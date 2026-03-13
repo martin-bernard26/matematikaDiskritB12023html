@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pertemuan 2 — Kuantor & Pembuktian Argumen</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Martian+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════════ */
+:root{
+  --bg:        #f6f3ee;
+  --bg2:       #ede9e1;
+  --bg3:       #e2ddd3;
+  --card:      #fefefb;
+  --ink:       #1d1a14;
+  --ink2:      #443e32;
+  --ink3:      #877d6a;
+  --border:    rgba(29,26,20,.1);
+  --border2:   rgba(29,26,20,.06);
+
+  /* accent palette */
+  --teal:      #0d7a6e;  --teal-bg:   rgba(13,122,110,.08);  --teal-b: rgba(13,122,110,.25);
+  --rust:      #b53c0a;  --rust-bg:   rgba(181,60,10,.08);   --rust-b: rgba(181,60,10,.25);
+  --indigo:    #3730a3;  --indigo-bg: rgba(55,48,163,.08);   --indigo-b:rgba(55,48,163,.25);
+  --gold:      #b8820a;  --gold-bg:   rgba(184,130,10,.08);  --gold-b: rgba(184,130,10,.25);
+  --plum:      #7e2d8a;  --plum-bg:   rgba(126,45,138,.08);  --plum-b: rgba(126,45,138,.25);
+
+  --t:  #1a6b3c; --t-bg: #edf9f3; --t-b: rgba(26,107,60,.25);
+  --f:  #a01c2c; --f-bg: #fef0f2; --f-b: rgba(160,28,44,.25);
+
+  --shadow:    0 2px 16px rgba(29,26,20,.07);
+  --shadow-lg: 0 8px 40px rgba(29,26,20,.11);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--bg);color:var(--ink);font-family:'Outfit',sans-serif;min-height:100vh;padding-bottom:80px}
+
+/* ═══════════════════════════════════════════
+   TOPNAV
+═══════════════════════════════════════════ */
+.topnav{
+  position:sticky;top:0;z-index:500;
+  background:var(--ink);
+  display:flex;align-items:center;
+  height:52px;padding:0 28px;
+  border-bottom:2px solid var(--rust);
+  gap:6px;overflow-x:auto;
+}
+.topnav-brand{
+  font-family:'Martian Mono',monospace;font-size:10px;
+  letter-spacing:2px;color:rgba(255,255,255,.4);
+  white-space:nowrap;margin-right:20px;text-transform:uppercase;
+}
+.topnav-brand span{color:var(--rust);font-size:11px;}
+.tnav-btn{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:1.5px;
+  text-transform:uppercase;padding:6px 14px;border-radius:4px;
+  border:1px solid rgba(255,255,255,.12);background:transparent;
+  color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;
+  transition:all .18s;
+}
+.tnav-btn:hover{color:#fff;border-color:rgba(255,255,255,.3);}
+.tnav-btn.active{background:var(--rust);border-color:var(--rust);color:#fff;}
+
+/* ═══════════════════════════════════════════
+   PANELS
+═══════════════════════════════════════════ */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero{
+  background:var(--ink);padding:60px 32px 52px;
+  position:relative;overflow:hidden;
+}
+.hero-mesh{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 100% at 5% 50%,rgba(181,60,10,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 80% at 95% 0%,rgba(55,48,163,.09) 0%,transparent 55%);
+}
+.hero-lines{
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.025) 39px,rgba(255,255,255,.025) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.025) 39px,rgba(255,255,255,.025) 40px);
+}
+.container{max-width:960px;margin:0 auto;padding:0 20px;position:relative;z-index:1;}
+.hero-badge{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--rust);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-badge::before{content:'';display:inline-block;width:20px;height:1px;background:var(--rust);}
+.hero h1{
+  font-family:'Crimson Pro',serif;font-size:clamp(40px,6vw,72px);
+  font-weight:700;line-height:1.05;letter-spacing:-.5px;
+  color:#fff;margin-bottom:14px;
+}
+.hero h1 em{color:var(--rust);font-style:italic;}
+.hero h1 .dim{color:rgba(255,255,255,.28);}
+.hero-sub{
+  font-family:'Martian Mono',monospace;font-size:11px;
+  color:rgba(255,255,255,.32);letter-spacing:1px;margin-bottom:32px;
+}
+.topic-pills{display:flex;gap:8px;flex-wrap:wrap;}
+.tpill{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:5px 13px;border-radius:3px;border:1px solid;
+}
+.tpill.a{color:#67e8d4;border-color:rgba(103,232,212,.3);background:rgba(103,232,212,.06);}
+.tpill.b{color:#93c5fd;border-color:rgba(147,197,253,.3);background:rgba(147,197,253,.06);}
+.tpill.c{color:#fcd34d;border-color:rgba(252,211,77,.3);background:rgba(252,211,77,.06);}
+.tpill.d{color:#f9a8d4;border-color:rgba(249,168,212,.3);background:rgba(249,168,212,.06);}
+
+/* ═══════════════════════════════════════════
+   SECTION
+═══════════════════════════════════════════ */
+.section{padding:52px 0 0;}
+.sec-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.sec-eye{
+  font-family:'Martian Mono',monospace;font-size:9px;
+  letter-spacing:3px;text-transform:uppercase;color:var(--ink3);
+}
+.sec-line{flex:1;height:1px;background:var(--border);}
+.section h2{
+  font-family:'Crimson Pro',serif;font-size:32px;font-weight:700;
+  color:var(--ink);letter-spacing:-.3px;margin-bottom:8px;
+}
+.section .sec-lead{
+  font-size:15px;color:var(--ink3);line-height:1.7;margin-bottom:28px;
+}
+
+/* ═══════════════════════════════════════════
+   DEF CARD
+═══════════════════════════════════════════ */
+.def-card{
+  background:var(--ink);border-radius:14px;
+  padding:32px 36px;position:relative;overflow:hidden;
+  margin-bottom:24px;
+}
+.def-card::before{
+  content:'∀';position:absolute;right:24px;top:50%;transform:translateY(-50%);
+  font-family:'Crimson Pro',serif;font-size:130px;color:rgba(255,255,255,.04);
+  pointer-events:none;line-height:1;
+}
+.def-card.exists::before{content:'∃';}
+.def-glyph{
+  font-family:'Martian Mono',monospace;font-size:52px;font-weight:700;
+  line-height:1;margin-bottom:10px;
+}
+.def-card.univ .def-glyph{color:var(--teal);}
+.def-card.exists .def-glyph{color:#f59e0b;}
+.def-name{
+  font-family:'Crimson Pro',serif;font-size:22px;font-weight:600;
+  color:#fff;margin-bottom:6px;
+}
+.def-meaning{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;margin-bottom:16px;}
+.def-formula{
+  font-family:'Martian Mono',monospace;font-size:16px;font-weight:600;
+  color:#e8d5b0;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  padding:10px 18px;border-radius:8px;display:inline-block;
+  letter-spacing:1px;margin-bottom:14px;
+}
+.def-rule{
+  font-size:13px;color:rgba(255,255,255,.45);
+  font-family:'Martian Mono',monospace;font-size:11px;
+  border-left:2px solid var(--rust);padding-left:12px;line-height:1.7;
+}
+.def-card.exists .def-rule{border-left-color:#f59e0b;}
+
+/* ═══════════════════════════════════════════
+   KUANTOR VISUAL EXPLORER
+═══════════════════════════════════════════ */
+.explorer{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:32px;box-shadow:var(--shadow);
+  margin-bottom:28px;
+}
+.explorer h3{
+  font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;
+  margin-bottom:4px;
+}
+.explorer .sub{
+  font-family:'Martian Mono',monospace;font-size:10px;
+  color:var(--ink3);letter-spacing:1px;margin-bottom:24px;
+}
+.domain-selector{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;
+}
+.dom-btn{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:1px;
+  padding:7px 14px;border-radius:6px;border:1.5px solid var(--border);
+  background:var(--bg);color:var(--ink3);cursor:pointer;transition:all .15s;
+}
+.dom-btn:hover{border-color:var(--teal-b);color:var(--teal);}
+.dom-btn.active{background:var(--teal-bg);border-color:var(--teal-b);color:var(--teal);font-weight:600;}
+
+.universe-display{
+  background:var(--bg2);border-radius:10px;padding:20px;
+  margin-bottom:18px;border:1px solid var(--border2);
+  min-height:100px;
+}
+.univ-label{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:12px;
+}
+.elem-grid{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.elem-pill{
+  font-family:'Martian Mono',monospace;font-size:13px;font-weight:600;
+  padding:6px 14px;border-radius:6px;border:1.5px solid;
+  transition:all .2s;
+}
+.elem-pill.neutral{background:var(--bg3);border-color:var(--border);color:var(--ink2);}
+.elem-pill.true-elem{background:var(--t-bg);border-color:var(--t-b);color:var(--t);transform:scale(1.05);}
+.elem-pill.false-elem{background:var(--f-bg);border-color:var(--f-b);color:var(--f);}
+
+.pred-select{
+  font-family:'Martian Mono',monospace;font-size:12px;
+  padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;
+  background:var(--bg);color:var(--ink);outline:none;
+  width:100%;margin-bottom:14px;cursor:pointer;transition:border-color .2s;
+}
+.pred-select:focus{border-color:var(--teal);}
+
+.quant-result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;}
+.qr-box{
+  border-radius:10px;padding:16px;text-align:center;border:1px solid;
+  transition:all .3s;
+}
+.qr-box.t-box{background:var(--t-bg);border-color:var(--t-b);}
+.qr-box.f-box{background:var(--f-bg);border-color:var(--f-b);}
+.qr-box.neu{background:var(--bg3);border-color:var(--border);}
+.qr-sym{font-family:'Martian Mono',monospace;font-size:15px;font-weight:600;color:var(--ink);}
+.qr-val{font-family:'Martian Mono',monospace;font-size:24px;font-weight:700;margin-top:4px;}
+.qr-box.t-box .qr-val{color:var(--t);}
+.qr-box.f-box .qr-val{color:var(--f);}
+.qr-box.neu  .qr-val{color:var(--ink3);}
+.qr-exp{font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.5;font-family:'Martian Mono',monospace;}
+
+/* ═══════════════════════════════════════════
+   CONTOH TABLE
+═══════════════════════════════════════════ */
+.contoh-grid{display:flex;flex-direction:column;gap:14px;margin-bottom:28px;}
+.contoh-row{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:20px 24px;
+  box-shadow:var(--shadow);
+  display:grid;grid-template-columns:56px 1fr auto;
+  gap:16px;align-items:start;
+  cursor:pointer;transition:border-color .18s,box-shadow .18s;
+}
+.contoh-row:hover{border-color:rgba(29,26,20,.2);box-shadow:var(--shadow-lg);}
+.contoh-row.expanded{border-color:var(--teal-b);}
+.cr-num{
+  font-family:'Martian Mono',monospace;font-size:11px;font-weight:600;
+  width:40px;height:40px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--ink);color:#fff;flex-shrink:0;
+}
+.cr-body{}
+.cr-ctx{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:6px;
+}
+.cr-stmt{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:6px;line-height:1.6;}
+.cr-formula{
+  font-family:'Martian Mono',monospace;font-size:14px;font-weight:600;
+  color:var(--teal);background:var(--teal-bg);
+  border:1px solid var(--teal-b);display:inline-block;
+  padding:5px 12px;border-radius:6px;letter-spacing:1px;
+}
+.cr-truth{
+  font-family:'Martian Mono',monospace;font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:4px;white-space:nowrap;
+}
+.cr-truth.T{background:var(--t-bg);color:var(--t);border:1px solid var(--t-b);}
+.cr-truth.F{background:var(--f-bg);color:var(--f);border:1px solid var(--f-b);}
+.cr-expand{
+  padding:14px 20px;border-top:1px solid var(--border2);
+  display:none;grid-column:1/-1;
+}
+.contoh-row.expanded .cr-expand{display:block;}
+.cr-expand p{font-size:14px;color:var(--ink2);line-height:1.8;margin-bottom:8px;}
+.negasi-box{
+  background:var(--bg2);border-radius:8px;padding:14px 18px;
+  margin-top:10px;border-left:3px solid var(--rust);
+}
+.neg-label{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--rust);margin-bottom:6px;
+}
+.neg-formula{
+  font-family:'Martian Mono',monospace;font-size:14px;font-weight:600;
+  color:var(--rust);letter-spacing:1px;
+}
+.neg-meaning{font-size:13px;color:var(--ink2);margin-top:4px;font-style:italic;}
+
+/* ═══════════════════════════════════════════
+   NEGASI RULES
+═══════════════════════════════════════════ */
+.neg-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+@media(max-width:600px){.neg-rules-grid{grid-template-columns:1fr;}}
+.neg-rule-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:24px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.neg-rule-card::after{
+  content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+  border-radius:12px 0 0 12px;
+}
+.nr-univ::after{background:var(--teal);}
+.nr-exist::after{background:#f59e0b;}
+.nr-title{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:10px;
+}
+.nr-formula-row{
+  display:flex;align-items:center;gap:12px;margin-bottom:12px;
+  font-family:'Martian Mono',monospace;font-size:15px;font-weight:600;
+}
+.nr-arrow{color:var(--ink3);font-size:18px;}
+.nr-left{color:var(--ink);}
+.nr-right{color:var(--rust);}
+.nr-meaning{font-size:13px;color:var(--ink2);line-height:1.6;}
+.nr-example{
+  background:var(--bg2);border-radius:6px;padding:10px 14px;
+  margin-top:10px;font-family:'Martian Mono',monospace;font-size:11px;
+  color:var(--ink3);line-height:1.6;
+}
+
+/* ═══════════════════════════════════════════
+   ARGUMENT RULES (Modus Ponens etc)
+═══════════════════════════════════════════ */
+.arg-cards{display:flex;flex-direction:column;gap:20px;}
+.arg-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.arg-head{
+  padding:22px 28px 0;
+  display:flex;align-items:flex-start;gap:16px;
+  cursor:pointer;
+}
+.arg-icon{
+  font-family:'Martian Mono',monospace;font-size:13px;font-weight:700;
+  width:48px;height:48px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.icon-mp{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-b);}
+.icon-mt{background:var(--rust-bg);color:var(--rust);border:1px solid var(--rust-b);}
+.icon-hs{background:var(--indigo-bg);color:var(--indigo);border:1px solid var(--indigo-b);}
+.icon-ds{background:var(--gold-bg);color:var(--gold);border:1px solid var(--gold-b);}
+.icon-ra{background:var(--plum-bg);color:var(--plum);border:1px solid var(--plum-b);}
+
+.arg-meta{flex:1;}
+.arg-abbr{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:5px;
+}
+.arg-name{
+  font-family:'Crimson Pro',serif;font-size:24px;font-weight:700;
+  margin-bottom:5px;color:var(--ink);
+}
+.arg-latin{
+  font-family:'Crimson Pro',serif;font-size:14px;
+  font-style:italic;color:var(--ink3);
+}
+.arg-toggle{
+  font-family:'Martian Mono',monospace;font-size:16px;color:var(--ink3);
+  background:none;border:none;cursor:pointer;padding:4px;
+  transition:transform .3s;
+}
+.arg-card.open .arg-toggle{transform:rotate(180deg);}
+
+.arg-body{
+  max-height:0;overflow:hidden;transition:max-height .4s ease;
+}
+.arg-card.open .arg-body{max-height:2000px;}
+.arg-inner{padding:0 28px 28px;}
+
+/* Proof schema */
+.proof-schema{
+  background:var(--bg2);border-radius:12px;padding:24px;
+  margin:18px 0;border:1px solid var(--border2);
+  display:flex;flex-direction:column;align-items:center;gap:0;
+}
+.ps-row{
+  display:grid;grid-template-columns:24px 1fr;gap:12px;
+  align-items:center;width:100%;max-width:400px;
+  padding:7px 0;
+}
+.ps-row.conclusion{
+  border-top:2.5px solid var(--ink3);
+  padding-top:10px;margin-top:4px;
+}
+.ps-n{
+  font-family:'Martian Mono',monospace;font-size:10px;color:var(--ink3);text-align:right;
+}
+.ps-n.conc-sym{color:var(--ink);font-size:14px;}
+.ps-formula{
+  font-family:'Martian Mono',monospace;font-size:15px;font-weight:600;
+  color:var(--ink);letter-spacing:1px;
+}
+.ps-row.conclusion .ps-formula{color:var(--teal);}
+.ps-row.premise-label .ps-formula{
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--ink3);font-weight:400;
+}
+
+/* Step table */
+.step-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+.step-table th{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink3);
+  padding:8px 14px;border-bottom:2px solid var(--border);text-align:left;
+}
+.step-table td{padding:10px 14px;border-bottom:1px solid var(--border2);}
+.step-table tr:last-child td{border-bottom:none;}
+.step-table td:first-child{
+  font-family:'Martian Mono',monospace;font-size:11px;color:var(--ink3);
+}
+.step-table td:nth-child(2){font-family:'Martian Mono',monospace;font-size:13px;color:var(--ink);font-weight:500;}
+.step-table td:nth-child(3){font-size:12px;color:#6366f1;}
+.step-table tr.conclusion-row td{
+  background:var(--teal-bg);color:var(--teal);font-weight:700;
+}
+.step-table tr.conclusion-row td:nth-child(2){font-family:'Martian Mono',monospace;}
+
+/* Context example */
+.ctx-example{
+  background:var(--bg2);border-radius:10px;padding:20px 22px;
+  border-left:3px solid;margin-bottom:14px;
+}
+.ctx-ex-teal{border-left-color:var(--teal);}
+.ctx-ex-rust{border-left-color:var(--rust);}
+.ctx-ex-indigo{border-left-color:var(--indigo);}
+.ctx-ex-gold{border-left-color:var(--gold);}
+.ctx-ex-plum{border-left-color:var(--plum);}
+.ctx-icon{font-size:18px;margin-bottom:6px;}
+.ctx-title{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:10px;
+}
+.ctx-premise{
+  font-size:14px;color:var(--ink2);line-height:1.8;
+  margin-bottom:4px;padding-left:12px;border-left:2px solid var(--border);
+}
+.ctx-premise.conc{
+  border-left-color:var(--teal);color:var(--teal);font-weight:600;
+  margin-top:8px;
+}
+
+/* ═══════════════════════════════════════════
+   INTERACTIVE ARGUMENT BUILDER
+═══════════════════════════════════════════ */
+.arg-builder{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:32px;box-shadow:var(--shadow);
+  margin-bottom:28px;
+}
+.ab-title{
+  font-family:'Crimson Pro',serif;font-size:22px;font-weight:700;
+  margin-bottom:4px;
+}
+.ab-sub{
+  font-family:'Martian Mono',monospace;font-size:10px;color:var(--ink3);
+  letter-spacing:1px;margin-bottom:26px;
+}
+.ab-mode-select{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px;
+}
+.ab-mode-btn{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+  padding:8px 16px;border-radius:6px;border:1.5px solid var(--border);
+  background:transparent;color:var(--ink3);cursor:pointer;transition:all .15s;
+}
+.ab-mode-btn:hover{border-color:var(--teal-b);color:var(--teal);}
+.ab-mode-btn.active{background:var(--teal-bg);border-color:var(--teal-b);color:var(--teal);font-weight:600;}
+
+.ab-scenario{
+  background:var(--bg2);border-radius:10px;padding:20px;
+  margin-bottom:18px;border:1px solid var(--border2);
+}
+.ab-sc-title{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:12px;
+}
+.premise-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:14px 18px;margin-bottom:8px;
+  font-family:'Martian Mono',monospace;font-size:13px;color:var(--ink2);
+  display:flex;align-items:center;gap:12px;
+}
+.pc-idx{
+  font-size:10px;font-weight:600;background:var(--bg3);
+  padding:3px 8px;border-radius:4px;color:var(--ink3);flex-shrink:0;
+}
+.pc-formula{color:var(--ink);font-weight:500;}
+.pc-name{font-size:11px;color:var(--ink3);}
+
+.ab-btn{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:2px;
+  padding:11px 24px;background:var(--ink);color:#fff;
+  border:none;border-radius:8px;cursor:pointer;font-weight:600;
+  transition:opacity .15s,transform .1s;width:100%;
+  margin-top:4px;
+}
+.ab-btn:hover{opacity:.85;transform:scale(.99);}
+.ab-result{
+  display:none;border-radius:10px;padding:16px 20px;
+  margin-top:14px;animation:resultIn .25s ease;
+}
+@keyframes resultIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.ab-result.show{display:block;}
+.ab-result.valid{background:var(--t-bg);border:1px solid var(--t-b);color:var(--t);}
+.ab-result.invalid{background:var(--f-bg);border:1px solid var(--f-b);color:var(--f);}
+.abr-title{font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:6px;}
+.abr-body{font-size:13px;line-height:1.7;opacity:.9;}
+.abr-steps{margin-top:12px;font-family:'Martian Mono',monospace;font-size:11px;line-height:2;}
+
+/* ═══════════════════════════════════════════
+   QUIZ
+═══════════════════════════════════════════ */
+.quiz-wrap{display:flex;flex-direction:column;gap:18px;}
+.quiz-card{
+  background:var(--card);border:1.5px solid var(--border);
+  border-radius:14px;padding:26px;box-shadow:var(--shadow);
+  transition:border-color .3s;
+}
+.qz-num{
+  font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:8px;
+}
+.qz-q{font-size:15px;color:var(--ink2);margin-bottom:10px;line-height:1.65;}
+.qz-expr{
+  font-family:'Martian Mono',monospace;font-size:16px;font-weight:600;
+  color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-b);
+  display:inline-block;padding:7px 16px;border-radius:7px;
+  margin-bottom:18px;letter-spacing:1px;
+}
+.qz-opts{display:flex;flex-direction:column;gap:8px;}
+.qz-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 16px;border:1.5px solid var(--border);
+  border-radius:8px;background:var(--bg);cursor:pointer;
+  font-size:13px;color:var(--ink2);transition:all .14s;text-align:left;
+}
+.qz-opt:hover:not(:disabled){border-color:var(--teal-b);background:var(--teal-bg);color:var(--ink);}
+.qz-opt .ok{
+  font-family:'Martian Mono',monospace;font-size:10px;font-weight:700;
+  min-width:22px;height:22px;border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(29,26,20,.06);color:var(--ink3);transition:all .14s;
+}
+.qz-opt.correct{border-color:var(--t-b);background:var(--t-bg);color:var(--t);}
+.qz-opt.correct .ok{background:var(--t);color:#fff;}
+.qz-opt.wrong{border-color:var(--f-b);background:var(--f-bg);color:var(--f);}
+.qz-opt.wrong .ok{background:var(--f);color:#fff;}
+.qz-opt:disabled{cursor:default;}
+.qz-fb{
+  margin-top:12px;font-family:'Martian Mono',monospace;font-size:11px;
+  border-radius:6px;padding:10px 14px;display:none;animation:resultIn .2s ease;line-height:1.7;
+}
+.qz-fb.show{display:block;}
+.qz-fb.ok{background:var(--t-bg);color:var(--t);border:1px solid var(--t-b);}
+.qz-fb.err{background:var(--f-bg);color:var(--f);border:1px solid var(--f-b);}
+
+/* ═══════════════════════════════════════════
+   SCOREBOARD
+═══════════════════════════════════════════ */
+.scoreboard{
+  background:var(--ink);border-radius:16px;padding:52px 40px;text-align:center;
+  display:none;animation:resultIn .4s ease;margin-top:32px;box-shadow:var(--shadow-lg);
+}
+.scoreboard.show{display:block;}
+.sb-pct{
+  font-family:'Crimson Pro',serif;font-size:88px;font-weight:700;
+  color:var(--rust);line-height:1;margin-bottom:6px;
+}
+.sb-lbl{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:4px;
+  text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px;
+}
+.sb-msg{
+  font-family:'Crimson Pro',serif;font-style:italic;font-size:20px;
+  color:rgba(255,255,255,.6);margin-bottom:32px;
+}
+.sb-retry{
+  font-family:'Martian Mono',monospace;font-size:10px;letter-spacing:2px;
+  padding:12px 36px;background:var(--rust);color:#fff;
+  border:none;border-radius:8px;cursor:pointer;font-weight:700;
+  transition:opacity .15s;
+}
+.sb-retry:hover{opacity:.85;}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.footer{
+  margin-top:64px;padding:28px 0;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+}
+.fl{font-family:'Martian Mono',monospace;font-size:10px;color:var(--ink3);}
+.fr{font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--ink3);}
+
+/* ═══════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════ */
+.mt16{margin-top:16px;} .mt24{margin-top:24px;}
+@media(max-width:600px){
+  .quant-result-grid{grid-template-columns:1fr;}
+  .score-rings{gap:14px;}
+  .arg-builder{padding:20px;}
+  .neg-rules-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  TOPNAV                               ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="topnav">
+  <div class="topnav-brand">Diskrit · <span>Pertemuan 2</span></div>
+  <button class="tnav-btn active" onclick="switchPanel('kuantor',this)">01 · Kuantor</button>
+  <button class="tnav-btn" onclick="switchPanel('negasi',this)">02 · Negasi Kuantor</button>
+  <button class="tnav-btn" onclick="switchPanel('argumen',this)">03 · Argumen Valid</button>
+  <button class="tnav-btn" onclick="switchPanel('simulator',this)">04 · Simulator</button>
+  <button class="tnav-btn" onclick="switchPanel('latihan',this)">05 · Latihan</button>
+</div>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  PANEL 1: KUANTOR                     ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="panel active" id="panel-kuantor">
+  <div class="hero">
+    <div class="hero-mesh"></div><div class="hero-lines"></div>
+    <div class="container">
+      <div class="hero-badge">Matematika Diskrit · Pertemuan 2 · Martin Bernard, M.Pd</div>
+      <h1>Kuantor <em>Universal & Eksistensial</em><br><span class="dim">& Pembuktian Argumen</span></h1>
+      <p class="hero-sub">// quantifiers_and_arguments.md — dari ∀ dan ∃ hingga Modus Ponens</p>
+      <div class="topic-pills">
+        <span class="tpill a">∀ Kuantor Universal</span>
+        <span class="tpill b">∃ Kuantor Eksistensial</span>
+        <span class="tpill c">Modus Ponens · Tollens</span>
+        <span class="tpill d">Silogisme Hipotetik</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">01 · Definisi</span><div class="sec-line"></div></div>
+      <h2>Dua Jenis Kuantor</h2>
+      <p class="sec-lead">
+        Kuantor digunakan untuk menyatakan seberapa banyak elemen dari suatu domain
+        yang memenuhi predikat tertentu. Ada dua kuantor dasar dalam logika predikat.
+      </p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+        <!-- Universal -->
+        <div class="def-card univ">
+          <div class="def-glyph">∀</div>
+          <div class="def-name">Kuantor Universal</div>
+          <div class="def-meaning">
+            Dibaca: <em>"untuk semua"</em> atau <em>"bagi setiap"</em>.
+            Menyatakan bahwa predikat berlaku untuk <strong style="color:#67e8d4">setiap</strong> elemen dalam domain.
+          </div>
+          <div class="def-formula">∀x P(x)</div>
+          <div class="def-rule">
+            Bernilai <strong>Benar</strong> jika P(x) benar untuk SEMUA x dalam domain.<br>
+            Bernilai <strong>Salah</strong> jika ada SATU x yang membuat P(x) salah (counterexample).
+          </div>
+        </div>
+        <!-- Existential -->
+        <div class="def-card exists">
+          <div class="def-glyph">∃</div>
+          <div class="def-name">Kuantor Eksistensial</div>
+          <div class="def-meaning">
+            Dibaca: <em>"ada"</em>, <em>"terdapat"</em>, atau <em>"paling sedikit satu"</em>.
+            Menyatakan bahwa predikat berlaku untuk <strong style="color:#fcd34d">setidaknya satu</strong> elemen.
+          </div>
+          <div class="def-formula">∃x P(x)</div>
+          <div class="def-rule">
+            Bernilai <strong>Benar</strong> jika ADA SATU x yang membuat P(x) benar.<br>
+            Bernilai <strong>Salah</strong> jika TIDAK ADA x yang membuat P(x) benar.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPLORER -->
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">Explorer Interaktif</span><div class="sec-line"></div></div>
+      <h2>Visualisasi Domain & Predikat</h2>
+      <div class="explorer">
+        <h3>Kuantor Explorer</h3>
+        <p class="sub">// pilih domain → pilih predikat → lihat nilai kebenaran ∀ dan ∃</p>
+
+        <div class="domain-selector">
+          <button class="dom-btn active" onclick="setDomain('bilangan',this)">Bilangan {1,2,3,4,5}</button>
+          <button class="dom-btn" onclick="setDomain('genap',this)">Bil. Genap {2,4,6,8}</button>
+          <button class="dom-btn" onclick="setDomain('prima',this)">Bil. Prima {2,3,5,7}</button>
+          <button class="dom-btn" onclick="setDomain('mahasiswa',this)">Mahasiswa {Ana,Budi,Cici,Dodi}</button>
+        </div>
+
+        <div class="universe-display">
+          <div class="univ-label">Domain 𝒟</div>
+          <div class="elem-grid" id="elemGrid"></div>
+        </div>
+
+        <select class="pred-select" id="predSelect" onchange="updateExplorer()">
+          <option value="">— Pilih Predikat P(x) —</option>
+        </select>
+
+        <div class="quant-result-grid" id="quantResults">
+          <div class="qr-box neu"><div class="qr-sym">∀x P(x)</div><div class="qr-val">?</div><div class="qr-exp">Pilih predikat</div></div>
+          <div class="qr-box neu"><div class="qr-sym">∃x P(x)</div><div class="qr-val">?</div><div class="qr-exp">Pilih predikat</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTOH -->
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">Contoh Lengkap</span><div class="sec-line"></div></div>
+      <h2>8 Contoh Kuantor dalam Konteks</h2>
+      <p class="sec-lead">Klik setiap contoh untuk melihat penjelasan dan bentuk negasinya.</p>
+
+      <div class="contoh-grid" id="contohGrid"></div>
+    </div>
+
+    <div class="footer">
+      <div class="fl">Martin Bernard, M.Pd · Matematika Diskrit</div>
+      <div class="fr">KUANTOR · PERTEMUAN 2 · 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  PANEL 2: NEGASI KUANTOR              ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="panel" id="panel-negasi">
+  <div class="container">
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">02 · Negasi Kuantor</span><div class="sec-line"></div></div>
+      <h2>Hukum Negasi Kuantor</h2>
+      <p class="sec-lead">
+        Negasi dari pernyataan berkuantor mengikuti hukum khusus yang serupa dengan Hukum De Morgan —
+        kuantor <em>berubah jenis</em> dan predikat dinegasikan.
+      </p>
+
+      <div class="neg-rules-grid">
+        <div class="neg-rule-card nr-univ">
+          <div class="nr-title">Negasi Kuantor Universal</div>
+          <div class="nr-formula-row">
+            <span class="nr-left">¬(∀x P(x))</span>
+            <span class="nr-arrow">≡</span>
+            <span class="nr-right">∃x ¬P(x)</span>
+          </div>
+          <div class="nr-meaning">
+            "Tidak benar semua x memenuhi P" ekuivalen dengan "Ada setidaknya satu x yang tidak memenuhi P".
+          </div>
+          <div class="nr-example">
+            Contoh:<br>
+            Semula: "Semua mahasiswa lulus" → ∀x Lulus(x)<br>
+            Negasi: "Ada mahasiswa yang tidak lulus" → ∃x ¬Lulus(x)
+          </div>
+        </div>
+        <div class="neg-rule-card nr-exist">
+          <div class="nr-title">Negasi Kuantor Eksistensial</div>
+          <div class="nr-formula-row">
+            <span class="nr-left">¬(∃x P(x))</span>
+            <span class="nr-arrow">≡</span>
+            <span class="nr-right">∀x ¬P(x)</span>
+          </div>
+          <div class="nr-meaning">
+            "Tidak ada x yang memenuhi P" ekuivalen dengan "Setiap x tidak memenuhi P (semua x tidak memenuhi P)".
+          </div>
+          <div class="nr-example">
+            Contoh:<br>
+            Semula: "Ada bilangan negatif" → ∃x (x &lt; 0)<br>
+            Negasi: "Semua bilangan tidak negatif" → ∀x ¬(x &lt; 0) ≡ ∀x (x ≥ 0)
+          </div>
+        </div>
+      </div>
+
+      <!-- Extended rules -->
+      <div style="background:var(--ink);border-radius:14px;padding:32px;margin-bottom:28px;">
+        <div style="font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:20px;">Tabel Hukum Negasi Kuantor Lengkap</div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%;border-collapse:collapse;font-family:'Martian Mono',monospace;font-size:13px;">
+            <thead>
+              <tr>
+                <th style="padding:10px 16px;color:rgba(255,255,255,.4);font-size:9px;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;">Pernyataan Asal</th>
+                <th style="padding:10px 16px;color:rgba(255,255,255,.4);font-size:9px;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;">Hukum</th>
+                <th style="padding:10px 16px;color:rgba(255,255,255,.4);font-size:9px;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;">Negasinya</th>
+                <th style="padding:10px 16px;color:rgba(255,255,255,.4);font-size:9px;letter-spacing:2px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;">Dibaca</th>
+              </tr>
+            </thead>
+            <tbody id="negasiTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Latihan Negasi Interaktif -->
+      <h2>Latihan Negasi Interaktif</h2>
+      <p class="sec-lead">Klik pernyataan untuk melihat negasinya beserta penjelasan langkah demi langkah.</p>
+      <div id="negLatihan" style="display:flex;flex-direction:column;gap:14px;margin-bottom:28px;"></div>
+    </div>
+    <div class="footer">
+      <div class="fl">Martin Bernard, M.Pd · Matematika Diskrit</div>
+      <div class="fr">NEGASI KUANTOR · 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  PANEL 3: ARGUMEN VALID               ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="panel" id="panel-argumen">
+  <div class="container">
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">03 · Argumen Valid</span><div class="sec-line"></div></div>
+      <h2>Aturan Inferensi & Pembuktian Argumen</h2>
+      <p class="sec-lead">
+        Argumen valid jika kesimpulan <em>pasti benar</em> ketika semua premis benar.
+        Berikut adalah aturan inferensi utama dalam logika matematika.
+      </p>
+
+      <div class="arg-cards" id="argCards"></div>
+    </div>
+    <div class="footer">
+      <div class="fl">Martin Bernard, M.Pd · Matematika Diskrit</div>
+      <div class="fr">ARGUMEN VALID · 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  PANEL 4: SIMULATOR                   ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="panel" id="panel-simulator">
+  <div class="container">
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">04 · Simulator</span><div class="sec-line"></div></div>
+      <h2>Argument Validity Simulator</h2>
+      <p class="sec-lead">
+        Pilih pola argumen dan skenario, lalu lihat apakah argumennya valid
+        berdasarkan aturan inferensi yang sesuai.
+      </p>
+      <div class="arg-builder" id="argBuilder"></div>
+    </div>
+    <div class="footer">
+      <div class="fl">Martin Bernard, M.Pd · Matematika Diskrit</div>
+      <div class="fr">SIMULATOR · 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔═══════════════════════════════════════╗
+     ║  PANEL 5: LATIHAN                     ║
+     ╚═══════════════════════════════════════╝ -->
+<div class="panel" id="panel-latihan">
+  <div class="container">
+    <div class="section">
+      <div class="sec-row"><span class="sec-eye">05 · Latihan Quiz</span><div class="sec-line"></div></div>
+      <h2>Uji Pemahamanmu</h2>
+      <p class="sec-lead">15 soal mencakup kuantor, negasi, dan pembuktian argumen.</p>
+      <div class="quiz-wrap" id="quizWrap"></div>
+      <div class="scoreboard" id="scoreboard">
+        <div class="sb-pct" id="sbPct">—</div>
+        <div class="sb-lbl">Skor Akhir</div>
+        <div class="sb-msg" id="sbMsg"></div>
+        <button class="sb-retry" onclick="retryQuiz()">↺ ULANGI LATIHAN</button>
+      </div>
+    </div>
+    <div class="footer">
+      <div class="fl">Martin Bernard, M.Pd · Matematika Diskrit</div>
+      <div class="fr">LATIHAN · PERTEMUAN 2 · 2025</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+═════════════════════════════════════════ -->
+<script>
+// ═══════════════ NAVIGATION ═══════════════
+function switchPanel(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tnav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════ DOMAIN DATA ═══════════════
+const DOMAINS = {
+  bilangan:{
+    elements:['1','2','3','4','5'],
+    predicates:[
+      {label:'P(x): x > 2',      fn:x=>Number(x)>2,      name:'lebih dari 2'},
+      {label:'P(x): x adalah prima', fn:x=>[2,3,5].includes(Number(x)), name:'bilangan prima'},
+      {label:'P(x): x genap',    fn:x=>Number(x)%2===0,  name:'bilangan genap'},
+      {label:'P(x): x² < 20',   fn:x=>Number(x)**2<20,  name:'kuadratnya < 20'},
+      {label:'P(x): x > 0',      fn:x=>Number(x)>0,      name:'positif'},
+    ]
+  },
+  genap:{
+    elements:['2','4','6','8'],
+    predicates:[
+      {label:'P(x): x genap',    fn:x=>Number(x)%2===0, name:'bilangan genap'},
+      {label:'P(x): x > 4',      fn:x=>Number(x)>4,     name:'lebih dari 4'},
+      {label:'P(x): x < 10',     fn:x=>Number(x)<10,    name:'kurang dari 10'},
+      {label:'P(x): x adalah prima', fn:x=>[2].includes(Number(x)), name:'bilangan prima'},
+    ]
+  },
+  prima:{
+    elements:['2','3','5','7'],
+    predicates:[
+      {label:'P(x): x ganjil',   fn:x=>Number(x)%2!==0, name:'bilangan ganjil'},
+      {label:'P(x): x > 3',      fn:x=>Number(x)>3,     name:'lebih dari 3'},
+      {label:'P(x): x < 6',      fn:x=>Number(x)<6,     name:'kurang dari 6'},
+      {label:'P(x): x adalah genap', fn:x=>Number(x)%2===0, name:'bilangan genap'},
+    ]
+  },
+  mahasiswa:{
+    elements:['Ana','Budi','Cici','Dodi'],
+    predicates:[
+      {label:'P(x): x lulus ujian', fn:x=>['Ana','Cici'].includes(x), name:'lulus ujian'},
+      {label:'P(x): x hadir kuliah', fn:_=>true, name:'hadir kuliah'},
+      {label:'P(x): x mendapat A',   fn:x=>['Ana'].includes(x), name:'mendapat nilai A'},
+      {label:'P(x): x tidak hadir',  fn:_=>false, name:'tidak hadir'},
+    ]
+  }
+};
+
+let currentDomain = 'bilangan';
+
+function setDomain(d,btn){
+  currentDomain=d;
+  document.querySelectorAll('.dom-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('predSelect').innerHTML='<option value="">— Pilih Predikat P(x) —</option>';
+  DOMAINS[d].predicates.forEach((p,i)=>{
+    const opt=document.createElement('option');
+    opt.value=i; opt.textContent=p.label;
+    document.getElementById('predSelect').appendChild(opt);
+  });
+  renderElements([]);
+  document.getElementById('quantResults').innerHTML=`
+    <div class="qr-box neu"><div class="qr-sym">∀x P(x)</div><div class="qr-val">?</div><div class="qr-exp">Pilih predikat</div></div>
+    <div class="qr-box neu"><div class="qr-sym">∃x P(x)</div><div class="qr-val">?</div><div class="qr-exp">Pilih predikat</div></div>`;
+}
+
+function renderElements(trueOnes){
+  const grid=document.getElementById('elemGrid');
+  grid.innerHTML='';
+  DOMAINS[currentDomain].elements.forEach(e=>{
+    const pill=document.createElement('div');
+    pill.className='elem-pill '+(trueOnes.length===0?'neutral':trueOnes.includes(e)?'true-elem':'false-elem');
+    pill.textContent=e;
+    grid.appendChild(pill);
+  });
+}
+
+function updateExplorer(){
+  const sel=document.getElementById('predSelect');
+  const idx=sel.value;
+  if(idx==='') return;
+  const domain=DOMAINS[currentDomain];
+  const pred=domain.predicates[Number(idx)];
+  const elems=domain.elements;
+  const trueOnes=elems.filter(e=>pred.fn(e));
+  const falseOnes=elems.filter(e=>!pred.fn(e));
+  renderElements(trueOnes);
+
+  const univTrue=trueOnes.length===elems.length;
+  const existTrue=trueOnes.length>0;
+
+  const univCls=univTrue?'t-box':'f-box';
+  const existCls=existTrue?'t-box':'f-box';
+  const univExp=univTrue
+    ?`Semua ${elems.length} elemen memenuhi P(x)`
+    :`Elemen yang tidak memenuhi: ${falseOnes.join(', ')}`;
+  const existExp=existTrue
+    ?`Elemen yang memenuhi: ${trueOnes.join(', ')}`
+    :`Tidak ada elemen yang memenuhi P(x)`;
+
+  document.getElementById('quantResults').innerHTML=`
+    <div class="qr-box ${univCls}">
+      <div class="qr-sym">∀x P(x)</div>
+      <div class="qr-val">${univTrue?'TRUE':'FALSE'}</div>
+      <div class="qr-exp">${univExp}</div>
+    </div>
+    <div class="qr-box ${existCls}">
+      <div class="qr-sym">∃x P(x)</div>
+      <div class="qr-val">${existTrue?'TRUE':'FALSE'}</div>
+      <div class="qr-exp">${existExp}</div>
+    </div>`;
+}
+
+// init domain
+setDomain('bilangan',document.querySelector('.dom-btn'));
+
+// ═══════════════ CONTOH DATA ═══════════════
+const CONTOH = [
+  {num:1, ctx:'🔢 Matematika', stmt:'"Semua bilangan bulat positif lebih besar dari nol"',
+   formula:'∀x ∈ ℤ⁺, P(x): x > 0', truth:'T',
+   penjelasan:'Setiap bilangan bulat positif (1, 2, 3, …) memang lebih besar dari 0. Tidak ada counter-example, sehingga bernilai Benar.',
+   negFormula:'∃x ∈ ℤ⁺, ¬P(x): x ≤ 0',
+   negMeaning:'"Ada bilangan bulat positif yang tidak lebih besar dari nol" — ini Salah karena tidak ada bilangan positif ≤ 0.'},
+  {num:2, ctx:'🔢 Matematika', stmt:'"Semua bilangan prima adalah ganjil"',
+   formula:'∀x, Prima(x) → Ganjil(x)', truth:'F',
+   penjelasan:'Counter-example: bilangan prima 2 adalah bilangan genap! Karena ada satu pengecualian, pernyataan universal ini bernilai Salah.',
+   negFormula:'∃x, Prima(x) ∧ ¬Ganjil(x)',
+   negMeaning:'"Ada bilangan prima yang genap" — ini Benar karena 2 adalah prima dan genap.'},
+  {num:3, ctx:'🎓 Pendidikan', stmt:'"Ada mahasiswa yang mendapat nilai A"',
+   formula:'∃x Mahasiswa(x) ∧ NilaiA(x)', truth:'T',
+   penjelasan:'Pernyataan eksistensial ini cukup benar jika ada satu mahasiswa dengan nilai A. Dalam kenyataan, selalu ada mahasiswa berprestasi.',
+   negFormula:'∀x Mahasiswa(x) → ¬NilaiA(x)',
+   negMeaning:'"Semua mahasiswa tidak mendapat nilai A" — ini Salah.'},
+  {num:4, ctx:'🌍 Alam', stmt:'"Semua planet mengorbit matahari"',
+   formula:'∀x Planet(x) → MengorbitMatahari(x)', truth:'T',
+   penjelasan:'Dalam tata surya kita, definisi planet (IAU 2006) mensyaratkan mengorbit matahari. Pernyataan ini benar dalam domainnya.',
+   negFormula:'∃x Planet(x) ∧ ¬MengorbitMatahari(x)',
+   negMeaning:'"Ada planet yang tidak mengorbit matahari" — Salah dalam konteks tata surya.'},
+  {num:5, ctx:'🔢 Matematika', stmt:'"Ada bilangan real x sehingga x² = -1"',
+   formula:'∃x ∈ ℝ, x² = -1', truth:'F',
+   penjelasan:'Dalam domain bilangan real, kuadrat selalu non-negatif. Tidak ada x ∈ ℝ yang memenuhi x² = -1. (Berbeda di bilangan kompleks!)',
+   negFormula:'∀x ∈ ℝ, x² ≠ -1',
+   negMeaning:'"Semua bilangan real, kuadratnya tidak sama dengan -1" — ini Benar di ℝ.'},
+  {num:6, ctx:'🏥 Medis', stmt:'"Setiap pasien mendapat diagnosis yang akurat"',
+   formula:'∀x Pasien(x) → DiagnosisAkurat(x)', truth:'F',
+   penjelasan:'Sayangnya dalam kenyataan, kesalahan diagnosis dapat terjadi. Pernyataan ini Salah karena tidak dapat dijamin untuk SEMUA pasien.',
+   negFormula:'∃x Pasien(x) ∧ ¬DiagnosisAkurat(x)',
+   negMeaning:'"Ada pasien yang tidak mendapat diagnosis akurat" — lebih realistis.'},
+  {num:7, ctx:'💻 Komputasi', stmt:'"Ada algoritma yang menyelesaikan masalah NP dalam waktu polinomial"',
+   formula:'∃x Algoritma(x) ∧ SolusiNP(x,polinomial)', truth:'?',
+   penjelasan:'Ini adalah masalah terbuka P vs NP! Belum diketahui apakah pernyataan eksistensial ini benar atau salah. Salah satu masalah Milenium.',
+   negFormula:'∀x Algoritma(x) → ¬SolusiNP(x,polinomial)',
+   negMeaning:'"Tidak ada algoritma yang menyelesaikan NP dalam waktu polinomial" — juga belum dibuktikan.'},
+  {num:8, ctx:'🎓 Pendidikan', stmt:'"Semua mahasiswa yang belajar keras pasti lulus"',
+   formula:'∀x (BelajarKeras(x) → Lulus(x))', truth:'T',
+   penjelasan:'Dalam konteks logika dengan asumsi kondisi ideal, jika domain dibatasi pada kondisi tersebut, pernyataan ini dapat diambil sebagai Benar.',
+   negFormula:'∃x (BelajarKeras(x) ∧ ¬Lulus(x))',
+   negMeaning:'"Ada mahasiswa yang belajar keras tapi tidak lulus" — negasi yang bermakna secara kontekstual.'},
+];
+
+function buildContoh(){
+  const grid=document.getElementById('contohGrid');
+  CONTOH.forEach((c,i)=>{
+    const row=document.createElement('div');
+    row.className='contoh-row';
+    row.id='cr-'+i;
+    const tClass=c.truth==='T'?'T':c.truth==='F'?'F':'';
+    const tLabel=c.truth==='T'?'TRUE':c.truth==='F'?'FALSE':'???';
+    row.innerHTML=`
+      <div class="cr-num">${c.num}</div>
+      <div class="cr-body">
+        <div class="cr-ctx">${c.ctx}</div>
+        <div class="cr-stmt">${c.stmt}</div>
+        <div class="cr-formula">${c.formula}</div>
+      </div>
+      <span class="cr-truth ${tClass}">${tLabel}</span>
+      <div class="cr-expand">
+        <p>${c.penjelasan}</p>
+        <div class="negasi-box">
+          <div class="neg-label">∼ Negasinya</div>
+          <div class="neg-formula">${c.negFormula}</div>
+          <div class="neg-meaning">${c.negMeaning}</div>
+        </div>
+      </div>`;
+    row.onclick=()=>row.classList.toggle('expanded');
+    grid.appendChild(row);
+  });
+}
+buildContoh();
+
+// ═══════════════ NEGASI TABLE ═══════════════
+const NEGASI_ROWS=[
+  {asal:'∀x P(x)',hukum:'¬(∀x P(x)) ≡ ∃x ¬P(x)',negasi:'∃x ¬P(x)',baca:'"Ada x yang tidak P"'},
+  {asal:'∃x P(x)',hukum:'¬(∃x P(x)) ≡ ∀x ¬P(x)',negasi:'∀x ¬P(x)',baca:'"Semua x tidak P"'},
+  {asal:'∀x (P(x)→Q(x))',hukum:'¬∀ + ¬(P→Q)',negasi:'∃x (P(x)∧¬Q(x))',baca:'"Ada x yang P tapi tidak Q"'},
+  {asal:'∃x (P(x)∧Q(x))',hukum:'¬∃ + De Morgan',negasi:'∀x (P(x)→¬Q(x))',baca:'"Semua x yang P, tidak Q"'},
+  {asal:'∀x∀y P(x,y)',hukum:'¬∀ bertingkat',negasi:'∃x∃y ¬P(x,y)',baca:'"Ada x,y yang tidak P"'},
+  {asal:'∃x∃y P(x,y)',hukum:'¬∃ bertingkat',negasi:'∀x∀y ¬P(x,y)',baca:'"Semua x,y tidak P"'},
+  {asal:'∀x∃y P(x,y)',hukum:'¬∀ + ¬∃',negasi:'∃x∀y ¬P(x,y)',baca:'"Ada x untuk semua y tidak P"'},
+  {asal:'∃x∀y P(x,y)',hukum:'¬∃ + ¬∀',negasi:'∀x∃y ¬P(x,y)',baca:'"Untuk semua x ada y tidak P"'},
+];
+const tbody=document.getElementById('negasiTable');
+NEGASI_ROWS.forEach((r,i)=>{
+  const bg=i%2===0?'rgba(255,255,255,.02)':'transparent';
+  tbody.innerHTML+=`<tr style="background:${bg}">
+    <td style="padding:10px 16px;font-weight:600;color:#e8d5b0;">${r.asal}</td>
+    <td style="padding:10px 16px;font-size:11px;color:rgba(255,255,255,.35);">${r.hukum}</td>
+    <td style="padding:10px 16px;font-weight:600;color:#f87171;">${r.negasi}</td>
+    <td style="padding:10px 16px;font-size:12px;color:rgba(255,255,255,.5);">${r.baca}</td>
+  </tr>`;
+});
+
+// ═══════════════ NEGASI LATIHAN ═══════════════
+const NEG_LAT=[
+  {orig:'"Semua kucing bisa terbang"',origF:'∀x Kucing(x) → Terbang(x)',
+   negF:'∃x Kucing(x) ∧ ¬Terbang(x)',negM:'"Ada kucing yang tidak bisa terbang"',
+   steps:['Mulai: ∀x Kucing(x) → Terbang(x)','Negasi: ¬(∀x ...)','Terapkan hukum: ∃x ¬(Kucing(x)→Terbang(x))','Sederhanakan ¬(P→Q) ≡ P∧¬Q','Hasil: ∃x (Kucing(x) ∧ ¬Terbang(x))']},
+  {orig:'"Ada mahasiswa yang tidak pernah absen"',origF:'∃x Mhs(x) ∧ ¬Absen(x)',
+   negF:'∀x Mhs(x) → Absen(x)',negM:'"Semua mahasiswa pernah absen"',
+   steps:['Mulai: ∃x (Mhs(x) ∧ ¬Absen(x))','Negasi: ¬(∃x ...)','Terapkan hukum: ∀x ¬(Mhs(x)∧¬Absen(x))','Sederhanakan ¬(P∧Q) ≡ P→¬Q','Hasil: ∀x (Mhs(x) → Absen(x))']},
+  {orig:'"Setiap program komputer bebas dari bug"',origF:'∀x Program(x) → BebAsBug(x)',
+   negF:'∃x (Program(x) ∧ ¬BebasBug(x))',negM:'"Ada program komputer yang memiliki bug"',
+   steps:['Mulai: ∀x (Program(x)→BebasBug(x))','Negasi: ¬(∀x ...)','Terapkan: ∃x ¬(Program(x)→BebasBug(x))','¬(P→Q) ≡ P∧¬Q','Hasil: ∃x (Program(x) ∧ ¬BebasBug(x))']},
+  {orig:'"Tidak ada bilangan real yang kuadratnya negatif"',origF:'¬∃x ∈ ℝ, x² < 0  ≡  ∀x ∈ ℝ, x² ≥ 0',
+   negF:'∃x ∈ ℝ, x² < 0',negM:'"Ada bilangan real yang kuadratnya negatif"',
+   steps:['Mulai: ∀x ∈ ℝ (x² ≥ 0)','Negasi: ¬(∀x ...)','Terapkan: ∃x ∈ ℝ ¬(x² ≥ 0)','Sederhanakan: ¬(x²≥0) ≡ x²<0','Hasil: ∃x ∈ ℝ, x² < 0']},
+];
+
+const negDiv=document.getElementById('negLatihan');
+NEG_LAT.forEach((n,i)=>{
+  const card=document.createElement('div');
+  card.style.cssText='background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 24px;box-shadow:var(--shadow);cursor:pointer;';
+  card.id='nl-'+i;
+  card.innerHTML=`
+    <div style="display:flex;align-items:flex-start;gap:14px;">
+      <div style="font-family:'Martian Mono',monospace;font-size:10px;font-weight:700;
+           background:var(--ink);color:#fff;padding:5px 10px;border-radius:6px;flex-shrink:0;">${i+1}</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;color:var(--ink2);margin-bottom:8px;line-height:1.6;">${n.orig}</div>
+        <div style="font-family:'Martian Mono',monospace;font-size:13px;font-weight:600;
+             color:var(--teal);background:var(--teal-bg);border:1px solid var(--teal-b);
+             display:inline-block;padding:5px 12px;border-radius:6px;">${n.origF}</div>
+      </div>
+      <button style="font-family:'Martian Mono',monospace;font-size:18px;color:var(--ink3);
+              background:none;border:none;cursor:pointer;" class="nl-toggle-${i}">▾</button>
+    </div>
+    <div class="nl-body-${i}" style="display:none;margin-top:16px;border-top:1px solid var(--border2);padding-top:16px;">
+      <div style="margin-bottom:12px;">
+        <div style="font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;
+             text-transform:uppercase;color:var(--rust);margin-bottom:6px;">Langkah Negasi</div>
+        ${n.steps.map((s,si)=>`
+          <div style="font-family:'Martian Mono',monospace;font-size:12px;color:var(--ink2);
+               padding:5px 0;border-bottom:1px solid var(--border2);display:flex;gap:10px;line-height:1.6;">
+            <span style="color:var(--ink3);min-width:20px;">${si+1}.</span>
+            <span>${s}</span>
+          </div>`).join('')}
+      </div>
+      <div style="background:var(--rust-bg);border:1px solid var(--rust-b);border-radius:8px;padding:14px 18px;">
+        <div style="font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:2px;
+             text-transform:uppercase;color:var(--rust);margin-bottom:6px;">∼ Hasil Negasi</div>
+        <div style="font-family:'Martian Mono',monospace;font-size:14px;font-weight:600;color:var(--rust);">${n.negF}</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:4px;font-style:italic;">${n.negM}</div>
+      </div>
+    </div>`;
+  card.onclick=()=>{
+    const body=card.querySelector('.nl-body-'+i);
+    const tog=card.querySelector('.nl-toggle-'+i);
+    const open=body.style.display==='none';
+    body.style.display=open?'block':'none';
+    tog.textContent=open?'▴':'▾';
+    card.style.borderColor=open?'var(--teal-b)':'var(--border)';
+  };
+  negDiv.appendChild(card);
+});
+
+// ═══════════════ ARGUMENT RULES ═══════════════
+const ARG_RULES=[
+{id:'mp',icon:'MP',iconCls:'icon-mp',abbr:'Modus Ponens',
+ name:'Modus Ponens',latin:'Modus ponendo ponens — cara menegaskan dengan menegaskan',
+ schema:[
+   {n:'P₁',f:'p → q',isConcl:false},
+   {n:'P₂',f:'p',isConcl:false},
+   {n:'∴',f:'q',isConcl:true},
+ ],
+ desc:'Jika implikasi "p → q" benar DAN anteseden "p" benar, maka konsekuen "q" pasti benar.',
+ tabel:[
+   {n:'1',f:'p → q',r:'Premis 1',isConcl:false},
+   {n:'2',f:'p',r:'Premis 2',isConcl:false},
+   {n:'3',f:'q',r:'Modus Ponens (1,2)',isConcl:true},
+ ],
+ ctx:{
+   icon:'🔐', title:'Contoh: Sistem Keamanan',
+   color:'ctx-ex-teal',
+   lines:[
+     {f:'Jika sidik jari valid (p), maka pintu terbuka (q)',isConc:false},
+     {f:'Sidik jari valid  (p)',isConc:false},
+     {f:'∴ Pintu terbuka  (q)',isConc:true},
+   ]
+ },
+ ctx2:{
+   icon:'🎓', title:'Contoh: Akademik',
+   color:'ctx-ex-teal',
+   lines:[
+     {f:'Jika mahasiswa lulus ujian (p) → mendapat sertifikat (q)',isConc:false},
+     {f:'Andi lulus ujian (p)',isConc:false},
+     {f:'∴ Andi mendapat sertifikat (q)',isConc:true},
+   ]
+ }
+},
+{id:'mt',icon:'MT',iconCls:'icon-mt',abbr:'Modus Tollens',
+ name:'Modus Tollens',latin:'Modus tollendo tollens — cara menyangkal dengan menyangkal',
+ schema:[
+   {n:'P₁',f:'p → q',isConcl:false},
+   {n:'P₂',f:'¬q',isConcl:false},
+   {n:'∴',f:'¬p',isConcl:true},
+ ],
+ desc:'Jika "p → q" benar DAN konsekuen "q" salah (¬q), maka anteseden "p" pasti salah (¬p).',
+ tabel:[
+   {n:'1',f:'p → q',r:'Premis 1',isConcl:false},
+   {n:'2',f:'¬q',r:'Premis 2',isConcl:false},
+   {n:'3',f:'¬p',r:'Modus Tollens (1,2)',isConcl:true},
+ ],
+ ctx:{
+   icon:'🏥', title:'Contoh: Diagnosa Medis',
+   color:'ctx-ex-rust',
+   lines:[
+     {f:'Jika infeksi bakteri (p) → ada demam tinggi (q)',isConc:false},
+     {f:'Tidak ada demam tinggi (¬q)',isConc:false},
+     {f:'∴ Tidak ada infeksi bakteri (¬p)',isConc:true},
+   ]
+ },
+ ctx2:{
+   icon:'⚖️', title:'Contoh: Hukum',
+   color:'ctx-ex-rust',
+   lines:[
+     {f:'Jika bersalah (p) → meninggalkan jejak (q)',isConc:false},
+     {f:'Tidak ada jejak (¬q)',isConc:false},
+     {f:'∴ Tidak bersalah (¬p)',isConc:true},
+   ]
+ }
+},
+{id:'hs',icon:'HS',iconCls:'icon-hs',abbr:'Hypothetical Syllogism',
+ name:'Silogisme Hipotetik',latin:'Silogisme rantai implikasi',
+ schema:[
+   {n:'P₁',f:'p → q',isConcl:false},
+   {n:'P₂',f:'q → r',isConcl:false},
+   {n:'∴',f:'p → r',isConcl:true},
+ ],
+ desc:'Jika "p → q" dan "q → r" keduanya benar, maka "p → r" juga benar. Rantai implikasi transitif.',
+ tabel:[
+   {n:'1',f:'p → q',r:'Premis 1',isConcl:false},
+   {n:'2',f:'q → r',r:'Premis 2',isConcl:false},
+   {n:'3',f:'p → r',r:'Silogisme Hipotetik (1,2)',isConcl:true},
+ ],
+ ctx:{
+   icon:'🌱', title:'Contoh: Ekologi',
+   color:'ctx-ex-indigo',
+   lines:[
+     {f:'Jika hujan (p) → tanah basah (q)',isConc:false},
+     {f:'Jika tanah basah (q) → tanaman tumbuh (r)',isConc:false},
+     {f:'∴ Jika hujan (p) → tanaman tumbuh (r)',isConc:true},
+   ]
+ },
+ ctx2:{
+   icon:'💻', title:'Contoh: Pemrograman',
+   color:'ctx-ex-indigo',
+   lines:[
+     {f:'Jika input valid (p) → data diproses (q)',isConc:false},
+     {f:'Jika data diproses (q) → output dihasilkan (r)',isConc:false},
+     {f:'∴ Jika input valid (p) → output dihasilkan (r)',isConc:true},
+   ]
+ }
+},
+{id:'ds',icon:'DS',iconCls:'icon-ds',abbr:'Disjunctive Syllogism',
+ name:'Silogisme Disjungtif',latin:'Penalaran dari disjungsi',
+ schema:[
+   {n:'P₁',f:'p ∨ q',isConcl:false},
+   {n:'P₂',f:'¬p',isConcl:false},
+   {n:'∴',f:'q',isConcl:true},
+ ],
+ desc:'Jika "p ∨ q" benar DAN "p" salah (¬p), maka "q" pasti benar. Eliminasi salah satu pilihan.',
+ tabel:[
+   {n:'1',f:'p ∨ q',r:'Premis 1',isConcl:false},
+   {n:'2',f:'¬p',r:'Premis 2',isConcl:false},
+   {n:'3',f:'q',r:'Silogisme Disjungtif (1,2)',isConcl:true},
+ ],
+ ctx:{
+   icon:'🚗', title:'Contoh: Pemilihan Transportasi',
+   color:'ctx-ex-gold',
+   lines:[
+     {f:'Andi naik bus (p) atau naik kereta (q)',isConc:false},
+     {f:'Andi tidak naik bus (¬p)',isConc:false},
+     {f:'∴ Andi naik kereta (q)',isConc:true},
+   ]
+ },
+ ctx2:{
+   icon:'🔧', title:'Contoh: Debugging',
+   color:'ctx-ex-gold',
+   lines:[
+     {f:'Error ada di modul A (p) atau modul B (q)',isConc:false},
+     {f:'Error tidak di modul A (¬p)',isConc:false},
+     {f:'∴ Error di modul B (q)',isConc:true},
+   ]
+ }
+},
+{id:'ra',icon:'RA',iconCls:'icon-ra',abbr:'Reductio ad Absurdum',
+ name:'Resolusi & Bukti Kontradiksi',latin:'Reductio ad absurdum — reduksi ke absurditas',
+ schema:[
+   {n:'P₁',f:'p ∨ q',isConcl:false},
+   {n:'P₂',f:'¬p ∨ r',isConcl:false},
+   {n:'∴',f:'q ∨ r',isConcl:true},
+ ],
+ desc:'Dari dua premis disjungtif dengan literal berlawanan (p dan ¬p), hasilkan disjungsi sisa. Dasar dari resolusi dalam logika otomatis.',
+ tabel:[
+   {n:'1',f:'p ∨ q',r:'Premis 1 (klausa 1)',isConcl:false},
+   {n:'2',f:'¬p ∨ r',r:'Premis 2 (klausa 2)',isConcl:false},
+   {n:'3',f:'q ∨ r',r:'Resolusi (1,2) — eliminasi p',isConcl:true},
+ ],
+ ctx:{
+   icon:'🧮', title:'Contoh: Matematika',
+   color:'ctx-ex-plum',
+   lines:[
+     {f:'n genap (p) atau n ganjil (q)',isConc:false},
+     {f:'n tidak genap (¬p) atau n dapat dibagi 3 (r)',isConc:false},
+     {f:'∴ n ganjil (q) atau n dapat dibagi 3 (r)',isConc:true},
+   ]
+ },
+ ctx2:{
+   icon:'🤖', title:'Contoh: AI / Prolog',
+   color:'ctx-ex-plum',
+   lines:[
+     {f:'user_admin(X) ∨ user_regular(X)',isConc:false},
+     {f:'¬user_admin(X) ∨ has_root_access(X)',isConc:false},
+     {f:'∴ user_regular(X) ∨ has_root_access(X)',isConc:true},
+   ]
+ }
+},
+];
+
+function buildArgCards(){
+  const wrap=document.getElementById('argCards');
+  ARG_RULES.forEach((ar,i)=>{
+    const card=document.createElement('div');
+    card.className='arg-card';card.id='ac-'+i;
+    const schemaHTML=ar.schema.map(s=>`
+      <div class="ps-row${s.isConcl?' conclusion':''}">
+        <div class="ps-n${s.isConcl?' conc-sym':''}">${s.n}</div>
+        <div class="ps-formula">${s.f}</div>
+      </div>`).join('');
+    const tabelHTML=ar.tabel.map(t=>`
+      <tr${t.isConcl?' class="conclusion-row"':''}>
+        <td>${t.n}</td><td>${t.f}</td><td>${t.r}</td>
+      </tr>`).join('');
+    card.innerHTML=`
+      <div class="arg-head" onclick="toggleArg(${i})">
+        <div class="arg-icon ${ar.iconCls}">${ar.icon}</div>
+        <div class="arg-meta">
+          <div class="arg-abbr">${ar.abbr}</div>
+          <div class="arg-name">${ar.name}</div>
+          <div class="arg-latin">${ar.latin}</div>
+        </div>
+        <button class="arg-toggle">▾</button>
+      </div>
+      <div class="arg-body">
+        <div class="arg-inner">
+          <p style="font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">${ar.desc}</p>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:20px;margin-bottom:20px;">
+            <div>
+              <div style="font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Skema</div>
+              <div class="proof-schema">${schemaHTML}</div>
+            </div>
+            <div>
+              <div style="font-family:'Martian Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;">Langkah Formal</div>
+              <table class="step-table">
+                <thead><tr><th>#</th><th>Formula</th><th>Alasan</th></tr></thead>
+                <tbody>${tabelHTML}</tbody>
+              </table>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div class="ctx-example ${ar.ctx.color}">
+              <div class="ctx-icon">${ar.ctx.icon}</div>
+              <div class="ctx-title">${ar.ctx.title}</div>
+              ${ar.ctx.lines.map(l=>`<div class="ctx-premise${l.isConc?' conc':''}">${l.f}</div>`).join('')}
+            </div>
+            <div class="ctx-example ${ar.ctx2.color}">
+              <div class="ctx-icon">${ar.ctx2.icon}</div>
+              <div class="ctx-title">${ar.ctx2.title}</div>
+              ${ar.ctx2.lines.map(l=>`<div class="ctx-premise${l.isConc?' conc':''}">${l.f}</div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>`;
+    wrap.appendChild(card);
+  });
+}
+buildArgCards();
+
+function toggleArg(i){
+  const card=document.getElementById('ac-'+i);
+  card.classList.toggle('open');
+}
+
+// ═══════════════ SIMULATOR ═══════════════
+const SCENARIOS=[
+  {mode:'mp',title:'Sistem Login Bank',desc:'Premis 1: Jika token valid (p), akses diberikan (q).\nPremis 2: Token valid (p).\nKesimpulan: Akses diberikan (q).',
+   valid:true,rule:'Modus Ponens',
+   steps:['P1: p → q (jika token valid maka akses diberikan)','P2: p (token valid — dikonfirmasi)','∴ q (akses diberikan) — Modus Ponens: P1,P2 ✓']},
+  {mode:'mt',title:'Diagnosa Laboratorium',desc:'Premis 1: Jika virus aktif (p), maka tes positif (q).\nPremis 2: Tes tidak positif (¬q).\nKesimpulan: Virus tidak aktif (¬p).',
+   valid:true,rule:'Modus Tollens',
+   steps:['P1: p → q (virus aktif → tes positif)','P2: ¬q (tes tidak positif — hasil lab)','∴ ¬p (virus tidak aktif) — Modus Tollens: P1,P2 ✓']},
+  {mode:'hs',title:'Rantai Proses Produksi',desc:'P1: Mesin aktif (p) → produksi jalan (q).\nP2: Produksi jalan (q) → barang tersedia (r).\nKesimpulan: Mesin aktif (p) → barang tersedia (r).',
+   valid:true,rule:'Silogisme Hipotetik',
+   steps:['P1: p → q (mesin aktif → produksi jalan)','P2: q → r (produksi jalan → barang tersedia)','∴ p → r — Silogisme Hipotetik: P1,P2 ✓']},
+  {mode:'ds',title:'Penentuan Rute Jaringan',desc:'P1: Rute A aktif (p) ATAU Rute B aktif (q).\nP2: Rute A tidak aktif (¬p).\nKesimpulan: Rute B aktif (q).',
+   valid:true,rule:'Silogisme Disjungtif',
+   steps:['P1: p ∨ q (rute A atau rute B aktif)','P2: ¬p (rute A down — dikonfirmasi)','∴ q (rute B aktif) — Silogisme Disjungtif: P1,P2 ✓']},
+  {mode:'invalid',title:'Argumen Tidak Valid (Fallacy of Affirming Consequent)',desc:'P1: Jika hujan (p), jalan basah (q).\nP2: Jalan basah (q).\nKesimpulan: Hujan (p). — TIDAK VALID!',
+   valid:false,rule:'Fallacy: Affirming the Consequent',
+   steps:['P1: p → q','P2: q (jalan basah — bisa karena disiram)','Klaim: p — SALAH! q bisa benar tanpa p benar','Counter-example: jalan disiram tanker (q=T, p=F)']},
+];
+
+function buildSimulator(){
+  const wrap=document.getElementById('argBuilder');
+  wrap.innerHTML=`
+    <h3 class="ab-title">Argument Validity Simulator</h3>
+    <p class="ab-sub">// pilih skenario → analisis validitas argumen</p>
+    <div class="ab-mode-select" id="simBtns">
+      ${SCENARIOS.map((s,i)=>`
+        <button class="ab-mode-btn${i===0?' active':''}" onclick="loadScenario(${i},this)"
+                style="border-color:${s.valid?'rgba(13,122,110,.2)':'rgba(160,28,44,.2)'};
+                       color:${s.valid?'var(--teal)':'var(--f)'};">
+          ${s.valid?'✓':'✗'} ${s.rule.split(' ')[0]}${s.rule.split(' ')[1]?' '+s.rule.split(' ')[1]:''}
+        </button>`).join('')}
+    </div>
+    <div class="ab-scenario" id="simScenario"></div>
+    <button class="ab-btn" id="simCheckBtn" onclick="checkScenario()">▶ ANALISIS VALIDITAS</button>
+    <div class="ab-result" id="simResult"></div>`;
+  loadScenario(0,document.querySelector('.ab-mode-btn'));
+}
+
+let currentScenario=0;
+function loadScenario(i,btn){
+  currentScenario=i;
+  document.querySelectorAll('.ab-mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const s=SCENARIOS[i];
+  const premLines=s.desc.split('\n');
+  document.getElementById('simScenario').innerHTML=`
+    <div class="ab-sc-title">${s.title}</div>
+    ${premLines.map((l,li)=>`
+      <div class="premise-card">
+        <span class="pc-idx">${li===premLines.length-1?'∴':('P'+(li+1))}</span>
+        <span class="pc-formula">${l.replace(/^P\d: |^Kesimpulan: /,'')}</span>
+      </div>`).join('')}`;
+  document.getElementById('simResult').className='ab-result';
+}
+
+function checkScenario(){
+  const s=SCENARIOS[currentScenario];
+  const res=document.getElementById('simResult');
+  res.className=`ab-result show ${s.valid?'valid':'invalid'}`;
+  const stepsHTML=s.steps.map((st,i)=>`<div>${i+1}. ${st}</div>`).join('');
+  res.innerHTML=`
+    <div class="abr-title">${s.valid?'✓ ARGUMEN VALID':'✗ ARGUMEN TIDAK VALID'}</div>
+    <div class="abr-body">
+      Aturan yang berlaku: <strong>${s.rule}</strong>
+      ${!s.valid?'<br><strong>⚠️ Ini adalah kesalahan logika (fallacy)!</strong>':''}
+    </div>
+    <div class="abr-steps">${stepsHTML}</div>`;
+}
+
+buildSimulator();
+
+// ═══════════════ QUIZ DATA ═══════════════
+const QUIZ_Q=[
+  {q:'Pernyataan "∀x (x > 0)" pada domain {1, 2, 3} bernilai…',
+   expr:'∀x P(x),  D={1,2,3},  P(x): x>0',
+   opts:['Benar, karena semua elemen > 0','Salah, karena ada elemen ≤ 0','Tidak dapat ditentukan','Bergantung nilai x'],
+   ans:0,ex:'Semua elemen {1,2,3} lebih besar dari 0, sehingga ∀x (x>0) bernilai Benar.'},
+  {q:'Negasi dari "∀x P(x)" adalah…',
+   expr:'¬(∀x P(x))',
+   opts:['∀x ¬P(x)','∃x P(x)','∃x ¬P(x)','¬∀x ¬P(x)'],
+   ans:2,ex:'Hukum negasi kuantor: ¬(∀x P(x)) ≡ ∃x ¬P(x). Kuantor berubah dari ∀ ke ∃.'},
+  {q:'Negasi dari "Ada mahasiswa yang rajin" adalah…',
+   expr:'¬(∃x Mhs(x) ∧ Rajin(x))',
+   opts:['Tidak ada mahasiswa','Ada mahasiswa yang tidak rajin','Semua mahasiswa tidak rajin','Semua mahasiswa rajin'],
+   ans:2,ex:'¬(∃x P(x)) ≡ ∀x ¬P(x). Negasinya: "Semua mahasiswa tidak rajin".'},
+  {q:'Diberikan: p→q (benar) dan p (benar). Aturan inferensi apa yang menghasilkan q?',
+   expr:'p→q,  p  ⊢  q',
+   opts:['Modus Tollens','Silogisme Hipotetik','Silogisme Disjungtif','Modus Ponens'],
+   ans:3,ex:'Ini adalah Modus Ponens: dari p→q dan p yang benar, disimpulkan q benar.'},
+  {q:'Modus Tollens menyimpulkan ¬p dari premis-premis…',
+   expr:'? dan ¬q  ⊢  ¬p',
+   opts:['p dan q','p→q dan p','p→q dan ¬q','q→p dan ¬q'],
+   ans:2,ex:'Modus Tollens: dari p→q (premis 1) dan ¬q (premis 2), disimpulkan ¬p.'},
+  {q:'Silogisme Hipotetik menghasilkan p→r dari…',
+   expr:'p→q dan q→r  ⊢  ?',
+   opts:['p dan r','p→r','q→r','¬p∨r'],
+   ans:1,ex:'Silogisme Hipotetik: dari p→q dan q→r, secara transitif disimpulkan p→r.'},
+  {q:'Pernyataan "∃x ∈ {2,4,6} (x ganjil)" bernilai…',
+   expr:'∃x P(x),  D={2,4,6},  P(x): x ganjil',
+   opts:['Benar','Salah','Tautologi','Tidak dapat ditentukan'],
+   ans:1,ex:'Semua elemen {2,4,6} adalah genap. Tidak ada yang ganjil, sehingga ∃x (x ganjil) = Salah.'},
+  {q:'Argumen berikut valid? P1: p∨q, P2: ¬p, ∴ q',
+   expr:'p∨q,  ¬p  ⊢  q',
+   opts:['Tidak valid','Valid — Modus Ponens','Valid — Silogisme Disjungtif','Valid — Modus Tollens'],
+   ans:2,ex:'Ini adalah Silogisme Disjungtif: dari p∨q dan ¬p, disimpulkan q.'},
+  {q:'Negasi "¬(∃x P(x))" ekuivalen dengan…',
+   expr:'¬(∃x P(x))',
+   opts:['∃x ¬P(x)','∀x P(x)','∀x ¬P(x)','¬∃x ¬P(x)'],
+   ans:2,ex:'¬(∃x P(x)) ≡ ∀x ¬P(x). Kuantor ∃ berubah menjadi ∀ dan P dinegasikan.'},
+  {q:'Pada Modus Ponens, jika p→q dan p keduanya benar, maka…',
+   expr:'p→q (T),  p (T)  ⊢  q = ?',
+   opts:['q bisa benar atau salah','q pasti salah','q pasti benar','Tidak dapat disimpulkan'],
+   ans:2,ex:'Modus Ponens menjamin: jika premis-premisnya benar, kesimpulan pasti benar. q pasti Benar.'},
+  {q:'Pernyataan "∀x (x>0 → x²>0)" pada domain bilangan real bernilai…',
+   expr:'∀x ∈ ℝ, (x>0 → x²>0)',
+   opts:['Salah karena x=0','Benar untuk semua x>0','Tidak dapat dibuktikan','Tautologi'],
+   ans:1,ex:'Untuk setiap x>0 di ℝ, x² juga >0 (kuadrat positif adalah positif). Pernyataan Benar.'},
+  {q:'Argumen P1: p→q, P2: q, ∴ p — apakah valid?',
+   expr:'p→q,  q  ⊢  p',
+   opts:['Valid — Modus Ponens','Valid — Modus Tollens','Tidak valid (Fallacy: Affirming the Consequent)','Valid — Silogisme Hipotetik'],
+   ans:2,ex:'TIDAK valid! Ini adalah "Fallacy of Affirming the Consequent". q bisa benar tanpa p benar (counter-example: q=T, p=F maka p→q = T tapi p = F).'},
+  {q:'Kuantor ∃! (eksistensial unik) P(x) berarti…',
+   expr:'∃! x P(x)',
+   opts:['Ada setidaknya 2 elemen yang memenuhi P','Tidak ada elemen yang memenuhi P','Ada tepat satu elemen yang memenuhi P','Semua elemen memenuhi P'],
+   ans:2,ex:'∃! (dibaca "ada tepat satu") adalah kuantor eksistensial unik: tepat satu elemen di domain memenuhi P(x).'},
+  {q:'Dari P1: p→q, P2: q→r, P3: r→s. Kesimpulan manakah yang valid?',
+   expr:'p→q,  q→r,  r→s  ⊢  ?',
+   opts:['p∧q∧r∧s','p↔s','p→s','¬p∨s saja'],
+   ans:2,ex:'Dengan Silogisme Hipotetik berulang: p→q, q→r → p→r; lalu p→r, r→s → p→s.'},
+  {q:'Pernyataan "Tidak semua bilangan prima ganjil" dinotasikan sebagai…',
+   expr:'"Tidak semua bilangan prima ganjil"',
+   opts:['∀x (Prima(x)→Ganjil(x))','∃x (Prima(x)∧Ganjil(x))','∃x (Prima(x)∧¬Ganjil(x))','∀x ¬(Prima(x)∧Ganjil(x))'],
+   ans:2,ex:'"Tidak semua prima ganjil" = ¬(∀x Prima(x)→Ganjil(x)) = ∃x (Prima(x)∧¬Ganjil(x)). Counterexample: 2 adalah prima dan genap.'},
+];
+
+let qAns={};let qDone=0;let qCorrect=0;const qKeys=['A','B','C','D'];
+
+function buildQuiz(){
+  const wrap=document.getElementById('quizWrap');
+  wrap.innerHTML='';qAns={};qDone=0;qCorrect=0;
+  document.getElementById('scoreboard').classList.remove('show');
+  QUIZ_Q.forEach((q,qi)=>{
+    const card=document.createElement('div');
+    card.className='quiz-card';card.id='qzc-'+qi;
+    card.innerHTML=`
+      <div class="qz-num">SOAL ${String(qi+1).padStart(2,'0')} / ${QUIZ_Q.length}</div>
+      <div class="qz-q">${q.q}</div>
+      <div class="qz-expr">${q.expr}</div>
+      <div class="qz-opts" id="qzo-${qi}">
+        ${q.opts.map((o,oi)=>`
+          <button class="qz-opt" onclick="pickQ(${qi},${oi})" id="qop-${qi}-${oi}">
+            <span class="ok">${qKeys[oi]}</span>${o}
+          </button>`).join('')}
+      </div>
+      <div class="qz-fb" id="qfb-${qi}"></div>`;
+    wrap.appendChild(card);
+  });
+}
+
+function pickQ(qi,oi){
+  if(qAns[qi]!==undefined)return;
+  qAns[qi]=oi;qDone++;
+  const q=QUIZ_Q[qi];const c=oi===q.ans;
+  if(c)qCorrect++;
+  for(let i=0;i<q.opts.length;i++){
+    const b=document.getElementById(`qop-${qi}-${i}`);
+    b.disabled=true;
+    if(i===q.ans)b.classList.add('correct');
+    else if(i===oi)b.classList.add('wrong');
+  }
+  const fb=document.getElementById(`qfb-${qi}`);
+  fb.className=`qz-fb show ${c?'ok':'err'}`;
+  fb.textContent=(c?'✓ Benar! ':'✗ Belum tepat. ')+q.ex;
+  document.getElementById(`qzc-${qi}`).style.borderColor=c?'var(--t-b)':'var(--f-b)';
+  if(qDone===QUIZ_Q.length)setTimeout(showScore,600);
+}
+
+function showScore(){
+  const pct=Math.round(qCorrect/QUIZ_Q.length*100);
+  document.getElementById('sbPct').textContent=pct+'%';
+  const msgs=[[90,'Luar biasa! Pemahaman kuantor dan argumen sangat kuat. 🏆'],
+               [75,'Sangat baik! Hampir sempurna. 🎯'],[55,'Baik! Perkuat pemahaman Modus Tollens dan negasi kuantor. 💪'],
+               [0,'Baca ulang materi dan coba lagi. Kamu pasti bisa! 📖']];
+  document.getElementById('sbMsg').textContent=msgs.find(([t])=>pct>=t)[1];
+  document.getElementById('scoreboard').classList.add('show');
+  document.getElementById('scoreboard').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function retryQuiz(){buildQuiz();document.getElementById('quizWrap').scrollIntoView({behavior:'smooth'});}
+buildQuiz();
+</script>
+</body>
+</html>
