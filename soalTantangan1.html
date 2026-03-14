@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20 Soal Esay Tantangan — Kuantor & Argumen Valid</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   ROOT & BASE
+═══════════════════════════════════════ */
+:root {
+  --bg:        #0f1117;
+  --bg2:       #161820;
+  --bg3:       #1d2030;
+  --card:      #1a1d28;
+  --card2:     #21253a;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.04);
+  --ink:       #e8eaf2;
+  --ink2:      #9aa0bb;
+  --ink3:      #565c7a;
+
+  /* Section A — Kuantor: emerald tones */
+  --a1:  #10b981;  --a1-bg: rgba(16,185,129,0.1);  --a1-b: rgba(16,185,129,0.25);
+  --a2:  #34d399;
+  --a-glow: rgba(16,185,129,0.06);
+
+  /* Section B — Argumen: amber tones */
+  --b1:  #f59e0b;  --b1-bg: rgba(245,158,11,0.1);  --b1-b: rgba(245,158,11,0.25);
+  --b2:  #fbbf24;
+  --b-glow: rgba(245,158,11,0.06);
+
+  /* Accents */
+  --ruby:    #f43f5e;
+  --violet:  #8b5cf6;
+  --cyan:    #06b6d4;
+  --rose:    #fb7185;
+
+  --shadow:  0 4px 24px rgba(0,0,0,0.4);
+  --shadow2: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+/* ═══════════════════════════════════════
+   TOPBAR
+═══════════════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 300;
+  background: rgba(15,17,23,0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  height: 54px;
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 8px;
+}
+.tb-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ink3); margin-right: 16px; white-space: nowrap;
+}
+.tb-brand .hi { color: var(--a1); }
+.tb-tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--ink3);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.18s;
+}
+.tb-tab:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); }
+.tb-tab.act-a { background: var(--a1-bg); border-color: var(--a1-b); color: var(--a1); }
+.tb-tab.act-b { background: var(--b1-bg); border-color: var(--b1-b); color: var(--b1); }
+.tb-sep { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
+.tb-count {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ink3);
+  display: flex; align-items: center; gap: 12px;
+}
+.tc-pill {
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid; font-size: 9px; letter-spacing: 1px;
+}
+.tc-a { color: var(--a1); border-color: var(--a1-b); background: var(--a1-bg); }
+.tc-b { color: var(--b1); border-color: var(--b1-b); background: var(--b1-bg); }
+
+/* ═══════════════════════════════════════
+   PANELS
+═══════════════════════════════════════ */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ═══════════════════════════════════════
+   SECTION HERO
+═══════════════════════════════════════ */
+.sec-hero {
+  padding: 56px 32px 48px;
+  position: relative; overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.sh-glow-a {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 120% at 0% 50%, rgba(16,185,129,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 50% 80% at 100% 100%, rgba(6,182,212,0.04) 0%, transparent 60%);
+}
+.sh-glow-b {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 120% at 0% 50%, rgba(245,158,11,0.07) 0%, transparent 60%),
+              radial-gradient(ellipse 50% 80% at 100% 100%, rgba(251,113,133,0.04) 0%, transparent 60%);
+}
+.sh-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.container { max-width: 920px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+.sh-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 10px;
+}
+.sh-eyebrow::before { content: ''; display: inline-block; width: 18px; height: 1px; opacity: 0.7; }
+.eye-a { color: var(--a1); } .eye-a::before { background: var(--a1); }
+.eye-b { color: var(--b1); } .eye-b::before { background: var(--b1); }
+
+.sh-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(34px, 5.5vw, 62px);
+  font-weight: 900; line-height: 1.05;
+  letter-spacing: -1px; color: #fff;
+  margin-bottom: 14px;
+}
+.sh-title .acc-a { color: var(--a1); font-style: italic; }
+.sh-title .acc-b { color: var(--b1); font-style: italic; }
+
+.sh-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--ink3); letter-spacing: 1px;
+  margin-bottom: 28px;
+}
+.sh-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.sh-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 4px; border: 1px solid;
+}
+
+/* ═══════════════════════════════════════
+   INSTRUCTIONS BANNER
+═══════════════════════════════════════ */
+.instr-banner {
+  border-radius: 12px; padding: 20px 24px;
+  margin: 32px 0; border: 1px solid;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.ib-a { background: rgba(16,185,129,0.04); border-color: var(--a1-b); }
+.ib-b { background: rgba(245,158,11,0.04); border-color: var(--b1-b); }
+.ib-icon { font-size: 24px; flex-shrink: 0; }
+.ib-content {}
+.ib-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ib-a .ib-title { color: var(--a1); }
+.ib-b .ib-title { color: var(--b1); }
+.ib-text { font-size: 13px; color: var(--ink2); line-height: 1.75; }
+.ib-criteria {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;
+}
+.ib-crit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; padding: 3px 10px; border-radius: 3px;
+  color: var(--ink3); background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+}
+
+/* ═══════════════════════════════════════
+   JUMP GRID
+═══════════════════════════════════════ */
+.jump-row {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 32px;
+}
+.jump-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink3); margin-right: 4px;
+}
+.jdot {
+  width: 32px; height: 32px; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  color: var(--ink3); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.jdot:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); }
+.jdot.a { border-color: var(--a1-b); color: var(--a1); background: var(--a1-bg); }
+.jdot.b { border-color: var(--b1-b); color: var(--b1); background: var(--b1-bg); }
+
+/* ═══════════════════════════════════════
+   QUESTION CARD
+═══════════════════════════════════════ */
+.q-wrap { display: flex; flex-direction: column; gap: 28px; }
+
+.q-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: cardIn 0.35s ease both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Accent strip */
+.q-strip { height: 3px; }
+.strip-a { background: linear-gradient(90deg, var(--a1), var(--cyan)); }
+.strip-b { background: linear-gradient(90deg, var(--b1), var(--rose)); }
+
+/* Card header */
+.q-header {
+  padding: 22px 28px 0;
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 16px; align-items: start;
+}
+
+.q-badge {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.badge-a {
+  background: var(--a1-bg); border: 1px solid var(--a1-b);
+}
+.badge-b {
+  background: var(--b1-bg); border: 1px solid var(--b1-b);
+}
+.badge-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px; font-weight: 700; line-height: 1;
+}
+.badge-a .badge-num { color: var(--a1); }
+.badge-b .badge-num { color: var(--b1); }
+.badge-sec {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px; letter-spacing: 1px;
+}
+.badge-a .badge-sec { color: rgba(16,185,129,0.6); }
+.badge-b .badge-sec { color: rgba(245,158,11,0.6); }
+
+.q-meta {}
+.q-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.q-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--ink3); background: rgba(255,255,255,0.03);
+}
+.q-tag.lvl-tinggi {
+  border-color: rgba(244,63,94,0.3);
+  color: var(--ruby); background: rgba(244,63,94,0.07);
+}
+.q-tag.lvl-sangat {
+  border-color: rgba(139,92,246,0.3);
+  color: var(--violet); background: rgba(139,92,246,0.07);
+}
+.q-pts {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--b1);
+  background: var(--b1-bg); border: 1px solid var(--b1-b);
+  padding: 3px 10px; border-radius: 3px; white-space: nowrap;
+  margin-left: auto;
+}
+.q-pts.pts-a {
+  color: var(--a1);
+  background: var(--a1-bg); border-color: var(--a1-b);
+}
+
+/* Context story */
+.q-context {
+  margin: 16px 28px 0;
+  background: var(--bg3);
+  border-radius: 10px; padding: 18px 20px;
+  border-left: 3px solid;
+  position: relative; overflow: hidden;
+}
+.q-context.ctx-a { border-left-color: var(--a1); }
+.q-context.ctx-b { border-left-color: var(--b1); }
+.ctx-scene {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ctx-a .ctx-scene { color: rgba(16,185,129,0.7); }
+.ctx-b .ctx-scene { color: rgba(245,158,11,0.7); }
+.ctx-story {
+  font-family: 'DM Sans', sans-serif;
+  font-style: italic; font-size: 14px;
+  color: var(--ink2); line-height: 1.75;
+}
+.ctx-story strong { color: var(--ink); font-style: normal; }
+
+/* Propositions */
+.q-props {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin: 12px 28px 0;
+}
+.prop-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 5px 12px;
+  border-radius: 6px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02); color: var(--ink2);
+}
+.prop-tag em { color: var(--a1); font-style: normal; font-weight: 600; }
+.prop-tag.pb em { color: var(--b1); }
+
+/* The actual question */
+.q-question {
+  padding: 16px 28px 0;
+  font-size: 15px; color: var(--ink); line-height: 1.7;
+  font-weight: 500;
+}
+
+/* Formula display */
+.q-formula {
+  margin: 12px 28px 0;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 8px; padding: 14px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px; font-weight: 600;
+  letter-spacing: 1.5px;
+}
+.q-formula.fa { color: var(--a1); border-color: rgba(16,185,129,0.15); }
+.q-formula.fb { color: var(--b1); border-color: rgba(245,158,11,0.15); }
+
+/* Sub-tasks */
+.q-tasks {
+  margin: 16px 28px 0;
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+}
+.q-task {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border2);
+  padding: 13px 16px;
+  align-items: flex-start;
+  transition: background 0.12s;
+}
+.q-task:last-child { border-bottom: none; }
+.q-task:hover { background: rgba(255,255,255,0.015); }
+.task-alpha {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 700;
+  padding-top: 1px;
+}
+.ta { color: var(--a1); }
+.tb-c { color: var(--b1); }
+.task-text {
+  font-size: 14px; color: var(--ink2); line-height: 1.7;
+}
+.task-text code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: var(--cyan);
+  background: rgba(6,182,212,0.08);
+  padding: 1px 6px; border-radius: 4px;
+}
+
+/* Essay answer area */
+.q-answer-area {
+  margin: 16px 28px 24px;
+}
+.ans-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ans-label::after {
+  content: ''; flex: 1; height: 1px;
+  background: var(--border);
+}
+.ans-textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--ink);
+  line-height: 1.7; resize: vertical;
+  min-height: 140px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ans-textarea:focus {
+  border-color: var(--a1);
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.08);
+}
+.ans-textarea.fb:focus {
+  border-color: var(--b1);
+  box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
+}
+.ans-textarea::placeholder { color: var(--ink3); }
+
+.ans-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 8px; flex-wrap: wrap; gap: 8px;
+}
+.char-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ink3);
+}
+.save-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 7px 18px; border-radius: 5px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--ink3);
+  cursor: pointer; transition: all 0.15s;
+}
+.save-btn:hover { color: var(--ink); border-color: rgba(255,255,255,0.25); }
+.save-btn.saved { color: var(--a1); border-color: var(--a1-b); background: var(--a1-bg); }
+.save-btn.saved-b { color: var(--b1); border-color: var(--b1-b); background: var(--b1-bg); }
+
+/* ═══════════════════════════════════════
+   DIFFICULTY BADGE (corner)
+═══════════════════════════════════════ */
+.difficulty-corner {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.diff-stars { font-size: 12px; letter-spacing: -2px; }
+
+/* ═══════════════════════════════════════
+   CRITERIA RUBRIK
+═══════════════════════════════════════ */
+.rubrik-panel {
+  margin: 0 28px 24px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border2);
+  border-radius: 8px; overflow: hidden;
+}
+.rubrik-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink3); background: none; border: none;
+  cursor: pointer; transition: color 0.15s;
+}
+.rubrik-toggle:hover { color: var(--ink); }
+.rubrik-body {
+  display: none; padding: 0 16px 14px;
+  border-top: 1px solid var(--border2);
+}
+.rubrik-body.open { display: block; }
+.rubrik-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 7px 0; border-bottom: 1px solid var(--border2);
+  font-size: 12px; color: var(--ink2);
+}
+.rubrik-item:last-child { border-bottom: none; }
+.rubrik-pts {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  min-width: 44px; padding: 2px 8px;
+  border-radius: 4px; text-align: center; flex-shrink: 0;
+}
+.rp-a { background: var(--a1-bg); color: var(--a1); border: 1px solid var(--a1-b); }
+.rp-b { background: var(--b1-bg); color: var(--b1); border: 1px solid var(--b1-b); }
+
+/* ═══════════════════════════════════════
+   PROGRESS TRACKER
+═══════════════════════════════════════ */
+.progress-panel {
+  position: fixed; bottom: 24px; right: 24px; z-index: 400;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 18px;
+  box-shadow: var(--shadow);
+  min-width: 200px;
+}
+.pp-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 10px;
+}
+.pp-bar-wrap {
+  height: 4px; background: rgba(255,255,255,0.06);
+  border-radius: 2px; overflow: hidden; margin-bottom: 6px;
+}
+.pp-bar {
+  height: 100%; border-radius: 2px;
+  transition: width 0.4s ease;
+  background: linear-gradient(90deg, var(--a1), var(--b1));
+}
+.pp-stats {
+  display: flex; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+}
+.pp-stat-a { color: var(--a1); }
+.pp-stat-b { color: var(--b1); }
+.pp-stat-t { color: var(--ink3); }
+
+/* ═══════════════════════════════════════
+   PRINT AREA
+═══════════════════════════════════════ */
+.print-controls {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.print-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 10px 20px; border-radius: 6px;
+  border: 1px solid; cursor: pointer; transition: all 0.15s;
+}
+.pb-a {
+  color: var(--a1); border-color: var(--a1-b); background: var(--a1-bg);
+}
+.pb-a:hover { background: rgba(16,185,129,0.15); }
+.pb-b {
+  color: var(--b1); border-color: var(--b1-b); background: var(--b1-bg);
+}
+.pb-b:hover { background: rgba(245,158,11,0.15); }
+.pb-all {
+  color: var(--ink2); border-color: var(--border); background: rgba(255,255,255,0.03);
+}
+.pb-all:hover { color: var(--ink); border-color: rgba(255,255,255,0.2); }
+
+/* ═══════════════════════════════════════
+   SECTION DIVIDER
+═══════════════════════════════════════ */
+.section-divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 40px 0 32px;
+}
+.sd-line { flex: 1; height: 1px; background: var(--border); }
+.sd-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  padding: 6px 16px; border-radius: 20px; border: 1px solid;
+}
+.sd-a { color: var(--a1); border-color: var(--a1-b); background: var(--a1-bg); }
+.sd-b { color: var(--b1); border-color: var(--b1-b); background: var(--b1-bg); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .q-header { grid-template-columns: 44px 1fr; }
+  .difficulty-corner { display: none; }
+  .progress-panel { bottom: 12px; right: 12px; min-width: 160px; }
+  .topbar { padding: 0 14px; }
+}
+@media print {
+  .topbar, .progress-panel, .print-controls { display: none !important; }
+  body { background: white !important; color: black !important; }
+  .q-card { break-inside: avoid; border: 1px solid #ddd !important; background: white !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  TOPBAR                              ║
+     ╚══════════════════════════════════════╝ -->
+<div class="topbar">
+  <div class="tb-brand">Diskrit · <span class="hi">Esay Tantangan</span></div>
+  <button class="tb-tab act-a" onclick="showTab('a', this)" id="tab-a">∀∃ Kuantor & Negasi</button>
+  <div class="tb-sep"></div>
+  <button class="tb-tab" onclick="showTab('b', this)" id="tab-b">⊢ Argumen Valid</button>
+  <div class="tb-sep"></div>
+  <button class="tb-tab" onclick="showTab('all', this)" id="tab-all">Semua Soal</button>
+  <div class="tb-count">
+    <span class="tc-pill tc-a" id="countA">0/10 dijawab</span>
+    <span class="tc-pill tc-b" id="countB">0/10 dijawab</span>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  PANEL A : KUANTOR & NEGASI          ║
+     ╚══════════════════════════════════════╝ -->
+<div class="panel active" id="panel-a">
+
+  <div class="sec-hero">
+    <div class="sh-glow-a"></div><div class="sh-grid"></div>
+    <div class="container">
+      <div class="sh-eyebrow eye-a">Bagian A · Soal Esay Tantangan · Matematika Diskrit</div>
+      <h1 class="sh-title">Kuantor <span class="acc-a">∀ ∃</span><br>& Negasinya</h1>
+      <p class="sh-sub">// Martin Bernard, M.Pd — 10 soal analisis mendalam tanpa jawaban</p>
+      <div class="sh-chips">
+        <span class="sh-chip" style="color:#67e8d4;border-color:rgba(103,232,212,0.3);background:rgba(103,232,212,0.06);">∀ Universal</span>
+        <span class="sh-chip" style="color:#fcd34d;border-color:rgba(252,211,77,0.3);background:rgba(252,211,77,0.06);">∃ Eksistensial</span>
+        <span class="sh-chip" style="color:#f9a8d4;border-color:rgba(249,168,212,0.3);background:rgba(249,168,212,0.06);">¬ Negasi Kuantor</span>
+        <span class="sh-chip" style="color:#c4b5fd;border-color:rgba(196,181,253,0.3);background:rgba(196,181,253,0.06);">⛓ Kuantor Bertingkat</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="instr-banner ib-a">
+      <div class="ib-icon">📋</div>
+      <div class="ib-content">
+        <div class="ib-title">Petunjuk Pengerjaan Soal Esay</div>
+        <div class="ib-text">
+          Kerjakan setiap soal dengan <strong>analisis mendalam</strong>. Jawaban esay harus mencakup:
+          notasi formal logika, pembuktian langkah demi langkah, contoh atau counter-example,
+          dan interpretasi makna dalam konteks soal cerita.
+          <strong>Tidak ada pilihan ganda — kembangkan argumenmu sendiri.</strong>
+        </div>
+        <div class="ib-criteria">
+          <span class="ib-crit">Notasi Formal</span>
+          <span class="ib-crit">Langkah Logis</span>
+          <span class="ib-crit">Counter-Example</span>
+          <span class="ib-crit">Interpretasi Konteks</span>
+          <span class="ib-crit">Kesimpulan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="print-controls">
+      <button class="print-btn pb-a" onclick="window.print()">🖨 Cetak Bagian A</button>
+      <button class="print-btn pb-all" onclick="exportAnswers('a')">⬇ Export Jawaban (TXT)</button>
+    </div>
+
+    <div class="jump-row">
+      <span class="jump-lbl">Soal →</span>
+      <div id="jumpsA" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+    </div>
+
+    <div class="q-wrap" id="qWrapA"></div>
+
+    <div style="height:80px;"></div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  PANEL B : ARGUMEN VALID             ║
+     ╚══════════════════════════════════════╝ -->
+<div class="panel" id="panel-b">
+
+  <div class="sec-hero">
+    <div class="sh-glow-b"></div><div class="sh-grid"></div>
+    <div class="container">
+      <div class="sh-eyebrow eye-b">Bagian B · Soal Esay Tantangan · Matematika Diskrit</div>
+      <h1 class="sh-title">Pembuktian Validitas<br><span class="acc-b">Argumen Logika</span></h1>
+      <p class="sh-sub">// Martin Bernard, M.Pd — 10 soal analisis mendalam tanpa jawaban</p>
+      <div class="sh-chips">
+        <span class="sh-chip" style="color:#6ee7b7;border-color:rgba(110,231,183,0.3);background:rgba(110,231,183,0.06);">Modus Ponens</span>
+        <span class="sh-chip" style="color:#fca5a5;border-color:rgba(252,165,165,0.3);background:rgba(252,165,165,0.06);">Modus Tollens</span>
+        <span class="sh-chip" style="color:#93c5fd;border-color:rgba(147,197,253,0.3);background:rgba(147,197,253,0.06);">Silogisme Hipotetik</span>
+        <span class="sh-chip" style="color:#fde68a;border-color:rgba(253,230,138,0.3);background:rgba(253,230,138,0.06);">Silogisme Disjungtif</span>
+        <span class="sh-chip" style="color:#e9d5ff;border-color:rgba(233,213,255,0.3);background:rgba(233,213,255,0.06);">Fallacy Analisis</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="instr-banner ib-b">
+      <div class="ib-icon">⚖️</div>
+      <div class="ib-content">
+        <div class="ib-title">Petunjuk Pembuktian Argumen</div>
+        <div class="ib-text">
+          Setiap soal menuntut <strong>analisis kritis</strong>: identifikasi aturan inferensi,
+          susun pembuktian formal, verifikasi validitas dengan tabel kebenaran jika diperlukan,
+          dan jelaskan apakah argumen valid atau mengandung fallacy.
+          <strong>Sertakan notasi ⊢ (pembuktian) dalam setiap langkah jawaban.</strong>
+        </div>
+        <div class="ib-criteria">
+          <span class="ib-crit">Identifikasi Premis</span>
+          <span class="ib-crit">Aturan Inferensi</span>
+          <span class="ib-crit">Bukti Formal</span>
+          <span class="ib-crit">Validitas / Fallacy</span>
+          <span class="ib-crit">Kesimpulan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="print-controls">
+      <button class="print-btn pb-b" onclick="window.print()">🖨 Cetak Bagian B</button>
+      <button class="print-btn pb-all" onclick="exportAnswers('b')">⬇ Export Jawaban (TXT)</button>
+    </div>
+
+    <div class="jump-row">
+      <span class="jump-lbl">Soal →</span>
+      <div id="jumpsB" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+    </div>
+
+    <div class="q-wrap" id="qWrapB"></div>
+    <div style="height:80px;"></div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════╗
+     ║  PANEL ALL                           ║
+     ╚══════════════════════════════════════╝ -->
+<div class="panel" id="panel-all">
+  <div class="container" style="padding-top:32px;">
+    <div class="section-divider">
+      <div class="sd-line"></div>
+      <span class="sd-label sd-a">∀∃ Bagian A — Kuantor & Negasi (Soal 1–10)</span>
+      <div class="sd-line"></div>
+    </div>
+    <div class="q-wrap" id="qWrapAllA"></div>
+    <div class="section-divider" style="margin-top:52px;">
+      <div class="sd-line"></div>
+      <span class="sd-label sd-b">⊢ Bagian B — Argumen Valid (Soal 11–20)</span>
+      <div class="sd-line"></div>
+    </div>
+    <div class="q-wrap" id="qWrapAllB"></div>
+    <div style="height:80px;"></div>
+  </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-panel" id="progressPanel">
+  <div class="pp-title">Progress Jawaban</div>
+  <div class="pp-bar-wrap">
+    <div class="pp-bar" id="ppBar" style="width:0%"></div>
+  </div>
+  <div class="pp-stats">
+    <span class="pp-stat-a" id="ppA">A: 0/10</span>
+    <span class="pp-stat-b" id="ppB">B: 0/10</span>
+    <span class="pp-stat-t" id="ppT">0%</span>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  SOAL DATA
+// ═══════════════════════════════════════
+
+const SOAL_A = [
+{
+  num: 1, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Kuantor Universal',
+  context: '🔬 Riset Ilmiah',
+  pts: 25,
+  story: `Seorang ilmuwan data sedang menganalisis hasil survei kesehatan nasional. Ia menemukan klaim: <strong>"Setiap warga negara yang berolahraga minimal 30 menit per hari memiliki tekanan darah normal."</strong> Namun, dari 10.000 responden, ditemukan 47 orang yang berolahraga teratur namun memiliki hipertensi akibat faktor genetik.`,
+  props: ['p(x): x berolahraga ≥30 mnt/hari', 'q(x): x memiliki tekanan darah normal'],
+  formula: '∀x (p(x) → q(x))',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan negasi dari pernyataan kuantor universal tersebut dalam notasi logika formal, lalu artikan dalam bahasa Indonesia.' },
+    { alpha: 'b', text: 'Berdasarkan data (47 responden), apakah pernyataan ∀x (p(x)→q(x)) bernilai Benar atau Salah? Jelaskan menggunakan konsep <code>counter-example</code> dan buktikan secara formal.' },
+    { alpha: 'c', text: 'Revisi pernyataan original menjadi pernyataan eksistensial yang lebih akurat secara ilmiah, lalu tuliskan dalam notasi formal ∃.' },
+    { alpha: 'd', text: 'Bagaimana domain pembicara (domain of discourse) memengaruhi nilai kebenaran pernyataan ini? Analisis dengan dua domain berbeda.' },
+  ],
+  rubrik: [
+    { pts: 6, desc: 'Negasi kuantor ditulis benar secara formal dan diartikan tepat' },
+    { pts: 8, desc: 'Counter-example diidentifikasi dan digunakan untuk membuktikan pernyataan Salah' },
+    { pts: 6, desc: 'Pernyataan ∃ direvisi dengan benar dan bermakna' },
+    { pts: 5, desc: 'Analisis domain pembicara dilakukan dengan contoh konkret' },
+  ]
+},
+{
+  num: 2, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Kuantor Eksistensial',
+  context: '⚖️ Sistem Hukum',
+  pts: 25,
+  story: `Seorang pengacara merumuskan argumen pembelaan dengan menyatakan: <strong>"Ada saksi yang melihat terdakwa berada di lokasi berbeda pada saat kejadian."</strong> Jaksa merespons dengan menyatakan negasi dari klaim tersebut sebagai dasar tuntutan.`,
+  props: ['S(x): x adalah saksi', 'L(x): x melihat terdakwa di lokasi berbeda'],
+  formula: '∃x (S(x) ∧ L(x))',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan apa yang dikatakan Jaksa (negasi dari klaim pengacara) dalam notasi logika formal.' },
+    { alpha: 'b', text: 'Jelaskan kondisi apa saja yang membuat ∃x (S(x) ∧ L(x)) bernilai Benar, dan kondisi apa yang membuatnya Salah. Sertakan tabel kasus.' },
+    { alpha: 'c', text: 'Jika diketahui hanya ada 3 saksi (x₁, x₂, x₃) dan hanya x₂ yang melihat terdakwa di tempat lain, evaluasi nilai kebenaran pernyataan eksistensial dan universalnya.' },
+    { alpha: 'd', text: 'Dari sudut pandang logika, apakah klaim pengacara ∃x yang benar cukup untuk membantah klaim jaksa ∀x ¬L(x)? Jelaskan hubungan negasi ini.' },
+  ],
+  rubrik: [
+    { pts: 6, desc: 'Negasi eksistensial ditulis formal dan tepat' },
+    { pts: 7, desc: 'Kondisi kebenaran dianalisis lengkap dengan tabel' },
+    { pts: 7, desc: 'Evaluasi konkret dengan 3 saksi dilakukan benar' },
+    { pts: 5, desc: 'Hubungan negasi kuantor ∃ dan ∀ dijelaskan dengan benar' },
+  ]
+},
+{
+  num: 3, sec: 'A',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Negasi Kuantor Kompleks',
+  context: '🤖 Kecerdasan Buatan',
+  pts: 30,
+  story: `Tim riset AI merancang spesifikasi sistem otonom dengan pernyataan: <strong>"Untuk setiap input yang diterima, ada setidaknya satu respons yang optimal."</strong> Spesifikasi ini digunakan sebagai invariant dalam verifikasi formal perangkat lunak.`,
+  props: ['I(x): x adalah input yang valid', 'R(y): y adalah respons', 'O(x,y): y adalah respons optimal untuk x'],
+  formula: '∀x (I(x) → ∃y (R(y) ∧ O(x,y)))',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan negasi dari pernyataan bertingkat tersebut dalam notasi formal secara langkah demi langkah. Tunjukkan perubahan setiap kuantor.' },
+    { alpha: 'b', text: 'Artikan negasi tersebut dalam bahasa Indonesia yang jelas, dan jelaskan apa artinya jika negasi itu benar dalam konteks sistem AI.' },
+    { alpha: 'c', text: 'Apakah ∀x∃y P(x,y) ≡ ∃y∀x P(x,y)? Buktikan dengan counter-example menggunakan domain kecil {x₁,x₂} dan {y₁,y₂}.' },
+    { alpha: 'd', text: 'Dalam konteks verifikasi formal, mengapa pembuktian ∀x∃y penting dibandingkan hanya ∃y∀x? Berikan implikasinya dalam rekayasa perangkat lunak.' },
+  ],
+  rubrik: [
+    { pts: 10, desc: 'Negasi bertingkat diselesaikan langkah demi langkah dengan benar' },
+    { pts: 6, desc: 'Interpretasi negasi dalam konteks AI tepat dan informatif' },
+    { pts: 8, desc: 'Counter-example untuk non-komutativitas kuantor disusun dengan benar' },
+    { pts: 6, desc: 'Analisis konteks rekayasa perangkat lunak menunjukkan pemahaman mendalam' },
+  ]
+},
+{
+  num: 4, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Domain & Nilai Kebenaran',
+  context: '🧬 Biologi & Ekologi',
+  pts: 25,
+  story: `Seorang ahli biologi menyatakan: <strong>"Setiap spesies yang punah tidak dapat dipulihkan."</strong> Namun tim paleontologi berencana melakukan de-extinction (menghidupkan kembali spesies) menggunakan rekayasa genetika, seperti proyek Mammoth Lanberbulu.`,
+  props: ['P(x): x adalah spesies yang punah', 'D(x): x dapat dipulihkan'],
+  formula: '∀x (P(x) → ¬D(x))',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan negasi dari pernyataan biologi tersebut. Apakah proyek de-extinction cukup untuk membuktikan negasinya benar? Analisis secara formal.' },
+    { alpha: 'b', text: 'Evaluasi nilai kebenaran ∀x (P(x) → ¬D(x)) jika domain dibatasi pada: (i) semua spesies yang pernah ada, (ii) hanya spesies yang punah dalam 100 tahun terakhir.' },
+    { alpha: 'c', text: 'Bandingkan dan bedakan antara pernyataan ∀x (P(x) → ¬D(x)) dengan ∀x ¬(P(x) ∧ D(x)). Apakah keduanya ekuivalen? Buktikan.' },
+    { alpha: 'd', text: 'Formulasikan ulang klaim ahli biologi dalam bentuk yang lebih akurat menggunakan kuantor yang tepat, dengan mempertimbangkan kemajuan teknologi.' },
+  ],
+  rubrik: [
+    { pts: 7, desc: 'Negasi dirumuskan benar dan dianalisis dalam konteks de-extinction' },
+    { pts: 7, desc: 'Evaluasi berdasarkan dua domain berbeda dilakukan tepat' },
+    { pts: 6, desc: 'Ekuivalensi dua ekspresi dibuktikan secara formal' },
+    { pts: 5, desc: 'Reformulasi klaim menunjukkan kemampuan sintesis' },
+  ]
+},
+{
+  num: 5, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Negasi Universal Bersyarat',
+  context: '🎓 Kebijakan Pendidikan',
+  pts: 25,
+  story: `Rektor universitas menetapkan kebijakan: <strong>"Setiap mahasiswa yang memiliki IPK di atas 3.5 dan aktif berorganisasi berhak mendapatkan beasiswa penuh."</strong> Bagian keuangan menerima pengajuan dari 120 mahasiswa, namun karena keterbatasan dana, tidak semua dikabulkan.`,
+  props: ['I(x): IPK(x) > 3.5', 'O(x): x aktif berorganisasi', 'B(x): x mendapat beasiswa penuh'],
+  formula: '∀x ((I(x) ∧ O(x)) → B(x))',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan negasi dari kebijakan tersebut secara formal. Apa artinya jika negasi bernilai Benar? Siapa yang dirugikan?' },
+    { alpha: 'b', text: 'Jika ada 1 mahasiswa yang memenuhi syarat (I(x) ∧ O(x)) namun tidak mendapat beasiswa (¬B(x)), tentukan nilai kebenaran kebijakan. Gunakan konsep <code>counter-example</code>.' },
+    { alpha: 'c', text: 'Perbedaan apa yang terjadi jika kebijakan dirumuskan sebagai ∃x ((I(x) ∧ O(x)) → B(x))? Analisis implikasi hukum dan etisnya.' },
+    { alpha: 'd', text: 'Susun argumen formal bahwa kebijakan ∀x (P(x) → Q(x)) lebih kuat secara hukum dibanding ∃x (P(x) → Q(x)) dalam konteks kebijakan publik.' },
+  ],
+  rubrik: [
+    { pts: 7, desc: 'Negasi formal ditulis benar dan diinterpretasikan dalam konteks' },
+    { pts: 7, desc: 'Counter-example digunakan secara tepat untuk menentukan nilai kebenaran' },
+    { pts: 6, desc: 'Perbedaan ∀ dan ∃ dianalisis dari sudut hukum dan etika' },
+    { pts: 5, desc: 'Argumen formal disusun dengan logis dan meyakinkan' },
+  ]
+},
+{
+  num: 6, sec: 'A',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Kuantor Bertingkat Ganda',
+  context: '🌐 Jaringan Sosial & Graph',
+  pts: 30,
+  story: `Sebuah platform media sosial mengklaim: <strong>"Untuk setiap pengguna, ada pengguna lain yang merupakan teman bersamanya (mutual friend) dengan semua teman pengguna pertama."</strong> Tim matematikawan diminta memverifikasi klaim ini secara formal.`,
+  props: ['U(x): x adalah pengguna', 'F(x,y): x dan y berteman', 'M(x,y,z): z adalah mutual friend antara x dan y'],
+  formula: '∀x ∃y ∀z (F(x,z) → F(y,z))',
+  tasks: [
+    { alpha: 'a', text: 'Artikan pernyataan ∀x ∃y ∀z (F(x,z) → F(y,z)) dalam bahasa Indonesia yang natural. Buat diagram relasi sederhana untuk mengilustrasikannya.' },
+    { alpha: 'b', text: 'Tuliskan negasi dari pernyataan bertingkat tiga ini secara langkah demi langkah. Setiap langkah harus disertai aturan yang digunakan.' },
+    { alpha: 'c', text: 'Konstruksi sebuah counter-example dengan graph berorientasi yang membuktikan pernyataan tersebut SALAH untuk domain {A, B, C, D}.' },
+    { alpha: 'd', text: 'Apakah pernyataan ini memiliki arti yang sama dengan ∃y ∀x ∀z (F(x,z) → F(y,z))? Analisis perbedaan semantiknya dan implikasi algoritmisnya.' },
+  ],
+  rubrik: [
+    { pts: 7, desc: 'Interpretasi bahasa Indonesia akurat, diagram relevan' },
+    { pts: 10, desc: 'Negasi bertingkat tiga diselesaikan langkah demi langkah benar' },
+    { pts: 8, desc: 'Counter-example dengan graph konkret valid dan tepat' },
+    { pts: 5, desc: 'Perbedaan semantik ∀∃∀ vs ∃∀∀ dianalisis dengan mendalam' },
+  ]
+},
+{
+  num: 7, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Kuantor & Implikasi Kompleks',
+  context: '💊 Farmasi & Uji Klinis',
+  pts: 25,
+  story: `Sebuah perusahaan farmasi mempublikasikan hasil uji klinis dengan klaim: <strong>"Untuk setiap pasien yang mengonsumsi obat X, jika ia tidak memiliki alergi terhadap komponennya maka obat akan efektif dalam 7 hari."</strong> Lembaga regulasi meminta pembuktian formal klaim ini.`,
+  props: ['P(x): x adalah pasien uji klinis', 'A(x): x memiliki alergi terhadap komponen', 'E(x): obat efektif untuk x dalam 7 hari'],
+  formula: '∀x (P(x) → (¬A(x) → E(x)))',
+  tasks: [
+    { alpha: 'a', text: 'Sederhanakan ∀x (P(x) → (¬A(x) → E(x))) menjadi bentuk yang lebih sederhana menggunakan hukum-hukum ekuivalensi logika. Tunjukkan setiap langkah.' },
+    { alpha: 'b', text: 'Tuliskan negasi lengkap dari klaim farmasi tersebut. Dalam konteks medis, apa artinya jika negasi ini terbukti benar?' },
+    { alpha: 'c', text: 'Dari 500 pasien uji klinis: 50 memiliki alergi, 420 tidak alergi dan sembuh, 30 tidak alergi tapi tidak sembuh. Evaluasi nilai kebenaran klaim secara formal.' },
+    { alpha: 'd', text: 'Bandingkan klaim ∀x dengan versi yang lebih lemah: ∃x (P(x) ∧ ¬A(x) ∧ E(x)). Mana yang lebih mudah dibuktikan dan mana yang lebih bermakna secara ilmiah? Jelaskan.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Penyederhanaan menggunakan hukum logika dilakukan dengan benar' },
+    { pts: 7, desc: 'Negasi formal tepat dan interpretasi medis bermakna' },
+    { pts: 5, desc: 'Evaluasi dengan data 500 pasien dilakukan secara logis' },
+    { pts: 5, desc: 'Perbandingan klaim ∀ vs ∃ menunjukkan pemahaman kritis' },
+  ]
+},
+{
+  num: 8, sec: 'A',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Kuantor Eksistensial Unik',
+  context: '🏆 Kompetisi Matematika',
+  pts: 25,
+  story: `Soal olimpiade matematika menyatakan: <strong>"Terdapat tepat satu bilangan real positif x yang memenuhi persamaan x + 1/x = 2."</strong> Peserta diminta membuktikan atau membantah klaim ini menggunakan logika formal.`,
+  props: ['x ∈ ℝ⁺', 'P(x): x + 1/x = 2'],
+  formula: '∃!x ∈ ℝ⁺, P(x)',
+  tasks: [
+    { alpha: 'a', text: 'Tuliskan ∃!x P(x) (eksistensial unik) dalam bentuk yang setara menggunakan kuantor ∃ dan ∀ biasa. Jelaskan setiap komponen formulanya.' },
+    { alpha: 'b', text: 'Buktikan secara matematis bahwa x = 1 adalah solusi dari P(x): x + 1/x = 2, dan tidak ada solusi lain di ℝ⁺.' },
+    { alpha: 'c', text: 'Tuliskan negasi dari ∃!x P(x) dan artikan: apa yang harus dibuktikan untuk membantah klaim olimpiade ini?' },
+    { alpha: 'd', text: 'Generalisasi: analisis pernyataan ∃!x (x + 1/x = k) untuk berbagai nilai k ∈ ℝ. Untuk nilai k berapa saja pernyataan ini benar? Hubungkan dengan domain pembicara.' },
+  ],
+  rubrik: [
+    { pts: 7, desc: 'Ekspansi ∃! ke ∃∧∀ dilakukan dengan benar' },
+    { pts: 8, desc: 'Bukti matematis x=1 sebagai solusi unik lengkap dan benar' },
+    { pts: 5, desc: 'Negasi ∃! ditulis dengan benar dan diinterpretasikan' },
+    { pts: 5, desc: 'Generalisasi ke nilai k berbeda menunjukkan pemikiran analitis' },
+  ]
+},
+{
+  num: 9, sec: 'A',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Kuantor dalam Teori Himpunan',
+  context: '🧮 Teori Himpunan Lanjut',
+  pts: 30,
+  story: `Dalam kursus teori himpunan, seorang dosen mengajukan tantangan: <strong>"Setiap himpunan tak-kosong A memiliki subset B yang tidak kosong sedemikian sehingga untuk setiap elemen x di B, ada elemen y di A yang lebih besar dari x."</strong>`,
+  props: ['A: himpunan tak-kosong dari bilangan real', 'B: subset dari A', 'R(x,y): y > x'],
+  formula: '∀A≠∅, ∃B⊆A, B≠∅, ∀x∈B, ∃y∈A, R(x,y)',
+  tasks: [
+    { alpha: 'a', text: 'Terjemahkan pernyataan formal tersebut ke bahasa Indonesia dan berikan contoh konkret untuk A = {1, 3, 5, 7} dengan menentukan B yang memenuhi syarat.' },
+    { alpha: 'b', text: 'Tuliskan negasi lengkap dari pernyataan bertingkat empat (∀∃∀∃) tersebut, tunjukkan perubahan setiap kuantor secara sistematis.' },
+    { alpha: 'c', text: 'Apakah pernyataan benar jika A adalah himpunan bilangan bulat positif ℤ⁺? Bagaimana dengan A = {5} (singleton)? Analisis dua kasus ini.' },
+    { alpha: 'd', text: 'Bagaimana karakterisasi himpunan A yang membuat pernyataan SALAH? Formulasikan kondisinya dalam notasi logika dan berikan contoh minimal.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Terjemahan akurat, contoh konkret valid' },
+    { pts: 10, desc: 'Negasi bertingkat empat dilakukan sistematis dan benar' },
+    { pts: 7, desc: 'Analisis dua kasus (ℤ⁺ dan singleton) dilakukan benar' },
+    { pts: 5, desc: 'Karakterisasi himpunan yang membuat pernyataan salah tepat' },
+  ]
+},
+{
+  num: 10, sec: 'A',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Analisis Kritis Kuantor',
+  context: '📰 Media & Statistik Publik',
+  pts: 30,
+  story: `Sebuah berita utama menyatakan: <strong>"Semua penelitian menunjukkan bahwa media sosial menyebabkan depresi pada remaja."</strong> Seorang statistikawan menantang klaim ini dengan menyatakan bahwa klaim tersebut merupakan kesalahan kuantifikasi dalam pelaporan ilmiah.`,
+  props: ['S(x): x adalah penelitian ilmiah', 'M(x): x menunjukkan kausalitas media sosial → depresi', 'K(x): x melibatkan remaja sebagai subjek'],
+  formula: '∀x (S(x) → M(x))',
+  tasks: [
+    { alpha: 'a', text: 'Identifikasi setidaknya dua permasalahan logika dalam klaim berita tersebut: (1) terkait kuantifikasi, (2) terkait perbedaan korelasi dan kausalitas. Tulis dalam notasi formal.' },
+    { alpha: 'b', text: 'Formulasikan klaim yang lebih akurat secara ilmiah menggunakan kuantor yang tepat. Sertakan domain pembicara yang eksplisit dan kondisi-kondisi tambahan yang relevan.' },
+    { alpha: 'c', text: 'Bagaimana negasi dari klaim ∀x (S(x) → M(x)) dapat digunakan sebagai argumen ilmiah untuk membantah berita tersebut? Tuliskan strategi pembuktiannya.' },
+    { alpha: 'd', text: 'Rancang sebuah pernyataan menggunakan kuantor bertingkat ∀∃ yang lebih tepat untuk merepresentasikan temuan ilmiah tentang media sosial dan kesehatan mental remaja.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Dua permasalahan logika diidentifikasi dengan notasi formal yang tepat' },
+    { pts: 8, desc: 'Reformulasi klaim akurat secara ilmiah, domain eksplisit' },
+    { pts: 7, desc: 'Strategi pembuktian menggunakan negasi tepat dan logis' },
+    { pts: 7, desc: 'Pernyataan ∀∃ baru menunjukkan pemahaman mendalam tentang kuantifikasi ilmiah' },
+  ]
+},
+];
+
+const SOAL_B = [
+{
+  num: 1, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Modus Ponens',
+  context: '🔐 Keamanan Siber',
+  pts: 25,
+  story: `Sistem deteksi intrusi (IDS) sebuah bank menggunakan aturan: <strong>"Jika ada aktivitas login dari IP asing (p), maka sistem memblokir akun sementara (q). Jika sistem memblokir akun (q), maka notifikasi dikirim ke pemilik (r)."</strong> Pada Jumat malam, terpantau login dari IP Vietnam.`,
+  props: ['p: ada login dari IP asing', 'q: sistem memblokir akun sementara', 'r: notifikasi dikirim ke pemilik'],
+  formula: 'p→q,  q→r,  p  ⊢  r',
+  tasks: [
+    { alpha: 'a', text: 'Susun pembuktian formal langkah demi langkah menggunakan Modus Ponens dan Silogisme Hipotetik untuk mencapai kesimpulan r.' },
+    { alpha: 'b', text: 'Identifikasi semua aturan inferensi yang digunakan. Apakah argumen ini valid? Buktikan menggunakan definisi formal validitas argumen.' },
+    { alpha: 'c', text: 'Misalkan ternyata notifikasi tidak terkirim (¬r). Gunakan Modus Tollens untuk melacak kegagalan sistem. Susun pembuktian formal.' },
+    { alpha: 'd', text: 'Tambahkan premis baru: "Jika notifikasi terkirim (r) maka pemilik dapat merespons (s)." Perpanjang rantai inferensi hingga s dan identifikasi semua aturan yang digunakan.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Pembuktian formal Modus Ponens + Silogisme Hipotetik disusun benar' },
+    { pts: 6, desc: 'Validitas dibuktikan menggunakan definisi formal' },
+    { pts: 6, desc: 'Modus Tollens diterapkan benar untuk melacak kegagalan' },
+    { pts: 5, desc: 'Rantai inferensi diperpanjang dengan benar' },
+  ]
+},
+{
+  num: 2, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Modus Tollens',
+  context: '🏥 Diagnosa Diferensial',
+  pts: 25,
+  story: `Seorang dokter spesialis menggunakan protokol diagnosa: <strong>"Jika pasien terinfeksi virus X (p), maka akan muncul ruam merah khas (q) dalam 48 jam. Pasien ini sudah 72 jam tanpa ruam merah (¬q)."</strong> Dokter menyimpulkan pasien tidak terinfeksi virus X.`,
+  props: ['p: pasien terinfeksi virus X', 'q: muncul ruam merah dalam 48 jam'],
+  formula: 'p→q,  ¬q  ⊢  ¬p',
+  tasks: [
+    { alpha: 'a', text: 'Verifikasi bahwa kesimpulan dokter valid menggunakan Modus Tollens. Tuliskan pembuktian formal dengan menyertakan justifikasi setiap baris.' },
+    { alpha: 'b', text: 'Apakah kesimpulan ¬p berarti pasien pasti sehat? Analisis apa yang tidak dapat disimpulkan dari Modus Tollens ini, dan mengapa.' },
+    { alpha: 'c', text: 'Seseorang berargumen: "Pasien tidak punya ruam, jadi ia pasti tidak sakit." Apakah ini Modus Tollens yang valid atau ada fallacy? Jelaskan secara formal.' },
+    { alpha: 'd', text: 'Konstruksi skenario medis di mana Modus Tollens menghasilkan kesimpulan yang secara logis benar tapi bisa menyesatkan secara klinis. Analisis batasannya.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Modus Tollens diterapkan dengan pembuktian formal yang lengkap' },
+    { pts: 6, desc: 'Analisis batas inferensi (apa yang tidak bisa disimpulkan) tepat' },
+    { pts: 6, desc: 'Identifikasi fallacy atau validitas argumen dilakukan dengan benar' },
+    { pts: 5, desc: 'Skenario batasan Modus Tollens dibangun dengan analitis' },
+  ]
+},
+{
+  num: 3, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Silogisme Hipotetik',
+  context: '♻️ Rantai Dampak Lingkungan',
+  pts: 25,
+  story: `Laporan IPCC menyatakan rantai kausalitas: <strong>"Jika emisi CO₂ meningkat (p), maka suhu global naik (q). Jika suhu global naik (q), maka es kutub mencair (r). Jika es kutub mencair (r), maka permukaan laut naik (s)."</strong>`,
+  props: ['p: emisi CO₂ meningkat', 'q: suhu global naik', 'r: es kutub mencair', 's: permukaan laut naik'],
+  formula: 'p→q,  q→r,  r→s  ⊢  p→s',
+  tasks: [
+    { alpha: 'a', text: 'Gunakan Silogisme Hipotetik secara bertahap untuk membuktikan p→s. Tunjukkan dua langkah aplikasi aturan dan tuliskan nomor premis yang digunakan.' },
+    { alpha: 'b', text: 'Dari p→s yang telah terbukti dan fakta emisi CO₂ meningkat (p), apa yang dapat disimpulkan? Aturan inferensi apa yang digunakan? Buktikan.' },
+    { alpha: 'c', text: 'Sekarang tambah premis ¬s (permukaan laut tidak naik). Apa yang dapat disimpulkan menggunakan Modus Tollens pada p→s? Apa implikasi ilmiahnya?' },
+    { alpha: 'd', text: 'Apakah rantai silogisme p→s membuktikan bahwa p adalah satu-satunya penyebab s? Analisis keterbatasan logika proposisional dalam memodelkan kausalitas kompleks.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Silogisme hipotetik bertahap dibuktikan dengan justifikasi benar' },
+    { pts: 6, desc: 'Modus Ponens diterapkan dari p→s dan p dengan benar' },
+    { pts: 6, desc: 'Modus Tollens dari p→s dan ¬s diterapkan benar dan dianalisis' },
+    { pts: 5, desc: 'Keterbatasan logika proposisional dianalisis dengan pemikiran kritis' },
+  ]
+},
+{
+  num: 4, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Silogisme Disjungtif',
+  context: '⚙️ Sistem Fault-Tolerant',
+  pts: 25,
+  story: `Insinyur sistem merancang protokol pemulihan: <strong>"Server utama gagal (p) atau server cadangan mengambil alih (q). Sistem monitoring mendeteksi server utama masih berjalan (¬p). Maka server cadangan mengambil alih."</strong> Tim QA diminta memverifikasi logika ini.`,
+  props: ['p: server utama gagal', 'q: server cadangan mengambil alih', 'r: layanan tetap berjalan'],
+  formula: 'p∨q,  ¬p  ⊢  q',
+  tasks: [
+    { alpha: 'a', text: 'Buktikan validitas silogisme disjungtif ini secara formal menggunakan tabel kebenaran. Tampilkan semua kolom dan identifikasi baris yang relevan.' },
+    { alpha: 'b', text: 'Jika premis diubah menjadi p∨q (disjungsi inklusif) vs p⊕q (disjungsi eksklusif), apakah kesimpulan yang sama q masih berlaku dari ¬p? Analisis perbedaannya.' },
+    { alpha: 'c', text: 'Tambahkan premis: "Jika server cadangan mengambil alih (q) maka layanan tetap berjalan (r)." Buktikan r menggunakan rantai inferensi (Silogisme Disjungtif + Modus Ponens).' },
+    { alpha: 'd', text: 'Apakah argumen berikut valid? P1: p∨q, P2: p, ∴ ¬q. Buktikan atau bantah menggunakan metode formal. Jika tidak valid, identifikasi fallacy-nya.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Tabel kebenaran lengkap dan identifikasi baris relevan benar' },
+    { pts: 6, desc: 'Perbedaan disjungsi inklusif dan eksklusif dianalisis benar' },
+    { pts: 6, desc: 'Rantai inferensi Silogisme Disjungtif + MP diterapkan dengan benar' },
+    { pts: 5, desc: 'Argumen invalid diidentifikasi fallacy-nya dengan benar' },
+  ]
+},
+{
+  num: 5, sec: 'B',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Analisis Fallacy',
+  context: '📺 Debat Publik & Politik',
+  pts: 30,
+  story: `Dalam debat politik, kandidat A menyatakan: <strong>"Jika negara ini makmur (p), maka rakyat bahagia (q). Rakyat kita bahagia (q). Oleh karena itu, negara ini makmur (p)."</strong> Moderator debat meminta pakar logika mengevaluasi argumen ini.`,
+  props: ['p: negara makmur', 'q: rakyat bahagia'],
+  formula: 'p→q,  q  ⊢  p  (klaim)',
+  tasks: [
+    { alpha: 'a', text: 'Identifikasi kesalahan logika (fallacy) dalam argumen kandidat A. Sebutkan nama fallacy-nya, definisikan, dan buktikan secara formal bahwa argumen ini TIDAK valid.' },
+    { alpha: 'b', text: 'Bangun counter-example konkret (dengan nilai kebenaran spesifik untuk p dan q) yang membuktikan premis bisa benar tapi kesimpulan salah.' },
+    { alpha: 'c', text: 'Bandingkan dengan Modus Ponens (p→q, p ⊢ q) yang valid. Jelaskan secara tepat mengapa membalik anteseden dan konsekuen menghasilkan argumen tidak valid.' },
+    { alpha: 'd', text: 'Susun argumen yang VALID yang dapat digunakan kandidat A untuk mencapai kesimpulan serupa (negara makmur) dari premis-premis yang secara logis dapat diterima. Gunakan minimal dua aturan inferensi berbeda.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Fallacy "Affirming the Consequent" diidentifikasi dan dibuktikan tidak valid secara formal' },
+    { pts: 8, desc: 'Counter-example konkret dibangun dan diverifikasi membuktikan invalidity' },
+    { pts: 7, desc: 'Perbandingan dengan Modus Ponens menunjukkan pemahaman struktural' },
+    { pts: 7, desc: 'Argumen valid alternatif disusun dengan dua aturan inferensi berbeda' },
+  ]
+},
+{
+  num: 6, sec: 'B',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Rantai Inferensi Panjang',
+  context: '🤖 Sistem Pakar AI',
+  pts: 30,
+  story: `Sebuah sistem pakar untuk diagnosa kerusakan mesin menggunakan basis pengetahuan: (1) Jika suhu mesin tinggi (p) maka ada kebocoran pelumas (q). (2) Jika ada kebocoran pelumas (q) atau korsleting (r), maka mesin harus dimatikan (s). (3) Mesin dalam kondisi suhu tinggi (p). (4) Tidak ada korsleting (¬r).`,
+  props: ['p: suhu mesin tinggi', 'q: ada kebocoran pelumas', 'r: ada korsleting', 's: mesin harus dimatikan'],
+  formula: 'p→q,  (q∨r)→s,  p,  ¬r  ⊢  s',
+  tasks: [
+    { alpha: 'a', text: 'Susun pembuktian formal langkah demi langkah untuk mencapai kesimpulan s. Setiap langkah harus menyebutkan aturan inferensi dan nomor premis yang digunakan.' },
+    { alpha: 'b', text: 'Apakah premis (4) tentang ¬r sebenarnya diperlukan dalam pembuktian ini? Analisis apakah s dapat disimpulkan tanpa ¬r. Apa implikasi ini untuk desain sistem pakar?' },
+    { alpha: 'c', text: 'Jika ternyata mesin tidak dimatikan (¬s), gunakan Modus Tollens secara bertahap untuk melacak apa yang pasti tidak terjadi dalam sistem. Tuliskan rantai inferensi mundur (backward chaining).' },
+    { alpha: 'd', text: 'Evaluasi apakah basis pengetahuan ini konsisten (tidak mengandung kontradiksi). Tambahkan premis ke-5: "Jika mesin dimatikan (s) maka produksi berhenti (t)" dan buktikan t.' },
+  ],
+  rubrik: [
+    { pts: 10, desc: 'Pembuktian formal lengkap dengan justifikasi setiap baris' },
+    { pts: 7, desc: 'Analisis relevansi ¬r dalam pembuktian dan implikasi untuk desain sistem' },
+    { pts: 8, desc: 'Backward chaining dengan Modus Tollens dilakukan benar' },
+    { pts: 5, desc: 'Konsistensi basis pengetahuan dievaluasi dan t dibuktikan' },
+  ]
+},
+{
+  num: 7, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Validitas vs Soundness',
+  context: '🎓 Filsafat Ilmu',
+  pts: 25,
+  story: `Seorang filsuf mempresentasikan dua argumen: <strong>Argumen 1:</strong> "Semua ikan bisa terbang (p). Nemo adalah ikan (q). Jadi Nemo bisa terbang (r)." <strong>Argumen 2:</strong> "Jika lulus ujian (p) maka mendapat gelar (q). Ahmad lulus ujian (p). Jadi Ahmad mendapat gelar (q)."`,
+  props: ['Arg 1: premis-premisnya SALAH secara fakta', 'Arg 2: premis-premisnya BENAR secara fakta'],
+  formula: 'Argumen 1: p, q ⊢ r  |  Argumen 2: p→q, p ⊢ q',
+  tasks: [
+    { alpha: 'a', text: 'Analisis validitas (validity) dan soundness (kesahihan) kedua argumen. Jelaskan perbedaan mendasar antara kedua konsep ini menggunakan kedua argumen sebagai ilustrasi.' },
+    { alpha: 'b', text: 'Argumen 1 menggunakan pola apa? Apakah ia valid secara logika meskipun premisnya salah secara faktual? Buktikan dengan definisi formal validitas.' },
+    { alpha: 'c', text: 'Mengapa sebuah argumen bisa valid tapi tidak sound? Berikan tiga contoh original (selain dari soal ini) yang mengilustrasikan perbedaan ini.' },
+    { alpha: 'd', text: 'Dalam konteks matematika dan ilmu komputer, mengapa kita lebih memperhatikan validitas daripada soundness? Berikan argumentasi yang mendalam.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Perbedaan validity dan soundness dijelaskan dengan benar dan akurat' },
+    { pts: 6, desc: 'Argumen 1 dianalisis validitas formalnya meskipun premis salah' },
+    { pts: 6, desc: 'Tiga contoh original yang tepat dan bervariasi diberikan' },
+    { pts: 5, desc: 'Argumentasi relevansi validitas dalam matematika dan CS kuat' },
+  ]
+},
+{
+  num: 8, sec: 'B',
+  level: 'Tinggi', stars: '⭐⭐⭐',
+  topic: 'Resolusi & Pembuktian Kontradiksi',
+  context: '🔎 Investigasi Forensik Digital',
+  pts: 25,
+  story: `Tim forensik digital menemukan log server dengan klaim yang tampak kontradiktif: (K1) "Jika file diakses (p), maka log tercatat (q)." (K2) "File diakses (p)." (K3) "Log tidak tercatat (¬q)." Investigator harus membuktikan bahwa sistem logs ini mengandung kontradiksi.`,
+  props: ['p: file diakses', 'q: log tercatat'],
+  formula: '{p→q, p, ¬q} — apakah konsisten?',
+  tasks: [
+    { alpha: 'a', text: 'Gunakan Modus Ponens dari K1 dan K2 untuk menurunkan q. Kemudian tunjukkan bahwa q dan K3 (¬q) membentuk kontradiksi. Tulis pembuktian formal.' },
+    { alpha: 'b', text: 'Dengan adanya kontradiksi, apa yang dapat disimpulkan secara logis? Gunakan prinsip "Ex Contradictione Quodlibet" (dari kontradiksi, segala sesuatu dapat disimpulkan). Jelaskan implikasinya.' },
+    { alpha: 'c', text: 'Dari sudut investigasi forensik: jika himpunan klaim mengandung kontradiksi, apa yang dapat disimpulkan tentang reliabilitas log? Formulasikan argumen hukum menggunakan logika.' },
+    { alpha: 'd', text: 'Bagaimana metode "Proof by Contradiction" (Reductio ad Absurdum) bekerja? Gunakan metode ini untuk membuktikan bahwa asumsi "K1, K2, K3 semuanya benar sekaligus" adalah mustahil.' },
+  ],
+  rubrik: [
+    { pts: 8, desc: 'Pembuktian kontradiksi formal dengan MP lengkap dan benar' },
+    { pts: 6, desc: 'Penjelasan Ex Contradictione Quodlibet tepat dan bermakna' },
+    { pts: 6, desc: 'Implikasi forensik dianalisis dengan penalaran logika yang kuat' },
+    { pts: 5, desc: 'Reductio ad Absurdum diterapkan dengan benar' },
+  ]
+},
+{
+  num: 9, sec: 'B',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Multi-Aturan Inferensi',
+  context: '⚖️ Logika Hukum Kompleks',
+  pts: 30,
+  story: `Sebuah kasus hukum memiliki basis fakta: (F1) Jika ada motif (m) dan ada kesempatan (k), maka tersangka melakukan kejahatan (t). (F2) Jika tersangka melakukan kejahatan (t) atau ada bukti fisik (b), maka vonis bersalah (v). (F3) Ada motif (m). (F4) Tidak ada bukti fisik (¬b). (F5) Ada kesempatan (k).`,
+  props: ['m: ada motif', 'k: ada kesempatan', 't: tersangka melakukan kejahatan', 'b: ada bukti fisik', 'v: vonis bersalah'],
+  formula: '(m∧k)→t,  (t∨b)→v,  m,  ¬b,  k  ⊢  v',
+  tasks: [
+    { alpha: 'a', text: 'Susun pembuktian formal langkah demi langkah untuk mencapai vonis bersalah (v). Identifikasi setiap aturan inferensi yang digunakan secara eksplisit.' },
+    { alpha: 'b', text: 'Misalkan ada keraguan tentang motif: ¬m (tidak ada motif). Gunakan rantai inferensi untuk menentukan apakah v masih dapat disimpulkan. Analisis tiga skenario: (i) ¬m, b (ii) ¬m, ¬b (iii) ¬m, ¬k.' },
+    { alpha: 'c', text: 'Tambahkan fakta baru: "Jika vonis bersalah (v) maka tersangka dipenjara (p) dan ganti rugi dibayar (g)." Perpanjang pembuktian untuk menentukan p ∧ g.' },
+    { alpha: 'd', text: 'Evaluasi: apakah argumen hukum ini cukup kuat secara logis untuk memenuhi standar "beyond reasonable doubt"? Analisis premis mana yang paling kritis dan mengapa.' },
+  ],
+  rubrik: [
+    { pts: 10, desc: 'Pembuktian formal ke v dilakukan lengkap dengan justifikasi' },
+    { pts: 8, desc: 'Tiga skenario keraguan motif dianalisis dengan benar' },
+    { pts: 7, desc: 'Rantai inferensi diperpanjang ke p∧g dengan benar' },
+    { pts: 5, desc: 'Evaluasi kekuatan argumen hukum menunjukkan pemikiran kritis' },
+  ]
+},
+{
+  num: 10, sec: 'B',
+  level: 'Sangat Tinggi', stars: '⭐⭐⭐⭐',
+  topic: 'Analisis & Konstruksi Argumen',
+  context: '🌍 Kebijakan Publik & Etika',
+  pts: 30,
+  story: `Dalam forum kebijakan iklim, tiga pihak menyampaikan argumen yang saling bertentangan. Pihak A: "Jika ekonomi tumbuh (e) maka emisi meningkat (m). Ekonomi harus tumbuh. Jadi emisi pasti meningkat." Pihak B: "Emisi tidak meningkat (¬m). Jadi ekonomi tidak tumbuh (¬e)." Pihak C: "Ada teknologi hijau (h) atau emisi meningkat (m). Teknologi hijau sudah ada. Jadi emisi tidak meningkat."`,
+  props: ['e: ekonomi tumbuh', 'm: emisi meningkat', 'h: ada teknologi hijau'],
+  formula: 'Evaluasi 3 argumen: A, B, C',
+  tasks: [
+    { alpha: 'a', text: 'Evaluasi validitas formal ketiga argumen (A, B, C). Untuk setiap argumen: identifikasi aturan inferensi, tuliskan dalam notasi formal, dan tentukan valid atau tidak valid.' },
+    { alpha: 'b', text: 'Argumen B tampaknya valid (Modus Tollens). Namun Argumen A menyimpulkan m, yang bertentangan dengan premis ¬m di Argumen B. Analisis apakah basis fakta ini konsisten. Jika tidak, identifikasi kontradiksinya.' },
+    { alpha: 'c', text: 'Argumen C menggunakan pola Silogisme Disjungtif. Namun ada masalah: "Teknologi hijau sudah ada" tidak berarti m=Salah. Identifikasi kelemahan logis argumen C secara formal.' },
+    { alpha: 'd', text: 'Konstruksi argumen valid yang menggabungkan premis dari ketiga pihak untuk mencapai kesimpulan kebijakan yang logis: "Pertumbuhan ekonomi dan pengurangan emisi dapat dicapai bersamaan." Gunakan minimal tiga aturan inferensi berbeda.' },
+  ],
+  rubrik: [
+    { pts: 9, desc: 'Tiga argumen dievaluasi dengan analisis formal yang akurat' },
+    { pts: 7, desc: 'Kontradiksi basis fakta diidentifikasi dan dianalisis' },
+    { pts: 7, desc: 'Kelemahan logis Argumen C diidentifikasi secara formal' },
+    { pts: 7, desc: 'Argumen sintetik baru valid dengan tiga aturan inferensi berbeda' },
+  ]
+},
+];
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+const answersA = {};
+const answersB = {};
+
+// ═══════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════
+function buildCard(soal, isAllView) {
+  const isA = soal.sec === 'A';
+  const sec = isA ? 'a' : 'b';
+  const color = isA ? 'a' : 'b';
+  const accentClass = isA ? 'ctx-a' : 'ctx-b';
+  const stripClass  = isA ? 'strip-a' : 'strip-b';
+  const badgeClass  = isA ? 'badge-a' : 'badge-b';
+  const lvlClass    = soal.level === 'Tinggi' ? 'lvl-tinggi' : 'lvl-sangat';
+  const uid = `${sec}-${soal.num}`;
+
+  const propsHTML = soal.props.map(p =>
+    `<div class="prop-tag ${isA ? '' : 'pb'}"><em>${p.split(':')[0]}</em>:${p.split(':').slice(1).join(':')}</div>`
+  ).join('');
+
+  const tasksHTML = soal.tasks.map(t =>
+    `<div class="q-task">
+      <span class="task-alpha ${isA ? 'ta' : 'tb-c'}">${t.alpha})</span>
+      <div class="task-text">${t.text}</div>
+    </div>`
+  ).join('');
+
+  const rubrikHTML = soal.rubrik.map(r =>
+    `<div class="rubrik-item">
+      <span class="rubrik-pts ${isA ? 'rp-a' : 'rp-b'}">${r.pts} pts</span>
+      <span>${r.desc}</span>
+    </div>`
+  ).join('');
+
+  const textareaId = `ta-${uid}`;
+  const answers = isA ? answersA : answersB;
+
+  return `
+    <div class="q-card" id="qcard-${uid}" style="animation-delay:${soal.num * 0.04}s">
+      <div class="q-strip ${stripClass}"></div>
+      <div class="q-header">
+        <div class="q-badge ${badgeClass}">
+          <div class="badge-num">${isAllView ? (isA ? soal.num : soal.num + 10) : soal.num}</div>
+          <div class="badge-sec">${soal.sec}</div>
+        </div>
+        <div class="q-meta">
+          <div class="q-tags">
+            <span class="q-tag ${lvlClass}">${soal.level}</span>
+            <span class="q-tag">${soal.topic}</span>
+          </div>
+        </div>
+        <div class="difficulty-corner">
+          <div class="diff-stars">${soal.stars}</div>
+          <span class="q-pts ${isA ? 'pts-a' : ''}">${soal.pts} poin</span>
+        </div>
+      </div>
+      <div class="q-context ${accentClass}">
+        <div class="ctx-scene">${soal.context}</div>
+        <div class="ctx-story">${soal.story}</div>
+      </div>
+      ${soal.props.length ? `<div class="q-props">${propsHTML}</div>` : ''}
+      ${soal.formula ? `<div class="q-formula f${color}">${soal.formula}</div>` : ''}
+      <div class="q-question">Kerjakan setiap sub-soal berikut dengan analisis yang mendalam dan komprehensif:</div>
+      <div class="q-tasks">${tasksHTML}</div>
+      <div class="rubrik-panel">
+        <button class="rubrik-toggle" onclick="toggleRubrik('${uid}')">
+          <span>📊 Rubrik Penilaian (total ${soal.pts} poin)</span>
+          <span id="rubrik-arrow-${uid}">▾</span>
+        </button>
+        <div class="rubrik-body" id="rubrik-${uid}">${rubrikHTML}</div>
+      </div>
+      <div class="q-answer-area">
+        <div class="ans-label">Ruang Jawaban Esay</div>
+        <textarea
+          class="ans-textarea ${isA ? '' : 'fb'}"
+          id="${textareaId}"
+          placeholder="Tuliskan jawaban esay Anda di sini... Gunakan notasi formal: ∀, ∃, →, ¬, ∧, ∨, ⊢&#10;&#10;Struktur jawaban yang disarankan:&#10;a) ...&#10;b) ...&#10;c) ...&#10;d) ..."
+          oninput="updateCount('${uid}', '${sec}')"
+          onchange="saveAnswer('${uid}', '${sec}')"
+        >${answers[soal.num] || ''}</textarea>
+        <div class="ans-footer">
+          <span class="char-count" id="cc-${uid}">0 karakter</span>
+          <button class="save-btn ${answers[soal.num] ? (isA ? 'saved' : 'saved-b') : ''}"
+                  id="savebtn-${uid}"
+                  onclick="saveAnswer('${uid}', '${sec}')">
+            ${answers[soal.num] ? '✓ Tersimpan' : '💾 Simpan'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderAll() {
+  // Panel A
+  const wrapA = document.getElementById('qWrapA');
+  wrapA.innerHTML = SOAL_A.map(s => buildCard(s, false)).join('');
+  const jumpsA = document.getElementById('jumpsA');
+  jumpsA.innerHTML = SOAL_A.map(s =>
+    `<button class="jdot${answersA[s.num] ? ' a' : ''}" id="jdotA-${s.num}"
+     onclick="jumpTo('${`a-${s.num}`}')" title="Soal A${s.num}">${s.num}</button>`
+  ).join('');
+
+  // Panel B
+  const wrapB = document.getElementById('qWrapB');
+  wrapB.innerHTML = SOAL_B.map(s => buildCard(s, false)).join('');
+  const jumpsB = document.getElementById('jumpsB');
+  jumpsB.innerHTML = SOAL_B.map(s =>
+    `<button class="jdot${answersB[s.num] ? ' b' : ''}" id="jdotB-${s.num}"
+     onclick="jumpTo('${`b-${s.num}`}')" title="Soal B${s.num}">${s.num}</button>`
+  ).join('');
+
+  // Panel All
+  document.getElementById('qWrapAllA').innerHTML = SOAL_A.map(s => buildCard(s, true)).join('');
+  document.getElementById('qWrapAllB').innerHTML = SOAL_B.map(s => buildCard(s, true)).join('');
+
+  // Init char counts
+  document.querySelectorAll('.ans-textarea').forEach(ta => {
+    const uid = ta.id.replace('ta-', '');
+    const cc = document.getElementById(`cc-${uid}`);
+    if (cc) cc.textContent = ta.value.length + ' karakter';
+  });
+
+  updateProgress();
+}
+
+// ═══════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════
+function showTab(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tb-tab').forEach(b => { b.classList.remove('act-a', 'act-b'); });
+  document.getElementById('panel-' + tab).classList.add('active');
+  if (tab === 'a') btn.classList.add('act-a');
+  else if (tab === 'b') btn.classList.add('act-b');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function jumpTo(uid) {
+  const el = document.getElementById('qcard-' + uid);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleRubrik(uid) {
+  const body = document.getElementById('rubrik-' + uid);
+  const arrow = document.getElementById('rubrik-arrow-' + uid);
+  const open = !body.classList.contains('open');
+  body.classList.toggle('open', open);
+  arrow.textContent = open ? '▴' : '▾';
+}
+
+function updateCount(uid, sec) {
+  const ta = document.getElementById('ta-' + uid);
+  const cc = document.getElementById('cc-' + uid);
+  if (ta && cc) cc.textContent = ta.value.length + ' karakter';
+}
+
+function saveAnswer(uid, sec) {
+  const ta = document.getElementById('ta-' + uid);
+  if (!ta || !ta.value.trim()) return;
+
+  const parts = uid.split('-');
+  const num = parseInt(parts[1]);
+  const isA = sec === 'a';
+
+  if (isA) answersA[num] = ta.value;
+  else answersB[num] = ta.value;
+
+  const btn = document.getElementById('savebtn-' + uid);
+  if (btn) {
+    btn.textContent = '✓ Tersimpan';
+    btn.className = 'save-btn ' + (isA ? 'saved' : 'saved-b');
+  }
+
+  // Update jump dot
+  const dot = document.getElementById(`jdot${sec.toUpperCase()}-${num}`);
+  if (dot) dot.className = 'jdot ' + sec;
+
+  updateProgress();
+  localStorage.setItem('esay_' + uid, ta.value);
+}
+
+function updateProgress() {
+  const doneA = Object.keys(answersA).filter(k => answersA[k] && answersA[k].trim()).length;
+  const doneB = Object.keys(answersB).filter(k => answersB[k] && answersB[k].trim()).length;
+  const total = doneA + doneB;
+  const pct = Math.round(total / 20 * 100);
+
+  document.getElementById('ppA').textContent = `A: ${doneA}/10`;
+  document.getElementById('ppB').textContent = `B: ${doneB}/10`;
+  document.getElementById('ppT').textContent = pct + '%';
+  document.getElementById('ppBar').style.width = pct + '%';
+  document.getElementById('countA').textContent = `${doneA}/10 dijawab`;
+  document.getElementById('countB').textContent = `${doneB}/10 dijawab`;
+}
+
+function exportAnswers(sec) {
+  const soals = sec === 'a' ? SOAL_A : SOAL_B;
+  const answers = sec === 'a' ? answersA : answersB;
+  const title = sec === 'a' ? 'BAGIAN A: KUANTOR & NEGASI' : 'BAGIAN B: ARGUMEN VALID';
+
+  let txt = `MATEMATIKA DISKRIT — SOAL ESAY TANTANGAN\n`;
+  txt += `${title}\n`;
+  txt += `Martin Bernard, M.Pd\n`;
+  txt += `═══════════════════════════════════════════\n\n`;
+
+  soals.forEach(s => {
+    txt += `SOAL ${s.num}: ${s.topic}\n`;
+    txt += `Konteks: ${s.context}\n\n`;
+    txt += `JAWABAN:\n`;
+    txt += (answers[s.num] || '[Belum dijawab]') + '\n';
+    txt += `\n───────────────────────────────────────────\n\n`;
+  });
+
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `jawaban_esay_${sec}_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Load saved answers from localStorage
+function loadSaved() {
+  SOAL_A.forEach(s => {
+    const saved = localStorage.getItem(`esay_a-${s.num}`);
+    if (saved) answersA[s.num] = saved;
+  });
+  SOAL_B.forEach(s => {
+    const saved = localStorage.getItem(`esay_b-${s.num}`);
+    if (saved) answersB[s.num] = saved;
+  });
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+loadSaved();
+renderAll();
+</script>
+</body>
+</html>
