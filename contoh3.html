@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Pembuktian Teorema Himpunan</title>
+
+<style>
+    body {
+        font-family: 'Georgia', serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+        text-align: center;
+        color: #4a4a4a;
+    }
+
+    .soal {
+        margin-bottom: 25px;
+        padding: 15px;
+        border-left: 5px solid #667eea;
+        background: #f9f9ff;
+        border-radius: 10px;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 8px 15px;
+        border: none;
+        background: #667eea;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #5a67d8;
+    }
+
+    .jawaban {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        background: #eef2ff;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Latihan Pembuktian Teorema Himpunan</h1>
+
+    <!-- SOAL 1 -->
+    <div class="soal">
+        <b>1. Buktikan: A ∪ A = A</b>
+        <br><button onclick="toggle(1)">Lihat Jawaban</button>
+        <div class="jawaban" id="j1">
+            Ambil x ∈ A ∪ A ⇒ x ∈ A atau x ∈ A ⇒ x ∈ A.<br>
+            Sebaliknya, jika x ∈ A maka jelas x ∈ A ∪ A.<br>
+            Jadi A ∪ A = A.
+        </div>
+    </div>
+
+    <!-- SOAL 2 -->
+    <div class="soal">
+        <b>2. Buktikan: A ∩ A = A</b>
+        <br><button onclick="toggle(2)">Lihat Jawaban</button>
+        <div class="jawaban" id="j2">
+            x ∈ A ∩ A ⇒ x ∈ A dan x ∈ A ⇒ x ∈ A.<br>
+            Sebaliknya, x ∈ A ⇒ x ∈ A ∩ A.<br>
+            Maka A ∩ A = A.
+        </div>
+    </div>
+
+    <!-- SOAL 3 -->
+    <div class="soal">
+        <b>3. Buktikan: A ∪ B = B ∪ A</b>
+        <br><button onclick="toggle(3)">Lihat Jawaban</button>
+        <div class="jawaban" id="j3">
+            x ∈ A ∪ B ⇒ x ∈ A atau x ∈ B ⇒ x ∈ B atau x ∈ A ⇒ x ∈ B ∪ A.<br>
+            Jadi komutatif.
+        </div>
+    </div>
+
+    <!-- SOAL 4 -->
+    <div class="soal">
+        <b>4. Buktikan: A ∩ B = B ∩ A</b>
+        <br><button onclick="toggle(4)">Lihat Jawaban</button>
+        <div class="jawaban" id="j4">
+            x ∈ A ∩ B ⇒ x ∈ A dan x ∈ B ⇒ x ∈ B dan x ∈ A ⇒ x ∈ B ∩ A.
+        </div>
+    </div>
+
+    <!-- SOAL 5 -->
+    <div class="soal">
+        <b>5. Buktikan: (A ∪ B) ∪ C = A ∪ (B ∪ C)</b>
+        <br><button onclick="toggle(5)">Lihat Jawaban</button>
+        <div class="jawaban" id="j5">
+            Gunakan definisi anggota himpunan dan sifat logika OR.<br>
+            x ∈ (A ∪ B) ∪ C ⇒ (x ∈ A atau B) atau C.<br>
+            Sama dengan A atau (B atau C).
+        </div>
+    </div>
+
+    <!-- SOAL 6 -->
+    <div class="soal">
+        <b>6. Buktikan: (A ∩ B) ∩ C = A ∩ (B ∩ C)</b>
+        <br><button onclick="toggle(6)">Lihat Jawaban</button>
+        <div class="jawaban" id="j6">
+            Gunakan sifat AND pada logika.<br>
+            x ∈ A dan B dan C berlaku sama.
+        </div>
+    </div>
+
+    <!-- SOAL 7 -->
+    <div class="soal">
+        <b>7. Buktikan: A ∩ (A ∪ B) = A</b>
+        <br><button onclick="toggle(7)">Lihat Jawaban</button>
+        <div class="jawaban" id="j7">
+            x ∈ A ∩ (A ∪ B) ⇒ x ∈ A dan (x ∈ A atau B) ⇒ x ∈ A.
+        </div>
+    </div>
+
+    <!-- SOAL 8 -->
+    <div class="soal">
+        <b>8. Buktikan: A ∪ (A ∩ B) = A</b>
+        <br><button onclick="toggle(8)">Lihat Jawaban</button>
+        <div class="jawaban" id="j8">
+            x ∈ A ∪ (A ∩ B) ⇒ x ∈ A atau (A dan B) ⇒ x ∈ A.
+        </div>
+    </div>
+
+    <!-- SOAL 9 -->
+    <div class="soal">
+        <b>9. Buktikan hukum De Morgan: (A ∪ B)' = A' ∩ B'</b>
+        <br><button onclick="toggle(9)">Lihat Jawaban</button>
+        <div class="jawaban" id="j9">
+            x ∈ (A ∪ B)' ⇒ x tidak di A dan tidak di B ⇒ x ∈ A' dan B'.
+        </div>
+    </div>
+
+    <!-- SOAL 10 -->
+    <div class="soal">
+        <b>10. Buktikan: (A ∩ B)' = A' ∪ B'</b>
+        <br><button onclick="toggle(10)">Lihat Jawaban</button>
+        <div class="jawaban" id="j10">
+            x ∈ (A ∩ B)' ⇒ tidak (A dan B) ⇒ tidak A atau tidak B.
+        </div>
+    </div>
+
+</div>
+
+<script>
+function toggle(n){
+    let el = document.getElementById("j"+n);
+    el.style.display = (el.style.display === "block") ? "none" : "block";
+}
+</script>
+
+</body>
+</html>
