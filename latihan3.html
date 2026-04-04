@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Analisis Pembuktian Himpunan</title>
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #2a5298;
+}
+
+.soal {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-left: 6px solid #2a5298;
+    background: #f4f7ff;
+    border-radius: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+input[type="text"], input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #2a5298;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e3c72;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Analisis Pembuktian Teorema Himpunan</h1>
+
+<form id="form">
+
+<label>Nama:</label>
+<input type="text" id="nama" required>
+
+<label>NIM:</label>
+<input type="text" id="nim" required>
+
+<!-- 10 SOAL CERITA -->
+<div class="soal">
+1. Dalam sebuah kelas, mahasiswa yang suka matematika (A) dan pemrograman (B). Jelaskan pembuktian bahwa A ∪ B = B ∪ A.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+2. Diketahui mahasiswa yang mengambil Kalkulus (A) dan Aljabar (B). Buktikan A ∩ B = B ∩ A.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+3. Misalkan A adalah mahasiswa aktif, B mahasiswa penelitian. Buktikan hukum distribusi A ∩ (B ∪ C).
+<textarea></textarea>
+</div>
+
+<div class="soal">
+4. Dalam survei, buktikan A ∪ (A ∩ B) = A menggunakan penjelasan logika.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+5. Buktikan hukum De Morgan dalam konteks mahasiswa lulus dan tidak lulus.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+6. Jika A ⊆ B, jelaskan secara abstraksi hubungan keduanya.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+7. Buktikan bahwa A × B ≠ B × A melalui contoh mahasiswa dan mata kuliah.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+8. Gunakan diagram logika untuk membuktikan A ∩ (A ∪ B) = A.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+9. Jelaskan makna komplemen dalam konteks mahasiswa yang tidak mengikuti ujian.
+<textarea></textarea>
+</div>
+
+<div class="soal">
+10. Buktikan bahwa himpunan kosong adalah subset dari semua himpunan.
+<textarea></textarea>
+</div>
+
+<label>Upload Jawaban (PDF/DOCX/JPEG):</label>
+<input type="file" id="file" required>
+
+<button type="submit">Kirim</button>
+
+</form>
+</div>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    alert("File akan diarahkan ke Google Form untuk upload!");
+
+    // redirect ke Google Form upload
+    window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSeges3f6AFWy7yxqFyHmrY4K1uVYDVSNcjelZcxjTtQ8PDKzQ/viewform";
+});
+</script>
+
+</body>
+</html>
