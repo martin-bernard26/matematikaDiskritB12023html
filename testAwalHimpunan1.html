@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Evaluasi Teori Himpunan</title>
+<style>
+    body {
+        font-family: Arial;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .soal {
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #4facfe;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #00c6ff;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Evaluasi Teori Himpunan</h2>
+
+    <form id="quizForm">
+        <label>Nama:</label>
+        <input type="text" id="nama" required>
+
+        <label>NIM:</label>
+        <input type="text" id="nim" required>
+
+        <!-- SOAL -->
+        <div class="soal">
+            <label>1. Himpunan kosong adalah?</label>
+            <input type="text" id="q1">
+        </div>
+
+        <div class="soal">
+            <label>2. Notasi himpunan bagian adalah?</label>
+            <input type="text" id="q2">
+        </div>
+
+        <div class="soal">
+            <label>3. Jika A ⊆ B maka?</label>
+            <input type="text" id="q3">
+        </div>
+
+        <div class="soal">
+            <label>4. A ∪ B disebut?</label>
+            <input type="text" id="q4">
+        </div>
+
+        <div class="soal">
+            <label>5. A ∩ B disebut?</label>
+            <input type="text" id="q5">
+        </div>
+
+        <div class="soal">
+            <label>6. Komplemen dari A adalah?</label>
+            <input type="text" id="q6">
+        </div>
+
+        <div class="soal">
+            <label>7. Jika n(A)=3, n(B)=2 maka banyak anggota A×B?</label>
+            <input type="text" id="q7">
+        </div>
+
+        <div class="soal">
+            <label>8. Himpunan semesta dilambangkan?</label>
+            <input type="text" id="q8">
+        </div>
+
+        <div class="soal">
+            <label>9. Selisih A - B berarti?</label>
+            <input type="text" id="q9">
+        </div>
+
+        <div class="soal">
+            <label>10. Diagram Venn digunakan untuk?</label>
+            <input type="text" id="q10">
+        </div>
+
+        <button type="submit">Kirim Jawaban</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("quizForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let formURL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSciIK_oXBygrbfyMsVAJkkMXNhx8kch_P61JlIx8WUK0LYnuw/formResponse";
+
+    let data = new FormData();
+    data.append("entry.649844372", document.getElementById("nama").value);
+    data.append("entry.767930985", document.getElementById("nim").value);
+    data.append("entry.1374409492", document.getElementById("q1").value);
+    data.append("entry.1092963440", document.getElementById("q2").value);
+    data.append("entry.125786674", document.getElementById("q3").value);
+    data.append("entry.980939379", document.getElementById("q4").value);
+    data.append("entry.393760163", document.getElementById("q5").value);
+    data.append("entry.2054009972", document.getElementById("q6").value);
+    data.append("entry.299001598", document.getElementById("q7").value);
+    data.append("entry.847568024", document.getElementById("q8").value);
+    data.append("entry.4806453", document.getElementById("q9").value);
+    data.append("entry.2120151993", document.getElementById("q10").value);
+
+    fetch(formURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+    });
+
+    alert("Jawaban berhasil dikirim!");
+    document.getElementById("quizForm").reset();
+});
+</script>
+
+</body>
+</html>
