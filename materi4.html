@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relasi & Fungsi — Matematika Diskrit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --aged: #e8dfc8;
+    --amber: #c8860a;
+    --rust: #b54a1e;
+    --teal: #1e6b6b;
+    --gold: #d4a017;
+    --shadow: rgba(26,18,8,0.18);
+    --accent-light: #fff8e7;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--aged);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(200,134,10,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 90%, rgba(30,107,107,0.07) 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  /* HEADER */
+  .page-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 52px 40px 44px;
+    position: relative;
+    z-index: 2;
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-label::after { content: ''; flex: 1; height: 1px; background: rgba(212,160,23,0.35); }
+  .header-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5.5vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .header-title em { font-style: italic; color: var(--gold); }
+  .header-sub {
+    font-size: 15px;
+    color: rgba(245,240,232,0.65);
+    font-style: italic;
+    margin-bottom: 28px;
+    letter-spacing: 0.01em;
+  }
+  .header-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    color: rgba(245,240,232,0.5);
+    letter-spacing: 0.06em;
+  }
+  .header-meta span { color: var(--gold); margin-right: 4px; }
+  .header-deco {
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 340px; height: 340px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,160,23,0.08);
+    z-index: 1;
+  }
+  .header-deco::after {
+    content: '';
+    position: absolute;
+    top: 40px; left: 40px; right: 40px; bottom: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(212,160,23,0.05);
+  }
+
+  /* NAV */
+  .toc-bar {
+    background: var(--ink);
+    border-top: 1px solid rgba(212,160,23,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .toc-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    gap: 2px;
+    padding: 0 40px;
+    scrollbar-width: none;
+  }
+  .toc-inner::-webkit-scrollbar { display: none; }
+  .toc-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.5);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 14px 18px;
+    white-space: nowrap;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  .toc-btn:hover { color: var(--paper); }
+  .toc-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* MAIN */
+  .main { max-width: 900px; margin: 0 auto; padding: 56px 40px 80px; }
+
+  /* SECTION */
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION HEADER */
+  .sec-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 10px;
+  }
+  .sec-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    line-height: 1.1;
+    margin-bottom: 28px;
+    color: var(--ink);
+    border-bottom: 2px solid var(--amber);
+    padding-bottom: 14px;
+  }
+
+  /* CONTENT BLOCKS */
+  .prose { margin-bottom: 26px; }
+  .prose p { margin-bottom: 14px; color: #2a2010; }
+
+  .box {
+    border-radius: 3px;
+    padding: 22px 26px;
+    margin: 24px 0;
+    position: relative;
+  }
+  .box-def {
+    background: var(--accent-light);
+    border-left: 4px solid var(--amber);
+  }
+  .box-thm {
+    background: #f0f5f5;
+    border-left: 4px solid var(--teal);
+  }
+  .box-ex {
+    background: #fdf5f0;
+    border-left: 4px solid var(--rust);
+  }
+  .box-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .box-def .box-label { color: var(--amber); }
+  .box-thm .box-label { color: var(--teal); }
+  .box-ex .box-label { color: var(--rust); }
+  .box-title { font-weight: 600; margin-bottom: 6px; font-size: 16px; }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 15px;
+    background: var(--paper);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+  th {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  td { padding: 10px 16px; border-bottom: 1px solid rgba(26,18,8,0.08); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(200,134,10,0.05); }
+
+  /* SIFAT CARDS */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 22px 0;
+  }
+  .card {
+    background: var(--paper);
+    border: 1px solid rgba(26,18,8,0.12);
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px var(--shadow); }
+  .card-icon { font-size: 26px; margin-bottom: 10px; }
+  .card-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .card-desc { font-size: 14px; color: #4a3a20; line-height: 1.55; }
+  .card-formula {
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--teal);
+    background: rgba(30,107,107,0.07);
+    padding: 6px 10px;
+    border-radius: 2px;
+  }
+
+  /* INTERACTIVE VISUALIZER */
+  .viz-container {
+    background: var(--paper);
+    border: 1px solid rgba(26,18,8,0.12);
+    border-radius: 4px;
+    padding: 28px;
+    margin: 28px 0;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .viz-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 18px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .viz-title::after { content: ''; flex: 1; height: 1px; background: rgba(26,18,8,0.1); }
+
+  .viz-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  .viz-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #6a5a40;
+    letter-spacing: 0.05em;
+  }
+  .viz-input {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    background: var(--aged);
+    border: 1px solid rgba(26,18,8,0.2);
+    border-radius: 3px;
+    color: var(--ink);
+    width: 180px;
+    transition: border-color 0.2s;
+  }
+  .viz-input:focus { outline: none; border-color: var(--amber); }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--gold);
+  }
+  .btn-primary:hover { background: #2e2416; }
+  .btn-secondary {
+    background: var(--amber);
+    color: var(--paper);
+  }
+  .btn-secondary:hover { background: #a36d08; }
+
+  .diagram-wrap {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  canvas {
+    border-radius: 3px;
+    background: #faf6ee;
+    border: 1px solid rgba(26,18,8,0.1);
+  }
+  .viz-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: #5a4a30;
+    background: var(--aged);
+    border-radius: 3px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    line-height: 1.8;
+    min-height: 60px;
+  }
+
+  /* QUIZ */
+  .quiz-container {
+    background: var(--paper);
+    border: 1px solid rgba(26,18,8,0.12);
+    border-radius: 4px;
+    padding: 28px;
+    margin: 28px 0;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .quiz-q {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .quiz-q .qnum {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    display: block;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 9px; margin-bottom: 18px; }
+  .quiz-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 3px;
+    border: 1.5px solid rgba(26,18,8,0.12);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+    background: var(--aged);
+  }
+  .quiz-opt:hover { border-color: var(--amber); background: var(--accent-light); }
+  .quiz-opt input[type="radio"] { accent-color: var(--amber); margin-top: 3px; flex-shrink: 0; }
+  .quiz-opt.correct { border-color: var(--teal); background: rgba(30,107,107,0.08); }
+  .quiz-opt.wrong { border-color: var(--rust); background: rgba(181,74,30,0.07); }
+  .feedback {
+    padding: 12px 16px;
+    border-radius: 3px;
+    font-size: 14.5px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.02em;
+    display: none;
+    margin-bottom: 12px;
+  }
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(30,107,107,0.1); color: var(--teal); border: 1px solid rgba(30,107,107,0.25); }
+  .feedback.no { background: rgba(181,74,30,0.08); color: var(--rust); border: 1px solid rgba(181,74,30,0.22); }
+  .quiz-nav { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .score-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--amber);
+    margin-left: auto;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    background: rgba(26,18,8,0.1);
+    border-radius: 10px;
+    height: 4px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--amber), var(--rust));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+
+  /* COMPOSITION */
+  .comp-board {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin: 20px 0;
+  }
+  .comp-input-area { flex: 1; min-width: 240px; }
+  .comp-result { flex: 1; min-width: 240px; }
+  .set-chip {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin: 3px;
+    letter-spacing: 0.04em;
+  }
+  .result-list {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--teal);
+    background: rgba(30,107,107,0.05);
+    border: 1px solid rgba(30,107,107,0.2);
+    border-radius: 3px;
+    padding: 14px;
+    min-height: 50px;
+    line-height: 1.9;
+  }
+
+  /* FOOTER */
+  .page-footer {
+    text-align: center;
+    padding: 36px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(26,18,8,0.4);
+    letter-spacing: 0.1em;
+    border-top: 1px solid rgba(26,18,8,0.1);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .main, .header-inner, .toc-inner { padding-left: 20px; padding-right: 20px; }
+    .header-meta { flex-direction: column; gap: 6px; }
+  }
+
+  mjx-container { overflow-x: auto; }
+
+  /* SIFAT RELASI TABLE */
+  .sifat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 18px 0;
+  }
+  @media (max-width: 580px) { .sifat-grid { grid-template-columns: 1fr; } }
+  .sifat-card {
+    background: var(--paper);
+    border: 1px solid rgba(26,18,8,0.1);
+    border-radius: 4px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    box-shadow: 0 1px 5px var(--shadow);
+  }
+  .sifat-card:hover { border-color: var(--amber); transform: translateY(-2px); }
+  .sifat-card.checked { border-color: var(--teal); background: rgba(30,107,107,0.05); }
+  .sifat-card input { position: absolute; opacity: 0; pointer-events: none; }
+  .sifat-name { font-family: 'DM Serif Display', serif; font-size: 16px; margin-bottom: 4px; }
+  .sifat-cond { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: var(--teal); margin-top: 5px; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-deco"></div>
+  <div class="header-inner">
+    <div class="header-label">Matematika Diskrit &nbsp;&mdash;&nbsp; IKIP Siliwangi</div>
+    <h1 class="header-title">Relasi &amp; <em>Fungsi</em></h1>
+    <p class="header-sub">Teorema, sifat, dan penerapan dalam matematika diskrit</p>
+    <div class="header-meta">
+      <div><span>▸</span> Pendidikan Matematika</div>
+      <div><span>▸</span> Martin Bernard, M.Pd.</div>
+      <div><span>▸</span> Semester Genap</div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc-bar">
+  <div class="toc-inner">
+    <button class="toc-btn active" onclick="showSection('relasi', this)">① Relasi</button>
+    <button class="toc-btn" onclick="showSection('sifat', this)">② Sifat Relasi</button>
+    <button class="toc-btn" onclick="showSection('komposisi', this)">③ Komposisi</button>
+    <button class="toc-btn" onclick="showSection('fungsi', this)">④ Fungsi</button>
+    <button class="toc-btn" onclick="showSection('jenis', this)">⑤ Jenis Fungsi</button>
+    <button class="toc-btn" onclick="showSection('teorema', this)">⑥ Teorema</button>
+    <button class="toc-btn" onclick="showSection('latihan', this)">⑦ Latihan</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ① RELASI -->
+<div id="relasi" class="section active">
+  <div class="sec-label">Bab I</div>
+  <h2 class="sec-title">Relasi Biner</h2>
+
+  <div class="prose">
+    <p>Relasi adalah konsep fundamental dalam matematika diskrit yang menggambarkan hubungan antar elemen-elemen suatu himpunan. Secara formal, relasi didefinisikan menggunakan produk kartesian.</p>
+  </div>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 1.1</div>
+    <div class="box-title">Relasi Biner</div>
+    <p>Misalkan \(A\) dan \(B\) adalah himpunan-himpunan. Suatu <strong>relasi biner</strong> \(R\) dari \(A\) ke \(B\) adalah himpunan bagian dari produk kartesian \(A \times B\). Ditulis:</p>
+    $$R \subseteq A \times B = \{(a,b) \mid a \in A,\ b \in B\}$$
+    <p>Jika \((a,b) \in R\), ditulis \(a\, R\, b\) (dibaca: "<em>a berelasi dengan b</em>").</p>
+  </div>
+
+  <div class="box box-ex">
+    <div class="box-label">Contoh 1.1</div>
+    <div class="box-title">Relasi "Habis Dibagi"</div>
+    <p>Misalkan \(A = \{1,2,3,4,6,12\}\). Definisikan relasi \(R\) pada \(A\) dengan:</p>
+    $$a\, R\, b \iff a \mid b$$
+    <p>Maka pasangan \((2,6) \in R\) karena \(2 \mid 6\), tetapi \((4,6) \notin R\) karena \(4 \nmid 6\).</p>
+  </div>
+
+  <div class="prose">
+    <p>Relasi dapat direpresentasikan dalam tiga cara utama: sebagai himpunan pasangan terurut, sebagai matriks relasi, atau sebagai digraf (directed graph).</p>
+  </div>
+
+  <table>
+    <thead><tr><th>Representasi</th><th>Bentuk</th><th>Kegunaan</th></tr></thead>
+    <tbody>
+      <tr><td>Pasangan Terurut</td><td>\(R = \{(1,2),(1,3),(2,4)\}\)</td><td>Definisi formal</td></tr>
+      <tr><td>Matriks Relasi</td><td>\(M_R[i][j] = 1\) jika \((a_i,a_j)\in R\)</td><td>Komputasi & analisis sifat</td></tr>
+      <tr><td>Digraf</td><td>Simpul = elemen, busur = pasangan</td><td>Visualisasi</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Interactive: Relasi Visualizer -->
+  <div class="viz-container">
+    <div class="viz-title">🔬 Penjelajah Relasi Interaktif</div>
+    <div class="viz-controls">
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Himpunan A (pisahkan koma)</div>
+        <input class="viz-input" id="setA" value="1,2,3,4" placeholder="misal: 1,2,3">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Pasangan Relasi (a,b)</div>
+        <input class="viz-input" id="relPairs" value="1,2;1,3;2,4;3,4" placeholder="misal: 1,2;2,3">
+      </div>
+      <button class="btn btn-primary" onclick="drawRelation()">Gambar Digraf</button>
+    </div>
+    <div class="diagram-wrap">
+      <canvas id="digrafCanvas" width="380" height="300"></canvas>
+    </div>
+    <div class="viz-info" id="relInfo">Masukkan data dan klik "Gambar Digraf" untuk melihat representasi visual.</div>
+  </div>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 1.2</div>
+    <div class="box-title">Relasi pada Himpunan</div>
+    <p>Relasi <strong>pada</strong> himpunan \(A\) adalah relasi dari \(A\) ke \(A\) sendiri, yaitu \(R \subseteq A \times A\).</p>
+    <p>Jumlah relasi yang mungkin pada himpunan \(A\) dengan \(|A|=n\) adalah \(2^{n^2}\).</p>
+  </div>
+</div>
+
+<!-- ② SIFAT RELASI -->
+<div id="sifat" class="section">
+  <div class="sec-label">Bab II</div>
+  <h2 class="sec-title">Sifat-Sifat Relasi</h2>
+
+  <div class="prose">
+    <p>Relasi pada suatu himpunan dapat memiliki berbagai sifat khusus. Sifat-sifat ini penting dalam mengklasifikasikan relasi dan membangun struktur-struktur lanjutan seperti relasi ekuivalensi dan relasi pengurutan.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-name">Refleksif</div>
+      <div class="card-desc">Setiap elemen berelasi dengan dirinya sendiri.</div>
+      <div class="card-formula">∀a ∈ A : (a,a) ∈ R</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">↔️</div>
+      <div class="card-name">Simetris</div>
+      <div class="card-desc">Jika a berelasi b, maka b berelasi a.</div>
+      <div class="card-formula">aRb ⟹ bRa</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">➡️</div>
+      <div class="card-name">Antisimetris</div>
+      <div class="card-desc">aRb dan bRa mengakibatkan a = b.</div>
+      <div class="card-formula">aRb ∧ bRa ⟹ a=b</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⛓️</div>
+      <div class="card-name">Transitif</div>
+      <div class="card-desc">Jika a berelasi b dan b berelasi c, maka a berelasi c.</div>
+      <div class="card-formula">aRb ∧ bRc ⟹ aRc</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <div class="card-name">Irefleksif</div>
+      <div class="card-desc">Tidak ada elemen yang berelasi dengan dirinya sendiri.</div>
+      <div class="card-formula">∀a ∈ A : (a,a) ∉ R</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚔️</div>
+      <div class="card-name">Asimetris</div>
+      <div class="card-desc">Jika a berelasi b, maka b tidak berelasi a.</div>
+      <div class="card-formula">aRb ⟹ ¬(bRa)</div>
+    </div>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 2.1</div>
+    <div class="box-title">Relasi Ekuivalensi</div>
+    <p>Relasi \(R\) pada himpunan \(A\) disebut <strong>relasi ekuivalensi</strong> jika dan hanya jika \(R\) bersifat <em>refleksif, simetris, dan transitif</em>.</p>
+    <p style="margin-top:10px">Relasi ekuivalensi membagi \(A\) menjadi kelas-kelas ekuivalensi yang saling terpisah (partisi).</p>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 2.2</div>
+    <div class="box-title">Relasi Pengurutan Parsial</div>
+    <p>Relasi \(R\) pada himpunan \(A\) disebut <strong>relasi pengurutan parsial (poset)</strong> jika dan hanya jika \(R\) bersifat <em>refleksif, antisimetris, dan transitif</em>.</p>
+    <p style="margin-top:10px">Pasangan \((A, R)\) disebut <strong>himpunan terurut parsial</strong> (partially ordered set / poset).</p>
+  </div>
+
+  <!-- Interactive: Cek sifat relasi -->
+  <div class="viz-container">
+    <div class="viz-title">🔍 Pemeriksa Sifat Relasi</div>
+    <div class="viz-controls">
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Himpunan A</div>
+        <input class="viz-input" id="chkSetA" value="1,2,3" placeholder="1,2,3">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Pasangan Relasi</div>
+        <input class="viz-input" id="chkPairs" value="1,1;2,2;3,3;1,2;2,1" placeholder="1,1;2,2">
+      </div>
+      <button class="btn btn-primary" onclick="checkSifat()">Periksa Sifat</button>
+    </div>
+    <div class="viz-info" id="sifatResult">Masukkan data dan klik "Periksa Sifat".</div>
+  </div>
+
+  <div class="box box-ex">
+    <div class="box-label">Contoh 2.1</div>
+    <div class="box-title">Identifikasi Sifat</div>
+    <p>Relasi \(R = \{(a,a),(b,b),(c,c),(a,b),(b,a)\}\) pada \(A = \{a,b,c\}\):</p>
+    <ul style="margin: 10px 0 0 20px; line-height: 2">
+      <li>✅ <strong>Refleksif</strong>: \((a,a),(b,b),(c,c) \in R\)</li>
+      <li>✅ <strong>Simetris</strong>: \((a,b) \in R\) dan \((b,a) \in R\)</li>
+      <li>❌ <strong>Antisimetris</strong>: \((a,b)\) dan \((b,a) \in R\) tetapi \(a \neq b\)</li>
+      <li>✅ <strong>Transitif</strong>: tidak ada pelanggaran</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ③ KOMPOSISI RELASI -->
+<div id="komposisi" class="section">
+  <div class="sec-label">Bab III</div>
+  <h2 class="sec-title">Komposisi Relasi</h2>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 3.1</div>
+    <div class="box-title">Komposisi Relasi</div>
+    <p>Misalkan \(R\) relasi dari \(A\) ke \(B\) dan \(S\) relasi dari \(B\) ke \(C\). <strong>Komposisi</strong> \(S \circ R\) adalah relasi dari \(A\) ke \(C\) yang didefinisikan:</p>
+    $$S \circ R = \{(a,c) \mid \exists b \in B : (a,b)\in R \text{ dan } (b,c)\in S\}$$
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 3.1</div>
+    <div class="box-title">Komposisi dengan Matriks</div>
+    <p>Jika \(M_R\) dan \(M_S\) adalah matriks relasi \(R\) dan \(S\), maka matriks komposisi \(M_{S \circ R}\) dapat dihitung menggunakan perkalian matriks Boolean:</p>
+    $$M_{S \circ R} = M_R \odot M_S$$
+    <p style="margin-top:8px">di mana \(\odot\) adalah perkalian matriks dengan operasi: penjumlahan diganti OR (∨) dan perkalian diganti AND (∧).</p>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 3.2</div>
+    <div class="box-title">Penutupan Transitif</div>
+    <p>Penutupan transitif dari relasi \(R\) pada himpunan \(n\) elemen adalah:</p>
+    $$R^* = R \cup R^2 \cup R^3 \cup \cdots \cup R^n$$
+    <p style="margin-top:8px">di mana \(R^k = R^{k-1} \circ R\). Algoritma Warshall dapat digunakan untuk menghitung \(R^*\) secara efisien dalam waktu \(O(n^3)\).</p>
+  </div>
+
+  <!-- Komposisi kalkulator -->
+  <div class="viz-container">
+    <div class="viz-title">🔗 Kalkulator Komposisi Relasi</div>
+    <div class="comp-board">
+      <div class="comp-input-area">
+        <div class="viz-label" style="margin-bottom:6px">Himpunan: A, B, C</div>
+        <input class="viz-input" id="compA" value="1,2,3" placeholder="Himpunan A" style="margin-bottom:8px;width:100%">
+        <input class="viz-input" id="compB" value="a,b,c" placeholder="Himpunan B" style="margin-bottom:8px;width:100%">
+        <input class="viz-input" id="compC" value="x,y,z" placeholder="Himpunan C" style="margin-bottom:14px;width:100%">
+        <div class="viz-label" style="margin-bottom:6px">Relasi R (A→B): pasang a,b</div>
+        <input class="viz-input" id="relR" value="1,a;2,b;2,c;3,a" placeholder="1,a;2,b" style="margin-bottom:8px;width:100%">
+        <div class="viz-label" style="margin-bottom:6px">Relasi S (B→C): pasang b,c</div>
+        <input class="viz-input" id="relS" value="a,x;b,y;c,z" placeholder="a,x;b,y" style="margin-bottom:12px;width:100%">
+        <button class="btn btn-primary" onclick="calcCompose()">Hitung S ∘ R</button>
+      </div>
+      <div class="comp-result">
+        <div class="viz-label" style="margin-bottom:6px">Hasil Komposisi S ∘ R:</div>
+        <div class="result-list" id="compResult">—</div>
+        <div style="margin-top:14px">
+          <div class="viz-label" style="margin-bottom:6px">Relasi R:</div>
+          <div class="result-list" id="relRDisp" style="color:#8a5a20">—</div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="viz-label" style="margin-bottom:6px">Relasi S:</div>
+          <div class="result-list" id="relSDisp" style="color:#5a7a8a">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-ex">
+    <div class="box-label">Contoh 3.1</div>
+    <div class="box-title">Pangkat Relasi</div>
+    <p>Misalkan \(R = \{(1,2),(2,3),(3,4)\}\) pada \(A = \{1,2,3,4\}\). Maka:</p>
+    <ul style="margin: 10px 0 0 20px; line-height: 2.2">
+      <li>\(R^1 = \{(1,2),(2,3),(3,4)\}\)</li>
+      <li>\(R^2 = \{(1,3),(2,4)\}\)</li>
+      <li>\(R^3 = \{(1,4)\}\)</li>
+      <li>\(R^* = R \cup R^2 \cup R^3 = \{(1,2),(1,3),(1,4),(2,3),(2,4),(3,4)\}\)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ④ FUNGSI -->
+<div id="fungsi" class="section">
+  <div class="sec-label">Bab IV</div>
+  <h2 class="sec-title">Fungsi</h2>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 4.1</div>
+    <div class="box-title">Fungsi (Pemetaan)</div>
+    <p>Suatu <strong>fungsi</strong> \(f\) dari himpunan \(A\) ke himpunan \(B\), ditulis \(f: A \to B\), adalah relasi khusus dari \(A\) ke \(B\) yang memenuhi:</p>
+    <ol style="margin: 12px 0 0 20px; line-height: 2">
+      <li>Setiap \(a \in A\) dipetakan ke <em>tepat satu</em> \(b \in B\).</li>
+      <li>Tidak ada elemen di \(A\) yang tidak memiliki pasangan di \(B\).</li>
+    </ol>
+    $$f: A \to B,\quad f(a) = b$$
+    <p>\(A\) disebut <strong>domain</strong>, \(B\) disebut <strong>kodomain</strong>. Himpunan \(\{f(a) \mid a \in A\} \subseteq B\) disebut <strong>range</strong>.</p>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 4.1</div>
+    <div class="box-title">Jumlah Fungsi</div>
+    <p>Jika \(|A| = m\) dan \(|B| = n\), maka banyaknya fungsi dari \(A\) ke \(B\) adalah:</p>
+    $$|B|^{|A|} = n^m$$
+  </div>
+
+  <table>
+    <thead><tr><th>Konsep</th><th>Notasi/Definisi</th></tr></thead>
+    <tbody>
+      <tr><td>Domain</td><td>\(\text{dom}(f) = A\)</td></tr>
+      <tr><td>Kodomain</td><td>\(\text{cod}(f) = B\)</td></tr>
+      <tr><td>Range / Bayangan</td><td>\(f(A) = \{f(a) \mid a \in A\} \subseteq B\)</td></tr>
+      <tr><td>Pra-bayangan</td><td>\(f^{-1}(b) = \{a \in A \mid f(a) = b\}\)</td></tr>
+      <tr><td>Komposisi</td><td>\((g \circ f)(a) = g(f(a))\)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Fungsi visualizer -->
+  <div class="viz-container">
+    <div class="viz-title">🎯 Visualisasi Fungsi</div>
+    <div class="viz-controls">
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Domain A</div>
+        <input class="viz-input" id="fDomA" value="1,2,3,4" placeholder="1,2,3">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Kodomain B</div>
+        <input class="viz-input" id="fCodB" value="a,b,c" placeholder="a,b,c">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Pemetaan (x→y)</div>
+        <input class="viz-input" id="fMap" value="1,a;2,b;3,b;4,c" placeholder="1,a;2,b">
+      </div>
+      <button class="btn btn-primary" onclick="drawFunction()">Gambar Fungsi</button>
+    </div>
+    <div class="diagram-wrap">
+      <canvas id="funcCanvas" width="420" height="300"></canvas>
+    </div>
+    <div class="viz-info" id="funcInfo">Masukkan domain, kodomain, dan pemetaan, lalu klik "Gambar Fungsi".</div>
+  </div>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 4.2</div>
+    <div class="box-title">Komposisi Fungsi</div>
+    <p>Jika \(f: A \to B\) dan \(g: B \to C\), maka komposisi \(g \circ f: A \to C\) didefinisikan:</p>
+    $$(g \circ f)(a) = g(f(a)),\quad \forall a \in A$$
+  </div>
+</div>
+
+<!-- ⑤ JENIS FUNGSI -->
+<div id="jenis" class="section">
+  <div class="sec-label">Bab V</div>
+  <h2 class="sec-title">Jenis-Jenis Fungsi</h2>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 5.1</div>
+    <div class="box-title">Injeksi (Satu-satu / One-to-One)</div>
+    <p>Fungsi \(f: A \to B\) disebut <strong>injektif</strong> jika:</p>
+    $$f(a_1) = f(a_2) \implies a_1 = a_2 \quad (\text{ekivalen: } a_1 \neq a_2 \implies f(a_1) \neq f(a_2))$$
+    <p style="margin-top:8px">Syarat: \(|A| \leq |B|\).</p>
+  </div>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 5.2</div>
+    <div class="box-title">Surjeksi (Onto / Kepada)</div>
+    <p>Fungsi \(f: A \to B\) disebut <strong>surjektif</strong> jika range-nya sama dengan kodomain:</p>
+    $$\forall b \in B,\ \exists a \in A : f(a) = b \quad (\text{atau: } f(A) = B)$$
+    <p style="margin-top:8px">Syarat: \(|A| \geq |B|\).</p>
+  </div>
+
+  <div class="box box-def">
+    <div class="box-label">Definisi 5.3</div>
+    <div class="box-title">Bijeksi (Korespondensi Satu-satu)</div>
+    <p>Fungsi \(f: A \to B\) disebut <strong>bijektif</strong> (atau <em>korespondensi satu-satu</em>) jika \(f\) sekaligus injektif dan surjektif.</p>
+    $$f \text{ bijektif} \iff f \text{ injektif} \wedge f \text{ surjektif}$$
+    <p style="margin-top:8px">Syarat: \(|A| = |B|\). Fungsi bijektif memiliki invers \(f^{-1}: B \to A\).</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card" style="border-top: 3px solid var(--amber)">
+      <div class="card-icon">📌</div>
+      <div class="card-name">Injektif</div>
+      <div class="card-desc">Setiap elemen B punya paling banyak satu pasangan di A. "Tidak ada dua input berbeda yang menghasilkan output sama."</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--teal)">
+      <div class="card-icon">🎯</div>
+      <div class="card-name">Surjektif</div>
+      <div class="card-desc">Setiap elemen B punya paling sedikit satu pasangan di A. "Semua kodomain terjangkau."</div>
+    </div>
+    <div class="card" style="border-top: 3px solid var(--rust)">
+      <div class="card-icon">⚖️</div>
+      <div class="card-name">Bijektif</div>
+      <div class="card-desc">Setiap elemen B punya tepat satu pasangan di A. Dapat dibalik. Jika bijektif, invers \(f^{-1}\) selalu ada.</div>
+    </div>
+    <div class="card" style="border-top: 3px solid #7a5a20">
+      <div class="card-icon">🔁</div>
+      <div class="card-name">Fungsi Identitas</div>
+      <div class="card-desc">Fungsi \(I_A: A \to A\) dengan \(I_A(a)=a\). Berlaku: \(f \circ I_A = f\) dan \(I_B \circ f = f\).</div>
+    </div>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 5.1</div>
+    <div class="box-title">Jumlah Fungsi Berdasarkan Jenis</div>
+    <p>Untuk \(|A|=m\), \(|B|=n\):</p>
+    <ul style="margin:10px 0 0 20px; line-height:2.2">
+      <li><strong>Semua fungsi:</strong> \(n^m\)</li>
+      <li><strong>Injektif</strong> (\(m \leq n\)): \(P(n,m) = \dfrac{n!}{(n-m)!}\)</li>
+      <li><strong>Surjektif</strong> (\(m \geq n\)): \(\displaystyle\sum_{k=0}^{n}(-1)^k\binom{n}{k}(n-k)^m\)</li>
+      <li><strong>Bijektif</strong> (\(m=n\)): \(n!\)</li>
+    </ul>
+  </div>
+
+  <!-- Jenis fungsi checker -->
+  <div class="viz-container">
+    <div class="viz-title">🔎 Pemeriksa Jenis Fungsi</div>
+    <div class="viz-controls">
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Domain A</div>
+        <input class="viz-input" id="jDomA" value="1,2,3" placeholder="1,2,3">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Kodomain B</div>
+        <input class="viz-input" id="jCodB" value="a,b,c" placeholder="a,b,c">
+      </div>
+      <div>
+        <div class="viz-label" style="margin-bottom:5px">Pemetaan (x,y)</div>
+        <input class="viz-input" id="jMap" value="1,a;2,b;3,c" placeholder="1,a;2,b">
+      </div>
+      <button class="btn btn-primary" onclick="checkFunctionType()">Periksa</button>
+    </div>
+    <div class="viz-info" id="jenisFuncResult">Masukkan pemetaan dan klik "Periksa".</div>
+  </div>
+</div>
+
+<!-- ⑥ TEOREMA -->
+<div id="teorema" class="section">
+  <div class="sec-label">Bab VI</div>
+  <h2 class="sec-title">Teorema-Teorema Penting</h2>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 6.1</div>
+    <div class="box-title">Komposisi Fungsi Injektif/Surjektif</div>
+    <p>Jika \(f: A \to B\) dan \(g: B \to C\), maka:</p>
+    <ul style="margin:10px 0 0 20px; line-height:2">
+      <li>\(g \circ f\) injektif \(\Rightarrow\) \(f\) injektif</li>
+      <li>\(g \circ f\) surjektif \(\Rightarrow\) \(g\) surjektif</li>
+      <li>\(f\) dan \(g\) injektif \(\Rightarrow\) \(g \circ f\) injektif</li>
+      <li>\(f\) dan \(g\) surjektif \(\Rightarrow\) \(g \circ f\) surjektif</li>
+      <li>\(f\) dan \(g\) bijektif \(\Rightarrow\) \(g \circ f\) bijektif</li>
+    </ul>
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 6.2</div>
+    <div class="box-title">Invers Fungsi</div>
+    <p>Fungsi \(f: A \to B\) memiliki invers \(f^{-1}: B \to A\) jika dan hanya jika \(f\) bijektif. Jika ada:</p>
+    $$f^{-1}(b) = a \iff f(a) = b$$
+    $$(f^{-1} \circ f)(a) = a \quad \text{dan} \quad (f \circ f^{-1})(b) = b$$
+    $$\Rightarrow f^{-1} \circ f = I_A,\quad f \circ f^{-1} = I_B$$
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 6.3</div>
+    <div class="box-title">Cantor-Schroeder-Bernstein</div>
+    <p>Jika terdapat fungsi injektif \(f: A \to B\) dan \(g: B \to A\), maka terdapat bijeksi \(h: A \to B\). Ekivalen:</p>
+    $$|A| \leq |B| \text{ dan } |B| \leq |A| \implies |A| = |B|$$
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 6.4</div>
+    <div class="box-title">Pigeonhole Principle (Prinsip Laci)</div>
+    <p>Jika \(n+1\) atau lebih elemen dipetakan ke \(n\) kategori, maka paling sedikit satu kategori memuat dua atau lebih elemen. Bentuk umum:</p>
+    $$\text{Jika } f: A \to B \text{ dan } |A| > |B|, \text{ maka } f \text{ tidak injektif.}$$
+    $$\text{Setidaknya satu } b \in B \text{ memiliki } |f^{-1}(b)| \geq \left\lceil \frac{|A|}{|B|} \right\rceil$$
+  </div>
+
+  <div class="box box-thm">
+    <div class="box-label">Teorema 6.5</div>
+    <div class="box-title">Himpunan Terhitung dan Tak Terhitung</div>
+    <p>Suatu himpunan \(A\) disebut <strong>terhitung</strong> (countable) jika \(|A| \leq |\mathbb{N}|\), artinya ada injeksi \(f: A \hookrightarrow \mathbb{N}\).</p>
+    <ul style="margin:10px 0 0 20px; line-height:2">
+      <li>\(\mathbb{Z}\), \(\mathbb{Q}\) adalah terhitung.</li>
+      <li>\(\mathbb{R}\), \(\mathcal{P}(\mathbb{N})\) adalah <em>tak terhitung</em> (Teorema Cantor).</li>
+      <li>\(|\mathcal{P}(A)| = 2^{|A|} > |A|\) untuk setiap himpunan \(A\).</li>
+    </ul>
+  </div>
+
+  <div class="box box-ex">
+    <div class="box-label">Contoh 6.1</div>
+    <div class="box-title">Aplikasi Pigeonhole</div>
+    <p>Di antara 13 orang, pasti ada (minimal) 2 orang yang lahir pada bulan yang sama. Karena: 13 orang → 12 bulan, maka \(\lceil 13/12 \rceil = 2\).</p>
+  </div>
+</div>
+
+<!-- ⑦ LATIHAN -->
+<div id="latihan" class="section">
+  <div class="sec-label">Bab VII</div>
+  <h2 class="sec-title">Latihan Soal</h2>
+
+  <div class="prose">
+    <p>Uji pemahaman Anda dengan mengerjakan soal-soal berikut. Setiap soal memiliki satu jawaban yang paling tepat.</p>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="quizProgress" style="width:0%"></div>
+  </div>
+
+  <div id="quizArea"></div>
+
+  <div class="quiz-nav">
+    <button class="btn btn-secondary" onclick="prevQ()" id="btnPrev" disabled>← Sebelumnya</button>
+    <button class="btn btn-primary" onclick="nextQ()" id="btnNext">Selanjutnya →</button>
+    <div class="score-badge" id="scoreBadge"></div>
+  </div>
+</div>
+
+</main>
+
+<footer class="page-footer">
+  Martin Bernard, M.Pd. &nbsp;·&nbsp; IKIP Siliwangi Cimahi &nbsp;·&nbsp; Matematika Diskrit
+</footer>
+
+<script>
+MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']], displayMath: [['$$','$$'],['\\[','\\]']] }, options: { skipHtmlTags: ['script','noscript','style','textarea'] } };
+
+// --- NAVIGATION ---
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.toc-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  MathJax.typesetPromise && MathJax.typesetPromise();
+}
+
+// --- COLORS ---
+const C = {
+  ink: '#1a1208', paper: '#f5f0e8', aged: '#e8dfc8',
+  amber: '#c8860a', rust: '#b54a1e', teal: '#1e6b6b', gold: '#d4a017'
+};
+
+// --- DIGRAF ---
+function parseItems(str) { return str.split(',').map(s => s.trim()).filter(Boolean); }
+function parsePairs(str) {
+  return str.split(';').map(s => { const p = s.trim().split(','); return [p[0].trim(), p[1]?.trim()]; }).filter(p => p[0] && p[1]);
+}
+
+function drawRelation() {
+  const A = parseItems(document.getElementById('setA').value);
+  const pairs = parsePairs(document.getElementById('relPairs').value);
+  const cvs = document.getElementById('digrafCanvas');
+  const ctx = cvs.getContext('2d');
+  ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+  const n = A.length;
+  const cx = cvs.width/2, cy = cvs.height/2;
+  const r = Math.min(cx, cy) - 55;
+  const pos = {};
+
+  A.forEach((el, i) => {
+    const angle = (2*Math.PI*i/n) - Math.PI/2;
+    pos[el] = { x: cx + r*Math.cos(angle), y: cy + r*Math.sin(angle) };
+  });
+
+  // Draw edges
+  pairs.forEach(([a, b]) => {
+    if (!pos[a] || !pos[b]) return;
+    ctx.strokeStyle = C.rust;
+    ctx.lineWidth = 1.8;
+    if (a === b) {
+      // self-loop
+      const px = pos[a].x, py = pos[a].y;
+      ctx.beginPath();
+      ctx.arc(px, py - 28, 18, 0.3, Math.PI*2-0.3);
+      ctx.stroke();
+      // arrowhead
+      drawArrow(ctx, px-14, py-20, px, py-12, C.rust);
+    } else {
+      drawLine(ctx, pos[a], pos[b], C.rust, true);
+    }
+  });
+
+  // Draw nodes
+  A.forEach(el => {
+    const {x,y} = pos[el];
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI*2);
+    ctx.fillStyle = C.aged;
+    ctx.fill();
+    ctx.strokeStyle = C.amber;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = C.ink;
+    ctx.font = 'bold 14px IBM Plex Mono, monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(el, x, y);
+  });
+
+  const valid = pairs.filter(([a,b]) => A.includes(a) && A.includes(b));
+  document.getElementById('relInfo').textContent =
+    `Himpunan A = {${A.join(', ')}} | Relasi R = {${valid.map(([a,b])=>`(${a},${b})`).join(', ')}} | |R| = ${valid.length}`;
+}
+
+function drawLine(ctx, p1, p2, color, arrow) {
+  const dx = p2.x-p1.x, dy = p2.y-p1.y;
+  const d = Math.sqrt(dx*dx+dy*dy);
+  const nr = 21/d;
+  const sx = p1.x + dx*nr, sy = p1.y + dy*nr;
+  const ex = p2.x - dx*nr, ey = p2.y - dy*nr;
+  ctx.beginPath();
+  ctx.moveTo(sx, sy);
+  ctx.lineTo(ex, ey);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.8;
+  ctx.stroke();
+  if (arrow) drawArrow(ctx, sx, sy, ex, ey, color);
+}
+
+function drawArrow(ctx, x1, y1, x2, y2, color) {
+  const angle = Math.atan2(y2-y1, x2-x1);
+  const size = 9;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2-size*Math.cos(angle-0.4), y2-size*Math.sin(angle-0.4));
+  ctx.lineTo(x2-size*Math.cos(angle+0.4), y2-size*Math.sin(angle+0.4));
+  ctx.closePath();
+  ctx.fill();
+}
+
+// --- SIFAT CHECKER ---
+function checkSifat() {
+  const A = parseItems(document.getElementById('chkSetA').value);
+  const pairs = parsePairs(document.getElementById('chkPairs').value);
+  const set = new Set(pairs.map(([a,b])=>`${a}|${b}`));
+
+  const refleksif = A.every(a => set.has(`${a}|${a}`));
+  const irefleksif = A.every(a => !set.has(`${a}|${a}`));
+  const simetris = pairs.every(([a,b]) => set.has(`${b}|${a}`));
+  const antisimetris = pairs.every(([a,b]) => a===b || !set.has(`${b}|${a}`));
+  const transitif = pairs.every(([a,b]) => pairs.filter(([x])=>x===b).every(([,c]) => set.has(`${a}|${c}`)));
+
+  const icon = v => v ? '✅' : '❌';
+  let res = `${icon(refleksif)} Refleksif | ${icon(irefleksif)} Irefleksif\n`;
+  res += `${icon(simetris)} Simetris | ${icon(antisimetris)} Antisimetris\n`;
+  res += `${icon(transitif)} Transitif\n\n`;
+  if (refleksif && simetris && transitif) res += '🏆 Relasi Ekuivalensi!\n';
+  if (refleksif && antisimetris && transitif) res += '📐 Relasi Pengurutan Parsial (Poset)!\n';
+  document.getElementById('sifatResult').textContent = res;
+}
+
+// --- KOMPOSISI ---
+function calcCompose() {
+  const R = parsePairs(document.getElementById('relR').value);
+  const S = parsePairs(document.getElementById('relS').value);
+  const comp = [];
+  R.forEach(([a,b]) => {
+    S.forEach(([c,d]) => { if (b===c) comp.push([a,d]); });
+  });
+  const fmt = arr => arr.length ? arr.map(([a,b])=>`(${a},${b})`).join('  ') : '∅ (kosong)';
+  document.getElementById('compResult').textContent = 'S∘R = { ' + fmt(comp) + ' }';
+  document.getElementById('relRDisp').textContent = 'R = { ' + fmt(R) + ' }';
+  document.getElementById('relSDisp').textContent = 'S = { ' + fmt(S) + ' }';
+}
+
+// --- FUNGSI VISUALIZER ---
+function drawFunction() {
+  const A = parseItems(document.getElementById('fDomA').value);
+  const B = parseItems(document.getElementById('fCodB').value);
+  const map = parsePairs(document.getElementById('fMap').value);
+  const cvs = document.getElementById('funcCanvas');
+  const ctx = cvs.getContext('2d');
+  ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+  const pad = 60, w = cvs.width, h = cvs.height;
+  const lx = pad, rx = w - pad;
+
+  // Labels
+  ctx.fillStyle = C.amber; ctx.font = 'bold 12px IBM Plex Mono, monospace'; ctx.textAlign = 'center';
+  ctx.fillText('A (Domain)', lx, 22);
+  ctx.fillStyle = C.teal;
+  ctx.fillText('B (Kodomain)', rx, 22);
+
+  const posA = {}, posB = {};
+  A.forEach((el, i) => { posA[el] = { x: lx, y: 45 + (i+1)*(h-50)/(A.length+1) }; });
+  B.forEach((el, i) => { posB[el] = { x: rx, y: 45 + (i+1)*(h-50)/(B.length+1) }; });
+
+  // Draw arrows
+  const mapped = new Set();
+  map.forEach(([a,b]) => {
+    if (!posA[a] || !posB[b]) return;
+    mapped.add(b);
+    const p1 = posA[a], p2 = posB[b];
+    ctx.beginPath();
+    const cpx = (p1.x+p2.x)/2, cpy = (p1.y+p2.y)/2 - 20;
+    ctx.moveTo(p1.x+18, p1.y);
+    ctx.quadraticCurveTo(cpx, cpy, p2.x-18, p2.y);
+    ctx.strokeStyle = C.rust; ctx.lineWidth = 1.6; ctx.stroke();
+    const angle = Math.atan2(p2.y-cpy, p2.x-18-cpx);
+    drawArrow(ctx, cpx, cpy, p2.x-18, p2.y, C.rust);
+  });
+
+  // Draw nodes A
+  A.forEach(el => {
+    const {x,y} = posA[el];
+    ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI*2);
+    ctx.fillStyle = C.aged; ctx.fill();
+    ctx.strokeStyle = C.amber; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = 'bold 13px IBM Plex Mono, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(el, x, y);
+  });
+
+  // Draw nodes B
+  B.forEach(el => {
+    const {x,y} = posB[el];
+    ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI*2);
+    ctx.fillStyle = mapped.has(el) ? 'rgba(30,107,107,0.12)' : C.aged;
+    ctx.fill();
+    ctx.strokeStyle = C.teal; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.font = 'bold 13px IBM Plex Mono, monospace'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(el, x, y);
+  });
+
+  // Validate
+  const mapObj = {};
+  let valid = true, info = [];
+  map.forEach(([a,b]) => {
+    if (mapObj[a]) { valid = false; info.push(`⚠ ${a} dipetakan ke >1 nilai (bukan fungsi)`); }
+    mapObj[a] = b;
+  });
+  A.forEach(a => { if (!mapObj[a]) { valid = false; info.push(`⚠ ${a} tidak memiliki pasangan`); } });
+  if (valid) info.push(`✅ Ini adalah fungsi sah | Range = {${[...new Set(map.map(([,b])=>b))].join(', ')}}`);
+  document.getElementById('funcInfo').textContent = info.join('\n');
+}
+
+// --- JENIS FUNGSI ---
+function checkFunctionType() {
+  const A = parseItems(document.getElementById('jDomA').value);
+  const B = parseItems(document.getElementById('jCodB').value);
+  const map = parsePairs(document.getElementById('jMap').value);
+
+  const mapObj = {};
+  let isFunc = true;
+  map.forEach(([a,b]) => {
+    if (mapObj[a] && mapObj[a]!==b) isFunc = false;
+    mapObj[a] = b;
+  });
+  A.forEach(a => { if (!mapObj[a]) isFunc = false; });
+
+  if (!isFunc) { document.getElementById('jenisFuncResult').textContent = '❌ Pemetaan ini BUKAN fungsi!'; return; }
+
+  const values = map.map(([,b])=>b);
+  const uniqueVals = [...new Set(values)];
+  const injektif = uniqueVals.length === values.length;
+  const surjektif = B.every(b => values.includes(b));
+  const bijektif = injektif && surjektif;
+
+  const icon = v => v ? '✅' : '❌';
+  let res = `✅ Ini adalah Fungsi\n\n`;
+  res += `${icon(injektif)} Injektif (One-to-One)\n`;
+  res += `${icon(surjektif)} Surjektif (Onto)\n`;
+  res += `${icon(bijektif)} Bijektif (Korespondensi 1-1)\n\n`;
+  res += `Domain: {${A.join(', ')}} | Kodomain: {${B.join(', ')}}\n`;
+  res += `Range: {${uniqueVals.join(', ')}}`;
+  if (bijektif) res += '\n\n🏆 Fungsi ini memiliki invers!';
+  document.getElementById('jenisFuncResult').textContent = res;
+}
+
+// --- QUIZ ---
+const questions = [
+  { q: 'Relasi \\(R = \\{(a,a),(b,b),(c,c)\\}\\) pada \\(A = \\{a,b,c\\}\\) disebut...', opts: ['Relasi identitas yang refleksif', 'Relasi simetris saja', 'Relasi antisimetris saja', 'Relasi irefleksif'], ans: 0, exp: 'R merupakan relasi identitas yang refleksif (setiap elemen berelasi dengan dirinya), simetris, antisimetris, dan transitif.' },
+  { q: 'Jika \\(|A| = 3\\) dan \\(|B| = 4\\), berapa banyak fungsi dari \\(A\\) ke \\(B\\)?', opts: ['12', '24', '64', '81'], ans: 2, exp: 'Banyak fungsi = |B|^|A| = 4³ = 64.' },
+  { q: 'Syarat suatu relasi menjadi relasi ekuivalensi adalah...', opts: ['Refleksif, Simetris, Transitif', 'Refleksif, Antisimetris, Transitif', 'Irefleksif, Simetris, Transitif', 'Refleksif, Asimetris, Transitif'], ans: 0, exp: 'Relasi ekuivalensi harus memenuhi: Refleksif, Simetris, dan Transitif.' },
+  { q: 'Fungsi \\(f: A \\to B\\) dikatakan surjektif jika...', opts: ['Setiap b∈B punya tepat satu pasangan di A', 'f(a₁)=f(a₂) ⟹ a₁=a₂', 'f(A) = B (range sama dengan kodomain)', 'A dan B memiliki kardinalitas sama'], ans: 2, exp: 'Surjektif berarti range f sama dengan kodomain B, yaitu ∀b∈B ∃a∈A: f(a)=b.' },
+  { q: 'Prinsip Pigeonhole menyatakan bahwa jika 13 merpati ditempatkan di 12 sarang, maka...', opts: ['Semua sarang berisi merpati', 'Paling sedikit satu sarang berisi ≥2 merpati', 'Paling banyak satu sarang berisi >1 merpati', 'Setiap sarang berisi tepat 1 merpati'], ans: 1, exp: '13 > 12, sehingga minimal satu sarang harus berisi ⌈13/12⌉ = 2 merpati.' },
+  { q: 'Komposisi S∘R dari relasi R: A→B dan S: B→C menghasilkan relasi dari...', opts: ['A ke A', 'B ke C', 'A ke C', 'C ke A'], ans: 2, exp: 'Komposisi S∘R menghasilkan relasi dari A ke C, yaitu {(a,c) | ∃b: (a,b)∈R dan (b,c)∈S}.' },
+  { q: 'Fungsi bijektif \\(f: A \\to B\\) menjamin adanya...', opts: ['Penutupan transitif', 'Invers f⁻¹: B→A', 'Hanya injeksi', 'Hanya surjeksi'], ans: 1, exp: 'Fungsi bijektif selalu memiliki invers f⁻¹: B→A yang merupakan fungsi.' },
+  { q: 'Relasi \\(R\\) pada \\(A\\) adalah poset jika \\(R\\) bersifat...', opts: ['Refleksif, Simetris, Transitif', 'Refleksif, Antisimetris, Transitif', 'Irefleksif, Antisimetris, Transitif', 'Simetris, Antisimetris, Transitif'], ans: 1, exp: 'Poset (Partially Ordered Set) memerlukan: Refleksif, Antisimetris, dan Transitif.' },
+];
+
+let curQ = 0, answered = Array(questions.length).fill(null), score = 0;
+
+function renderQuiz() {
+  const q = questions[curQ];
+  const prev = answered[curQ];
+  const pct = Math.round(answered.filter(a=>a!==null).length / questions.length * 100);
+  document.getElementById('quizProgress').style.width = pct + '%';
+
+  let html = `<div class="quiz-container">
+    <div class="quiz-q"><span class="qnum">Soal ${curQ+1} dari ${questions.length}</span>${q.q}</div>
+    <div class="quiz-options">`;
+
+  q.opts.forEach((opt, i) => {
+    let cls = '';
+    if (prev !== null) {
+      if (i === q.ans) cls = 'correct';
+      else if (i === prev && prev !== q.ans) cls = 'wrong';
+    }
+    html += `<label class="quiz-opt ${cls}">
+      <input type="radio" name="qopt" value="${i}" ${prev!==null?'disabled':''} ${prev===i?'checked':''}>
+      <span>${opt}</span>
+    </label>`;
+  });
+
+  html += `</div>`;
+  if (prev !== null) {
+    const ok = prev === q.ans;
+    html += `<div class="feedback show ${ok?'ok':'no'}">${ok?'✅ Benar!':'❌ Kurang tepat.'} ${q.exp}</div>`;
+  } else {
+    html += `<div class="feedback" id="fb"></div>
+    <button class="btn btn-secondary" onclick="submitQ()">Jawab</button>`;
+  }
+  html += `</div>`;
+
+  document.getElementById('quizArea').innerHTML = html;
+  MathJax.typesetPromise && MathJax.typesetPromise([document.getElementById('quizArea')]);
+  document.getElementById('btnPrev').disabled = curQ === 0;
+  document.getElementById('btnNext').textContent = curQ === questions.length-1 ? 'Selesai' : 'Selanjutnya →';
+  const done = answered.filter(a=>a!==null).length;
+  document.getElementById('scoreBadge').textContent = done ? `Nilai: ${score}/${done}` : '';
+}
+
+function submitQ() {
+  const sel = document.querySelector('input[name="qopt"]:checked');
+  if (!sel) { alert('Pilih salah satu jawaban terlebih dahulu.'); return; }
+  const val = parseInt(sel.value);
+  answered[curQ] = val;
+  if (val === questions[curQ].ans) score++;
+  renderQuiz();
+}
+
+function nextQ() {
+  if (curQ === questions.length-1) {
+    const done = answered.filter(a=>a!==null).length;
+    alert(`🎓 Latihan selesai!\nNilai Anda: ${score}/${done} (${Math.round(score/done*100)}%)`);
+    return;
+  }
+  curQ++; renderQuiz();
+}
+function prevQ() { if (curQ > 0) { curQ--; renderQuiz(); } }
+
+// Init
+renderQuiz();
+drawRelation();
+calcCompose();
+</script>
+</body>
+</html>
