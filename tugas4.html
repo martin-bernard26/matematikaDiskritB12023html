@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Soal Pembuktian Relasi & Fungsi</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+    }
+};
+</script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            border-bottom: 2px solid #e8f0fe;
+            padding-bottom: 10px;
+        }
+
+        .instruction {
+            background: #e8f0fe;
+            padding: 15px;
+            border-left: 5px solid #1a73e8;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .question-card {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .question-card:hover {
+            transform: scale(1.01);
+            border-color: #1a73e8;
+        }
+
+        .q-header {
+            font-weight: bold;
+            color: #1a73e8;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .q-body {
+            margin-bottom: 15px;
+        }
+
+        .q-meta {
+            font-size: 0.85em;
+            color: #6c757d;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .latex-box {
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Latihan Pembuktian Matematika Diskrit</h1>
+    
+    <div class="instruction">
+        <strong>Instruksi:</strong> Kerjakan soal pembuktian berikut dengan menyusun argumen yang logis, sistematis, dan menggunakan definisi formal. Fokuslah pada ketepatan notasi dan alur komunikasi matematis.
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 1: Relasi Ekivalen</span>
+        <div class="q-body">
+            Misalkan $R$ adalah sebuah relasi pada himpunan bilangan bulat $\mathbb{Z}$ yang didefinisikan oleh $aRb$ jika dan hanya jika $3a + 4b$ habis dibagi $7$. Buktikan bahwa $R$ adalah relasi ekivalen.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Abstraksi Sifat Relasi</span>
+            <span>Topik: Relasi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 2: Komposisi Fungsi Injektif</span>
+        <div class="q-body">
+            Diberikan fungsi $f: A \to B$ dan $g: B \to C$. Buktikan secara formal bahwa jika $g \circ f$ adalah injektif, maka $f$ haruslah injektif. Berikan pula sebuah <i>counter-example</i> untuk menunjukkan bahwa $g$ tidak harus injektif.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Komunikasi Logika Kontradiksi</span>
+            <span>Topik: Fungsi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 3: Relasi Transitif</span>
+        <div class="q-body">
+            Buktikan bahwa jika relasi $R$ dan $S$ pada himpunan $A$ keduanya bersifat transitif, maka irisan keduanya $R \cap S$ juga bersifat transitif pada $A$.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Abstraksi Himpunan Relasi</span>
+            <span>Topik: Relasi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 4: Fungsi Bijektif</span>
+        <div class="q-body">
+            Buktikan bahwa fungsi $f: \mathbb{R} \setminus \{2\} \to \mathbb{R} \setminus \{1\}$ yang didefinisikan oleh $f(x) = \frac{x-3}{x-2}$ adalah fungsi bijektif.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Manipulasi Aljabar Formal</span>
+            <span>Topik: Fungsi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 5: Invers Relasi</span>
+        <div class="q-body">
+            Misalkan $R$ adalah relasi pada himpunan $A$. Buktikan bahwa $R$ bersifat simetris jika dan hanya jika $R = R^{-1}$, di mana $R^{-1}$ adalah relasi invers.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Komunikasi Bukti Dua Arah</span>
+            <span>Topik: Relasi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 6: Image dan Pre-image</span>
+        <div class="q-body">
+            Misalkan $f: A \to B$ adalah sebuah fungsi, dan $S, T$ adalah subhimpunan dari $A$. Buktikan bahwa $f(S \cup T) = f(S) \cup f(T)$.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Abstraksi Teori Himpunan</span>
+            <span>Topik: Fungsi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 7: Sifat Antisimetris</span>
+        <div class="q-body">
+            Didefinisikan relasi $R$ pada $\mathbb{Z}^+$ (bilangan bulat positif) sedemikian sehingga $aRb$ jika $a$ adalah pembagi dari $b$ ($a | b$). Buktikan bahwa $R$ bersifat antisimetris.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Komunikasi Definisi Pembagian</span>
+            <span>Topik: Relasi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 8: Komposisi Invers</span>
+        <div class="q-body">
+            Jika $f: A \to B$ dan $g: B \to C$ adalah dua fungsi yang bijektif, buktikan bahwa $(g \circ f)^{-1} = f^{-1} \circ g^{-1}$.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Abstraksi Operasi Komposisi</span>
+            <span>Topik: Fungsi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 9: Penutup Transitif (Transitive Closure)</span>
+        <div class="q-body">
+            Misalkan $R$ adalah relasi pada himpunan $A$. Buktikan bahwa jika $R$ refleksif, maka penutup transitifnya $R^*$ juga refleksif.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Komunikasi Struktur Induktif</span>
+            <span>Topik: Relasi</span>
+        </div>
+    </div>
+
+    <div class="question-card">
+        <span class="q-header">Soal 10: Sifat Fungsi Surjektif</span>
+        <div class="q-body">
+            Misalkan $f: A \to B$ dan $g: B \to C$. Buktikan bahwa jika $g \circ f$ adalah surjektif, maka $g$ haruslah surjektif. Berikan penjelasan mengapa $f$ tidak harus surjektif.
+        </div>
+        <div class="q-meta">
+            <span>Kemampuan: Abstraksi Pemetaan</span>
+            <span>Topik: Fungsi</span>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p style="text-align: center; color: #6c757d; margin-top: 20px;">
+        Dibuat untuk pengembangan kemampuan berpikir kritis mahasiswa Matematika/Informatika.
+    </p>
+</footer>
+
+</body>
+</html>
