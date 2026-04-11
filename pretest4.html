@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesmen Awal Relasi & Fungsi</title>
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: linear-gradient(135deg, #38f9d7, #43e97b);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Asesmen Awal Relasi & Fungsi</h1>
+
+<form id="quizForm">
+
+<div class="question">
+<label>Nama</label>
+<input type="text" id="nama" required>
+</div>
+
+<div class="question">
+<label>NIM</label>
+<input type="text" id="nim" required>
+</div>
+
+<!-- SOAL -->
+
+<div class="question">
+<label>1. Apa yang dimaksud dengan relasi?</label>
+<input type="text" id="q1">
+</div>
+
+<div class="question">
+<label>2. Contoh relasi dalam kehidupan sehari-hari?</label>
+<input type="text" id="q2">
+</div>
+
+<div class="question">
+<label>3. Relasi dari A ke B adalah...</label>
+<input type="text" id="q3">
+</div>
+
+<div class="question">
+<label>4. Apa yang dimaksud fungsi?</label>
+<input type="text" id="q4">
+</div>
+
+<div class="question">
+<label>5. Apakah semua relasi adalah fungsi?</label>
+<select id="q5">
+<option>Ya</option>
+<option>Tidak</option>
+</select>
+</div>
+
+<div class="question">
+<label>6. Fungsi memiliki sifat...</label>
+<input type="text" id="q6">
+</div>
+
+<div class="question">
+<label>7. Apa itu domain?</label>
+<input type="text" id="q7">
+</div>
+
+<div class="question">
+<label>8. Apa itu kodomain?</label>
+<input type="text" id="q8">
+</div>
+
+<div class="question">
+<label>9. Apa itu range?</label>
+<input type="text" id="q9">
+</div>
+
+<div class="question">
+<label>10. Berikan contoh fungsi sederhana</label>
+<input type="text" id="q10">
+</div>
+
+<button type="submit">Kirim Jawaban</button>
+
+</form>
+</div>
+
+<script>
+document.getElementById("quizForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let formURL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLSdxi_Qo71UjgpRyzpWG1F1EihhXKEk20TMKcB7TtrNf0cnSJw/formResponse";
+
+    let data = new FormData();
+
+    // GANTI entry sesuai Google Form
+    data.append("entry.777931652", document.getElementById("nama").value);
+    data.append("entry.1969429791", document.getElementById("nim").value);
+    data.append("entry.2105698025", document.getElementById("q1").value);
+    data.append("entry.393494688", document.getElementById("q2").value);
+    data.append("entry.596117860", document.getElementById("q3").value);
+    data.append("entry.367491199", document.getElementById("q4").value);
+    data.append("entry.1238421589", document.getElementById("q5").value);
+    data.append("entry.102419755", document.getElementById("q6").value);
+    data.append("entry.2014281511", document.getElementById("q7").value);
+    data.append("entry.1610617528", document.getElementById("q8").value);
+    data.append("entry.518196864", document.getElementById("q9").value);
+    data.append("entry.2105131", document.getElementById("q10").value);
+
+    fetch(formURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: data
+    }).then(() => {
+        alert("Jawaban berhasil dikirim!");
+        document.getElementById("quizForm").reset();
+    });
+});
+</script>
+
+</body>
+</html>
