@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latihan Pembuktian Matematika Diskrit</title>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+window.MathJax = {
+    tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+    }
+};
+</script>
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .quiz-card {
+            background: var(--card-bg);
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent-color);
+        }
+
+        .question-number {
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .question-text {
+            font-size: 1.15em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .hint {
+            background: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            border-left: 3px solid #3498db;
+        }
+
+        .answer-section {
+            margin-top: 15px;
+        }
+
+        .answer-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .answer-item:hover {
+            background-color: #f9f9f9;
+            border-color: var(--accent-color);
+        }
+
+        .correct-badge {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .rationale {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .quiz-card { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Matematika Diskrit</h1>
+        <p>Latihan Pembuktian Relasi & Fungsi</p>
+    </header>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 1</span>
+        <div class="question-text">
+            Buktikan bahwa jika $R$ adalah relasi yang transitif pada himpunan $A$, maka relasi invers $R^{-1}$ juga bersifat transitif.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Misalkan $(x, y) \in R^{-1}$ dan $(y, z) \in R^{-1}$, gunakan definisi relasi invers.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 2</span>
+        <div class="question-text">
+            Misalkan $f: A \to B$ dan $g: B \to C$ adalah fungsi injektif. Buktikan bahwa fungsi komposisi $g \circ f: A \to C$ juga injektif.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Gunakan definisi injektif: jika $(g \circ f)(x_1) = (g \circ f)(x_2)$, buktikan $x_1 = x_2$.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 3</span>
+        <div class="question-text">
+            Buktikan bahwa relasi $R$ pada $\mathbb{Z}$ yang didefinisikan oleh $a \equiv b \pmod{n}$ adalah relasi refleksif.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Cek apakah $a \equiv a \pmod{n}$ selalu benar untuk setiap $a \in \mathbb{Z}$.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 4</span>
+        <div class="question-text">
+            Buktikan bahwa jika $R$ dan $S$ adalah relasi simetris pada $A$, maka $R \cap S$ juga simetris.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Ambil $(x, y) \in R \cap S$ dan tunjukkan $(y, x) \in R \cap S$.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 5</span>
+        <div class="question-text">
+            Buktikan bahwa fungsi $f: \mathbb{R} \to \mathbb{R}$ dengan $f(x) = 2x + 3$ adalah fungsi surjektif.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Untuk setiap $y \in \mathbb{R}$, temukan $x$ sehingga $f(x) = y$.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 6</span>
+        <div class="question-text">
+            Buktikan bahwa relasi 'lebih besar dari' ($>$) pada $\mathbb{Z}$ bersifat antisimetris.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Ingat implikasi $(a R b \land b R a) \implies a = b$.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 7</span>
+        <div class="question-text">
+            Jika $R$ relasi ekuivalen dan $(a, b) \in R$, buktikan $[a] = [b]$.
+        </div>
+        <div class="hint">
+            <strong>Petunjuk:</strong> Gunakan sifat transitif untuk menunjukkan subset dua arah.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 8</span>
+        <div class="question-text">
+            Buktikan fungsi konstanta $f(x) = c$ pada domain $|A| > 1$ tidak injektif.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 9</span>
+        <div class="question-text">
+            Buktikan komposisi dua fungsi surjektif $g \circ f$ adalah surjektif.
+        </div>
+     </div>
+
+    <div class="quiz-card">
+        <span class="question-number">Soal 10</span>
+        <div class="question-text">
+            Buktikan relasi $a R b$ jika 'a lebih tinggi dari b' adalah asimetris.
+        </div>
+     </div>
+
+    <footer>
+        <p>&copy; 2026 Pembelajaran Matematika Diskrit - Abstraksi & Komunikasi</p>
+    </footer>
+</div>
+
+</body>
+</html>
