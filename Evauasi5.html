@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soal Analisis Pembuktian — Matematika Diskrit</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1209;
+    --parchment: #f5edd8;
+    --cream: #faf5e8;
+    --gold: #b8860b;
+    --gold-light: #d4a520;
+    --rust: #8b2500;
+    --sage: #3d5a3e;
+    --muted: #6b5e45;
+    --border: #c8b08a;
+    --shadow: rgba(26,18,9,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(184,134,11,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,37,0,0.05) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b8860b' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, var(--ink) 0%, #2d1f0a 100%);
+    color: var(--parchment);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 4px double var(--gold);
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(184,134,11,0.04) 40px, rgba(184,134,11,0.04) 41px
+    );
+  }
+  .header-ornament {
+    font-size: 1.4rem;
+    letter-spacing: .4em;
+    color: var(--gold);
+    opacity: .7;
+    display: block;
+    margin-bottom: .6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+  }
+  header h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    letter-spacing: .02em;
+    line-height: 1.2;
+    position: relative;
+  }
+  header h1 span { color: var(--gold-light); font-style: italic; }
+  .header-sub {
+    margin-top: .8rem;
+    font-size: .95rem;
+    opacity: .75;
+    letter-spacing: .08em;
+    font-style: italic;
+  }
+  .instructor-tag {
+    display: inline-block;
+    margin-top: 1.2rem;
+    padding: .35rem 1.4rem;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    font-size: .8rem;
+    letter-spacing: .15em;
+    color: var(--gold-light);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+  }
+
+  /* ─── LEGEND CHIPS ─── */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: .6rem;
+    justify-content: center;
+    padding: 1.2rem 2rem;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border);
+  }
+  .chip {
+    display: flex; align-items: center; gap: .4rem;
+    padding: .3rem .9rem;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-family: 'JetBrains Mono', monospace;
+    border: 1px solid;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .cat-proposisi  { color: #6b2d00; border-color: #c08060; background: #fff4ee; }
+  .cat-kuantor    { color: #1a4030; border-color: #6aab87; background: #eef7f2; }
+  .cat-logika     { color: #2b3c6b; border-color: #7090c8; background: #eef2fb; }
+  .cat-himpunan   { color: #5b1f5f; border-color: #a878ad; background: #f7eef8; }
+  .cat-relasi     { color: #4a3500; border-color: #c0a040; background: #fdf8ec; }
+
+  /* ─── MAIN WRAPPER ─── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ─── PROGRESS ─── */
+  .progress-bar-wrap {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    height: 6px;
+    margin-bottom: 2.5rem;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    width: 0%;
+    transition: width .5s ease;
+    border-radius: 4px;
+  }
+
+  /* ─── CARD ─── */
+  .soal-card {
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 2px 4px 18px var(--shadow);
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp .55s ease forwards;
+    position: relative;
+  }
+  .soal-card:nth-child(1) { animation-delay: .05s }
+  .soal-card:nth-child(2) { animation-delay: .10s }
+  .soal-card:nth-child(3) { animation-delay: .15s }
+  .soal-card:nth-child(4) { animation-delay: .20s }
+  .soal-card:nth-child(5) { animation-delay: .25s }
+  .soal-card:nth-child(6) { animation-delay: .30s }
+  .soal-card:nth-child(7) { animation-delay: .35s }
+  .soal-card:nth-child(8) { animation-delay: .40s }
+  .soal-card:nth-child(9) { animation-delay: .45s }
+  .soal-card:nth-child(10){ animation-delay: .50s }
+
+  @keyframes fadeUp {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* accent stripe per category */
+  .soal-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    border-radius: 4px 0 0 4px;
+  }
+  .cat-proposisi-card::before  { background: #c08060; }
+  .cat-kuantor-card::before    { background: #6aab87; }
+  .cat-logika-card::before     { background: #7090c8; }
+  .cat-himpunan-card::before   { background: #a878ad; }
+  .cat-relasi-card::before     { background: #c0a040; }
+
+  .card-header {
+    display: flex; align-items: flex-start; gap: 1rem;
+    padding: 1.2rem 1.5rem 1rem 1.8rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .soal-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 2.5rem;
+  }
+  .card-meta { flex: 1; }
+  .card-category {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .15rem .7rem;
+    border-radius: 2px;
+    margin-bottom: .4rem;
+  }
+  .cat-proposisi  .card-category { background:#fff4ee; color:#6b2d00; }
+  .cat-kuantor    .card-category { background:#eef7f2; color:#1a4030; }
+  .cat-logika     .card-category { background:#eef2fb; color:#2b3c6b; }
+  .cat-himpunan   .card-category { background:#f7eef8; color:#5b1f5f; }
+  .cat-relasi     .card-category { background:#fdf8ec; color:#4a3500; }
+
+  .soal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .card-body { padding: 1.2rem 1.5rem 1.2rem 1.8rem; }
+
+  .soal-text {
+    font-size: .975rem;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+
+  /* math block */
+  .math-block {
+    background: #fff8f0;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 3px 3px 0;
+    padding: .9rem 1.2rem;
+    margin: .8rem 0;
+    font-size: .95rem;
+    overflow-x: auto;
+  }
+
+  /* petunjuk */
+  .petunjuk {
+    background: rgba(61,90,62,.07);
+    border: 1px dashed #6aab87;
+    border-radius: 3px;
+    padding: .7rem 1rem;
+    font-size: .88rem;
+    color: var(--sage);
+    margin-top: .8rem;
+    line-height: 1.6;
+  }
+  .petunjuk strong {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: .3rem;
+    color: var(--sage);
+  }
+
+  /* toggle jawaban */
+  .toggle-btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    margin-top: 1.1rem;
+    padding: .5rem 1.2rem;
+    background: none;
+    border: 1.5px solid var(--gold);
+    border-radius: 3px;
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .toggle-btn:hover { background: var(--gold); color: var(--parchment); }
+  .toggle-icon { transition: transform .3s; font-style: normal; }
+  .toggle-btn.open .toggle-icon { transform: rotate(180deg); }
+
+  /* jawaban area */
+  .jawaban-area {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .45s cubic-bezier(.4,0,.2,1), padding .3s;
+  }
+  .jawaban-area.visible { max-height: 800px; }
+
+  .jawaban-inner {
+    margin-top: 1rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1.1rem 1.3rem;
+  }
+  .jawaban-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: .6rem;
+    display: block;
+  }
+  .jawaban-step {
+    font-size: .9rem;
+    line-height: 1.9;
+    color: #2a1f0e;
+  }
+  .step-line {
+    display: flex; gap: .8rem; margin-bottom: .4rem;
+  }
+  .step-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    color: var(--gold);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: .15rem;
+  }
+
+  /* ─── SCORE PANEL ─── */
+  #score-panel {
+    display: none;
+    background: linear-gradient(135deg, var(--ink), #2d1f0a);
+    color: var(--parchment);
+    border-radius: 4px;
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 2rem;
+    box-shadow: 4px 8px 32px var(--shadow);
+  }
+  #score-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--gold-light);
+    margin-bottom: .5rem;
+  }
+  #score-panel p { opacity: .75; font-size: .95rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: .8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    letter-spacing: .05em;
+  }
+  footer strong { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    .card-header { gap: .6rem; }
+    .soal-number { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-ornament">✦ &nbsp; IKIP SILIWANGI &nbsp; ✦</span>
+  <h1>Analisis <span>Pembuktian</span> Matematika</h1>
+  <p class="header-sub">Proposisi · Kuantor · Logika Kesimpulan · Himpunan · Relasi &amp; Fungsi</p>
+  <div class="instructor-tag">Martin Bernard, M.Pd.</div>
+</header>
+
+<div class="legend">
+  <div class="chip cat-proposisi"><span class="chip-dot" style="background:#c08060"></span>Proposisi</div>
+  <div class="chip cat-kuantor"><span class="chip-dot" style="background:#6aab87"></span>Kuantor</div>
+  <div class="chip cat-logika"><span class="chip-dot" style="background:#7090c8"></span>Logika Kesimpulan</div>
+  <div class="chip cat-himpunan"><span class="chip-dot" style="background:#a878ad"></span>Teori Himpunan</div>
+  <div class="chip cat-relasi"><span class="chip-dot" style="background:#c0a040"></span>Relasi &amp; Fungsi</div>
+</div>
+
+<main>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progBar"></div></div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 1 — PROPOSISI -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-proposisi-card cat-proposisi">
+    <div class="card-header">
+      <div class="soal-number">01</div>
+      <div class="card-meta">
+        <span class="card-category">Proposisi — Tautologi &amp; Kontradiksi</span>
+        <div class="soal-title">Buktikan bahwa \(p \to (q \to p)\) adalah tautologi.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Diberikan formula proposisional \(p \to (q \to p)\). Tanpa menggunakan tabel kebenaran,
+        buktikan secara aljabar bahwa formula ini merupakan <em>tautologi</em> (bernilai benar
+        untuk semua nilai kebenaran \(p\) dan \(q\)).
+      </p>
+      <div class="math-block">
+        \[p \to (q \to p)\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Gunakan ekuivalensi \(A \to B \equiv \lnot A \lor B\), lalu distribusikan dan sederhanakan
+        hingga diperoleh sebuah tautologi dasar.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">①</span><span>Terapkan \(A\to B\equiv\lnot A\lor B\) pada formula luar: \(\lnot p \lor (q\to p)\).</span></div>
+            <div class="step-line"><span class="step-n">②</span><span>Terapkan lagi pada \(q\to p\): \(\lnot p \lor (\lnot q \lor p)\).</span></div>
+            <div class="step-line"><span class="step-n">③</span><span>Sifat asosiatif: \((\lnot p \lor p) \lor \lnot q\).</span></div>
+            <div class="step-line"><span class="step-n">④</span><span>\(\lnot p \lor p \equiv \mathbf{T}\), sehingga seluruh ekspresi \(\equiv \mathbf{T} \lor \lnot q \equiv \mathbf{T}\).</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>Formula adalah <strong>tautologi</strong>. \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 2 — PROPOSISI -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-proposisi-card cat-proposisi">
+    <div class="card-header">
+      <div class="soal-number">02</div>
+      <div class="card-meta">
+        <span class="card-category">Proposisi — Hukum De Morgan</span>
+        <div class="soal-title">Buktikan Hukum De Morgan: \(\lnot(p \land q) \equiv \lnot p \lor \lnot q\).</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Buktikan ekuivalensi logika berikut menggunakan <em>dua cara</em>: (a) tabel kebenaran,
+        dan (b) rantai ekuivalensi aljabar.
+      </p>
+      <div class="math-block">
+        \[\lnot(p \land q) \equiv \lnot p \lor \lnot q\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Untuk metode (b), gunakan definisi \(A\land B \equiv \lnot(\lnot A\lor\lnot B)\) lalu
+        terapkan hukum double negation.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(a)</span><span>Tabel kebenaran: untuk ke-4 kombinasi \((p,q)\), nilai \(\lnot(p\land q)\) dan \(\lnot p\lor\lnot q\) identik di setiap baris → ekuivalen.</span></div>
+            <div class="step-line"><span class="step-n">(b)</span><span>\(\lnot(p\land q) \equiv \lnot\lnot(\lnot p\lor\lnot q)\) &nbsp;[def. \(\land\)]</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>\(\equiv \lnot p\lor\lnot q\) &nbsp;[double negation] \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 3 — KUANTOR -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-kuantor-card cat-kuantor">
+    <div class="card-header">
+      <div class="soal-number">03</div>
+      <div class="card-meta">
+        <span class="card-category">Kuantor — Negasi Kuantor</span>
+        <div class="soal-title">Tentukan negasi dari \(\forall x\,\exists y\,(x + y = 0)\) dan buktikan kebenarannya di \(\mathbb{Z}\).</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Diberikan pernyataan berkuantor dalam domain bilangan bulat \(\mathbb{Z}\):
+      </p>
+      <div class="math-block">
+        \[P: \forall x\in\mathbb{Z},\;\exists y\in\mathbb{Z},\;(x+y=0)\]
+      </div>
+      <p class="soal-text">
+        (a) Tuliskan negasi formal dari \(P\). &nbsp;(b) Tentukan nilai kebenaran \(P\) beserta buktinya.
+      </p>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Ingat: \(\lnot\forall x\,Q(x) \equiv \exists x\,\lnot Q(x)\) dan \(\lnot\exists y\,R(y) \equiv \forall y\,\lnot R(y)\).
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(a)</span><span>\(\lnot P:\;\exists x\in\mathbb{Z},\;\forall y\in\mathbb{Z},\;(x+y\neq 0)\)</span></div>
+            <div class="step-line"><span class="step-n">(b)</span><span>\(P\) bernilai <strong>BENAR</strong>. Bukti: untuk setiap \(x\in\mathbb{Z}\), pilih \(y=-x\). Maka \(x+(-x)=0\). Karena \(-x\in\mathbb{Z}\), syarat terpenuhi untuk semua \(x\). \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 4 — KUANTOR -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-kuantor-card cat-kuantor">
+    <div class="card-header">
+      <div class="soal-number">04</div>
+      <div class="card-meta">
+        <span class="card-category">Kuantor — Urutan Kuantor</span>
+        <div class="soal-title">Apakah \(\exists x\,\forall y\,(x\leq y)\) ekuivalen dengan \(\forall y\,\exists x\,(x\leq y)\) pada \(\mathbb{R}\)?</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Analisis dan buktikan apakah kedua pernyataan berkuantor berikut memiliki nilai kebenaran
+        yang sama pada domain bilangan real \(\mathbb{R}\):
+      </p>
+      <div class="math-block">
+        \[P_1:\;\exists x\in\mathbb{R},\;\forall y\in\mathbb{R},\;(x\leq y)\]
+        \[P_2:\;\forall y\in\mathbb{R},\;\exists x\in\mathbb{R},\;(x\leq y)\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Urutan kuantor yang berbeda dapat menghasilkan nilai kebenaran berbeda. Cari kontraeksemplar untuk \(P_1\).
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">P₁</span><span><strong>SALAH.</strong> \(P_1\) mengklaim ada bilangan real terkecil. Ambil \(y=x-1 < x\), maka \(x\leq x-1\) tidak mungkin benar. Kontradiksi.</span></div>
+            <div class="step-line"><span class="step-n">P₂</span><span><strong>BENAR.</strong> Untuk setiap \(y\in\mathbb{R}\), pilih \(x=y-1\). Maka \(x=y-1\leq y\). \(\blacksquare\)</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>\(P_1\not\equiv P_2\). Urutan kuantor <strong>tidak</strong> dapat dipertukarkan secara bebas.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 5 — LOGIKA KESIMPULAN -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-logika-card cat-logika">
+    <div class="card-header">
+      <div class="soal-number">05</div>
+      <div class="card-meta">
+        <span class="card-category">Logika Kesimpulan — Modus Ponens &amp; Syllogism</span>
+        <div class="soal-title">Periksa kevalidan argumen berikut menggunakan aturan inferensi.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Diberikan argumen berikut:
+      </p>
+      <div class="math-block">
+        \[\text{Premis 1: } p\to q\]
+        \[\text{Premis 2: } q\to r\]
+        \[\text{Premis 3: } p\]
+        \[\hline\]
+        \[\text{Kesimpulan: } r\]
+      </div>
+      <p class="soal-text">Buktikan bahwa argumen ini valid menggunakan aturan inferensi formal.</p>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Terapkan <em>Modus Ponens</em> dua kali, atau gunakan <em>Hypothetical Syllogism</em>
+        diikuti Modus Ponens.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">①</span><span>\(p\to q\) &nbsp;&amp;&amp;&nbsp; \(q\to r\) &nbsp;⟹&nbsp; \(p\to r\) &nbsp;&nbsp;[Hypothetical Syllogism]</span></div>
+            <div class="step-line"><span class="step-n">②</span><span>\(p\to r\) &nbsp;&amp;&amp;&nbsp; \(p\) &nbsp;⟹&nbsp; \(r\) &nbsp;&nbsp;[Modus Ponens]</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>Argumen <strong>valid</strong>. \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 6 — LOGIKA KESIMPULAN -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-logika-card cat-logika">
+    <div class="card-header">
+      <div class="soal-number">06</div>
+      <div class="card-meta">
+        <span class="card-category">Logika Kesimpulan — Bukti Kontradiksi</span>
+        <div class="soal-title">Buktikan dengan kontradiksi: Jika \(n^2\) genap, maka \(n\) genap.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Gunakan metode <em>bukti kontradiksi (reductio ad absurdum)</em> untuk membuktikan
+        pernyataan berikut untuk setiap bilangan bulat \(n\):
+      </p>
+      <div class="math-block">
+        \[\forall n\in\mathbb{Z},\quad n^2 \text{ genap} \implies n \text{ genap}\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Asumsikan \(n\) ganjil, yaitu \(n=2k+1\) untuk suatu \(k\in\mathbb{Z}\), kemudian
+        hitung \(n^2\) dan tunjukkan kontradiksi.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">①</span><span>Asumsi negasi: misal \(n^2\) genap tetapi \(n\) ganjil.</span></div>
+            <div class="step-line"><span class="step-n">②</span><span>Karena \(n\) ganjil, tuliskan \(n=2k+1\) untuk suatu \(k\in\mathbb{Z}\).</span></div>
+            <div class="step-line"><span class="step-n">③</span><span>\(n^2=(2k+1)^2=4k^2+4k+1=2(2k^2+2k)+1\), yang merupakan bilangan ganjil.</span></div>
+            <div class="step-line"><span class="step-n">④</span><span>Ini kontradiksi dengan asumsi \(n^2\) genap.</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>Asumsi salah, jadi jika \(n^2\) genap maka \(n\) harus genap. \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 7 — HIMPUNAN -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-himpunan-card cat-himpunan">
+    <div class="card-header">
+      <div class="soal-number">07</div>
+      <div class="card-meta">
+        <span class="card-category">Teori Himpunan — Identitas Himpunan</span>
+        <div class="soal-title">Buktikan: \(A \cap (B \cup C) = (A \cap B) \cup (A \cap C)\).</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Buktikan hukum distributif himpunan berikut menggunakan pendekatan
+        <em>inklusi dua arah</em> (double inclusion / subset mutual).
+      </p>
+      <div class="math-block">
+        \[A \cap (B \cup C) = (A \cap B) \cup (A \cap C)\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Tunjukkan (⊆) dan (⊇). Untuk setiap arah, ambil elemen sembarang dan gunakan definisi
+        irisan serta gabungan.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(⊆)</span><span>Ambil \(x\in A\cap(B\cup C)\). Maka \(x\in A\) dan \(x\in B\cup C\).</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>Kasus 1: \(x\in B\) ⟹ \(x\in A\cap B\) ⟹ \(x\in(A\cap B)\cup(A\cap C)\).</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>Kasus 2: \(x\in C\) ⟹ \(x\in A\cap C\) ⟹ \(x\in(A\cap B)\cup(A\cap C)\). ✓</span></div>
+            <div class="step-line"><span class="step-n">(⊇)</span><span>Ambil \(x\in(A\cap B)\cup(A\cap C)\). Maka \(x\in A\cap B\) atau \(x\in A\cap C\).</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>Dalam kedua kasus: \(x\in A\) dan \(x\in B\cup C\), sehingga \(x\in A\cap(B\cup C)\). ✓</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>Keduanya saling inklusif, terbukti kesetaraan himpunan. \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 8 — HIMPUNAN -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-himpunan-card cat-himpunan">
+    <div class="card-header">
+      <div class="soal-number">08</div>
+      <div class="card-meta">
+        <span class="card-category">Teori Himpunan — Komplemen &amp; Selisih</span>
+        <div class="soal-title">Buktikan: \(A \setminus B = A \cap B^c\) dan implikasinya \(A\subseteq B\Rightarrow A\setminus B=\emptyset\).</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        (a) Buktikan secara formal bahwa selisih himpunan sama dengan irisan dengan komplemen.
+        (b) Gunakan hasil (a) untuk membuktikan implikasi:
+      </p>
+      <div class="math-block">
+        \[(a)\;A\setminus B = A\cap B^c \qquad (b)\; A\subseteq B \;\Rightarrow\; A\setminus B = \emptyset\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Untuk (b), gunakan kontrapositif atau langsung: jika \(A\subseteq B\) maka tidak ada elemen
+        \(A\) yang berada di luar \(B\), sehingga \(A\cap B^c=\emptyset\).
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(a)</span><span>\(x\in A\setminus B \iff x\in A \land x\notin B \iff x\in A \land x\in B^c \iff x\in A\cap B^c\). Jadi \(A\setminus B=A\cap B^c\). \(\checkmark\)</span></div>
+            <div class="step-line"><span class="step-n">(b)</span><span>Misalkan \(A\subseteq B\). Ambil sembarang \(x\in A\). Karena \(A\subseteq B\), maka \(x\in B\), sehingga \(x\notin B^c\).</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>Jadi tidak ada \(x\) yang memenuhi \(x\in A\) dan \(x\in B^c\) sekaligus, artinya \(A\cap B^c=\emptyset\).</span></div>
+            <div class="step-line"><span class="step-n">&nbsp;</span><span>Dari (a): \(A\setminus B=A\cap B^c=\emptyset\). \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 9 — RELASI -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-relasi-card cat-relasi">
+    <div class="card-header">
+      <div class="soal-number">09</div>
+      <div class="card-meta">
+        <span class="card-category">Relasi — Relasi Ekuivalensi</span>
+        <div class="soal-title">Buktikan bahwa kongruensi modulo \(n\) adalah relasi ekuivalensi pada \(\mathbb{Z}\).</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Definisikan relasi \(R\) pada \(\mathbb{Z}\) oleh: \(a\,R\,b \iff n\mid(a-b)\) untuk suatu
+        bilangan bulat positif \(n\). Buktikan bahwa \(R\) adalah relasi ekuivalensi dengan
+        memverifikasi ketiga sifat berikut:
+      </p>
+      <div class="math-block">
+        \[\text{(i) Refleksif}\quad\text{(ii) Simetris}\quad\text{(iii) Transitif}\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Ingat: \(n\mid k\) artinya \(\exists q\in\mathbb{Z},\;k=nq\).
+        Gunakan definisi ini langsung pada setiap pembuktian sifat.
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(i)</span><span><strong>Refleksif:</strong> \(a-a=0=n\cdot 0\), jadi \(n\mid 0\), sehingga \(a\,R\,a\). ✓</span></div>
+            <div class="step-line"><span class="step-n">(ii)</span><span><strong>Simetris:</strong> Jika \(n\mid(a-b)\) maka \(a-b=nq\). Maka \(b-a=n(-q)\), jadi \(n\mid(b-a)\), sehingga \(b\,R\,a\). ✓</span></div>
+            <div class="step-line"><span class="step-n">(iii)</span><span><strong>Transitif:</strong> Jika \(a-b=nq_1\) dan \(b-c=nq_2\), maka \(a-c=(a-b)+(b-c)=n(q_1+q_2)\). Jadi \(n\mid(a-c)\) sehingga \(a\,R\,c\). ✓</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>Kongruensi modulo \(n\) adalah <strong>relasi ekuivalensi</strong>. \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- SOAL 10 — FUNGSI -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="soal-card cat-relasi-card cat-relasi">
+    <div class="card-header">
+      <div class="soal-number">10</div>
+      <div class="card-meta">
+        <span class="card-category">Fungsi — Injeksi, Surjeksi &amp; Bijeksi</span>
+        <div class="soal-title">Buktikan \(f:\mathbb{R}\to\mathbb{R}\), \(f(x)=3x-5\) adalah bijeksi dan tentukan inversnya.</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p class="soal-text">
+        Diberikan fungsi \(f:\mathbb{R}\to\mathbb{R}\) yang didefinisikan sebagai \(f(x)=3x-5\).
+        (a) Buktikan \(f\) injektif (satu-satu). &nbsp;(b) Buktikan \(f\) surjektif (onto).
+        &nbsp;(c) Tentukan fungsi invers \(f^{-1}(x)\).
+      </p>
+      <div class="math-block">
+        \[f(x) = 3x - 5,\quad f:\mathbb{R}\to\mathbb{R}\]
+      </div>
+      <div class="petunjuk">
+        <strong>Petunjuk</strong>
+        Injektif: asumsikan \(f(x_1)=f(x_2)\) lalu simpulkan \(x_1=x_2\).
+        Surjektif: untuk \(y\in\mathbb{R}\) sembarang, cari \(x\) sehingga \(f(x)=y\).
+      </div>
+      <button class="toggle-btn" onclick="toggleJawaban(this)">
+        <em class="toggle-icon">▾</em> Lihat Pembahasan
+      </button>
+      <div class="jawaban-area">
+        <div class="jawaban-inner">
+          <span class="jawaban-label">Pembahasan</span>
+          <div class="jawaban-step">
+            <div class="step-line"><span class="step-n">(a)</span><span><strong>Injektif:</strong> Misalkan \(f(x_1)=f(x_2)\). Maka \(3x_1-5=3x_2-5\) ⟹ \(3x_1=3x_2\) ⟹ \(x_1=x_2\). ✓</span></div>
+            <div class="step-line"><span class="step-n">(b)</span><span><strong>Surjektif:</strong> Untuk \(y\in\mathbb{R}\) sembarang, pilih \(x=\dfrac{y+5}{3}\in\mathbb{R}\). Maka \(f(x)=3\cdot\dfrac{y+5}{3}-5=y\). ✓</span></div>
+            <div class="step-line"><span class="step-n">(c)</span><span>Dari \(y=3x-5\), diperoleh \(x=\dfrac{y+5}{3}\). Jadi \(f^{-1}(x)=\dfrac{x+5}{3}\).</span></div>
+            <div class="step-line"><span class="step-n">∴</span><span>\(f\) adalah <strong>bijeksi</strong> dengan invers \(f^{-1}(x)=\dfrac{x+5}{3}\). \(\blacksquare\)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="score-panel">
+    <h2>✦ Semua Pembahasan Terbuka</h2>
+    <p>Anda telah memeriksa seluruh 10 soal analisis pembuktian.</p>
+  </div>
+</main>
+
+<footer>
+  <p>Mata Kuliah <strong>Matematika Diskrit &amp; Analisis Real</strong> &nbsp;|&nbsp;
+  <strong>Martin Bernard, M.Pd.</strong> &nbsp;|&nbsp; IKIP Siliwangi &nbsp;|&nbsp; 2025</p>
+</footer>
+
+<script>
+  let openCount = 0;
+  const total = 10;
+
+  function toggleJawaban(btn) {
+    const area = btn.nextElementSibling;
+    const isOpen = area.classList.contains('visible');
+
+    area.classList.toggle('visible', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.toggle-icon').textContent = isOpen ? '▾' : '▴';
+    btn.childNodes[1].textContent = isOpen ? ' Lihat Pembahasan' : ' Sembunyikan';
+
+    if (!isOpen) {
+      openCount++;
+    } else {
+      openCount = Math.max(0, openCount - 1);
+    }
+
+    // Count currently open
+    const allOpen = document.querySelectorAll('.jawaban-area.visible').length;
+    document.getElementById('progBar').style.width = (allOpen / total * 100) + '%';
+
+    if (allOpen === total) {
+      document.getElementById('score-panel').style.display = 'block';
+      document.getElementById('score-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      document.getElementById('score-panel').style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>
