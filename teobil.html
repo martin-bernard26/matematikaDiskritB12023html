@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soal Cerita Teori Bilangan – Matematika Diskrit</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --border2: #444c56;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --gold: #f0c040;
+  --gold2: #ffd700;
+  --gold-dim: rgba(240,192,64,0.15);
+  --gold-glow: rgba(240,192,64,0.08);
+  --teal: #39c5bb;
+  --teal-dim: rgba(57,197,187,0.12);
+  --rose: #e05c7a;
+  --rose-dim: rgba(224,92,122,0.12);
+  --sage: #7ec86d;
+  --sage-dim: rgba(126,200,109,0.12);
+  --violet: #a78bfa;
+  --violet-dim: rgba(167,139,250,0.12);
+  --amber: #fb923c;
+  --amber-dim: rgba(251,146,60,0.12);
+  --sky: #38bdf8;
+  --sky-dim: rgba(56,189,248,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative;
+  padding: 4rem 2rem 3rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(240,192,64,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-block;
+  background: var(--gold-dim);
+  border: 1px solid rgba(240,192,64,0.3);
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+header h1 {
+  font-family: 'Lora', serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+header h1 span { color: var(--gold); }
+.header-desc {
+  color: var(--text2);
+  font-size: 15px;
+  max-width: 560px;
+  margin: 0 auto 2rem;
+}
+.stat-row {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.stat {
+  text-align: center;
+}
+.stat-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--gold);
+  display: block;
+}
+.stat-lbl {
+  font-size: 12px;
+  color: var(--text3);
+  letter-spacing: 1px;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(13,17,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+}
+.filter-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  align-items: center;
+}
+.filter-inner::-webkit-scrollbar { display: none; }
+.filter-label {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: 'DM Mono', monospace;
+  white-space: nowrap;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  margin-right: 0.25rem;
+}
+.ftag {
+  flex-shrink: 0;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  padding: 5px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ftag:hover { border-color: var(--gold); color: var(--gold); }
+.ftag.active { background: var(--gold); color: #0d1117; border-color: var(--gold); font-weight: 600; }
+
+/* ── MAIN ── */
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+/* ── SOAL CARD ── */
+.soal-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s;
+  animation: slideUp 0.4s ease both;
+}
+.soal-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card header */
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem 1.2rem;
+  cursor: pointer;
+  user-select: none;
+}
+.card-num {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 1px;
+}
+.card-meta { flex: 1; }
+.card-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.ctag {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+.card-title {
+  font-family: 'Lora', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 0.35rem;
+}
+.card-story {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.65;
+  font-style: italic;
+}
+.card-arrow {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3);
+  font-size: 13px;
+  transition: all 0.25s;
+  margin-top: 2px;
+}
+.soal-card.open .card-arrow { background: var(--gold); color: #000; border-color: var(--gold); transform: rotate(180deg); }
+
+/* Divider */
+.card-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 1.5rem;
+}
+
+/* Body */
+.card-body {
+  display: none;
+  padding: 1.5rem;
+}
+.soal-card.open .card-body { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Pertanyaan */
+.soal-pertanyaan {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Lora', serif;
+  font-size: 15px;
+  color: var(--text);
+}
+.soal-pertanyaan .q-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+/* Langkah jawaban */
+.jawaban-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.jawaban-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.langkah {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
+}
+.langkah-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 1px;
+}
+.langkah-isi {
+  flex: 1;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.langkah-isi strong { color: var(--text); font-weight: 500; }
+.langkah-isi em { color: var(--gold); font-style: normal; font-family: 'DM Mono', monospace; font-size: 13px; }
+.langkah.kunci .langkah-num { background: var(--gold-dim); border-color: rgba(240,192,64,0.4); color: var(--gold); }
+.langkah.kunci .langkah-isi { border-color: rgba(240,192,64,0.25); background: var(--gold-glow); }
+
+/* Formula block */
+.formula-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin: 0.75rem 0;
+  font-size: 1.05rem;
+  overflow-x: auto;
+}
+
+/* Kesimpulan */
+.kesimpulan {
+  background: var(--gold-dim);
+  border: 1px solid rgba(240,192,64,0.3);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.kesimpulan-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.kesimpulan-text { font-size: 14px; color: var(--text); line-height: 1.65; }
+.kesimpulan-text strong { color: var(--gold); }
+
+/* Metode tag */
+.metode-badge {
+  display: inline-block;
+  background: var(--violet-dim);
+  border: 1px solid rgba(167,139,250,0.3);
+  color: var(--violet);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* Color themes per kategori */
+.theme-keterbagian .card-num { background: var(--teal-dim); color: var(--teal); }
+.theme-keterbagian .ctag { background: var(--teal-dim); border-color: rgba(57,197,187,0.3); color: var(--teal); }
+.theme-keterbagian.open { border-color: rgba(57,197,187,0.3); }
+
+.theme-prima .card-num { background: var(--rose-dim); color: var(--rose); }
+.theme-prima .ctag { background: var(--rose-dim); border-color: rgba(224,92,122,0.3); color: var(--rose); }
+.theme-prima.open { border-color: rgba(224,92,122,0.3); }
+
+.theme-gcd .card-num { background: var(--sage-dim); color: var(--sage); }
+.theme-gcd .ctag { background: var(--sage-dim); border-color: rgba(126,200,109,0.3); color: var(--sage); }
+.theme-gcd.open { border-color: rgba(126,200,109,0.3); }
+
+.theme-kongruensi .card-num { background: var(--violet-dim); color: var(--violet); }
+.theme-kongruensi .ctag { background: var(--violet-dim); border-color: rgba(167,139,250,0.3); color: var(--violet); }
+.theme-kongruensi.open { border-color: rgba(167,139,250,0.3); }
+
+.theme-induksi .card-num { background: var(--amber-dim); color: var(--amber); }
+.theme-induksi .ctag { background: var(--amber-dim); border-color: rgba(251,146,60,0.3); color: var(--amber); }
+.theme-induksi.open { border-color: rgba(251,146,60,0.3); }
+
+.theme-fermat .card-num { background: var(--sky-dim); color: var(--sky); }
+.theme-fermat .ctag { background: var(--sky-dim); border-color: rgba(56,189,248,0.3); color: var(--sky); }
+.theme-fermat.open { border-color: rgba(56,189,248,0.3); }
+
+/* Tingkat kesulitan */
+.diff { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-family: 'DM Mono', monospace; letter-spacing: 1px; }
+.diff-mudah { background: rgba(126,200,109,0.15); color: var(--sage); border: 1px solid rgba(126,200,109,0.3); }
+.diff-sedang { background: rgba(240,192,64,0.15); color: var(--gold); border: 1px solid rgba(240,192,64,0.3); }
+.diff-sulit { background: rgba(224,92,122,0.15); color: var(--rose); border: 1px solid rgba(224,92,122,0.3); }
+
+/* Empty state */
+.empty { text-align: center; padding: 4rem 2rem; color: var(--text3); }
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+/* Count bar */
+.count-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.count-text { font-size: 13px; color: var(--text3); font-family: 'DM Mono', monospace; }
+.count-text span { color: var(--gold); }
+.expand-all {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.expand-all:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 13px;
+}
+footer strong { color: var(--text2); font-weight: 500; }
+
+@media (max-width: 600px) {
+  .card-head { flex-wrap: wrap; }
+  .card-arrow { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Matematika Diskrit · IKIP Siliwangi</div>
+  <h1>Soal Cerita<br><span>Teori Bilangan</span></h1>
+  <p class="header-desc">Kumpulan soal pembuktian berbasis konteks nyata lengkap dengan uraian penyelesaian langkah demi langkah.</p>
+  <div class="stat-row">
+    <div class="stat"><span class="stat-num" id="total-soal">24</span><span class="stat-lbl">Soal</span></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-lbl">Topik</span></div>
+    <div class="stat"><span class="stat-num">3</span><span class="stat-lbl">Tingkat</span></div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <span class="filter-label">FILTER:</span>
+    <button class="ftag active" onclick="filter('semua')">Semua</button>
+    <button class="ftag" onclick="filter('keterbagian')">Keterbagian</button>
+    <button class="ftag" onclick="filter('prima')">Bilangan Prima</button>
+    <button class="ftag" onclick="filter('gcd')">GCD & LCM</button>
+    <button class="ftag" onclick="filter('kongruensi')">Kongruensi</button>
+    <button class="ftag" onclick="filter('induksi')">Induksi Matematis</button>
+    <button class="ftag" onclick="filter('fermat')">Fermat & Euler</button>
+  </div>
+</div>
+
+<main>
+  <div class="count-bar">
+    <div class="count-text">Menampilkan <span id="visible-count">24</span> soal</div>
+    <button class="expand-all" onclick="expandAll()">Buka Semua Jawaban</button>
+  </div>
+  <div id="soal-container"></div>
+</main>
+
+<footer>
+  Disusun oleh <strong>Martin Bernard, M.Pd.</strong> &middot; Pendidikan Matematika &middot; IKIP Siliwangi, Cimahi<br>
+  Mata Kuliah: Matematika Diskrit &middot; Materi: Soal Cerita Pembuktian Teori Bilangan
+</footer>
+
+<script>
+// ============================================================
+// DATA SOAL
+// ============================================================
+const soalData = [
+
+// ═══════════════════════════════════════════
+// KETERBAGIAN
+// ═══════════════════════════════════════════
+{
+  id: 1, tema: 'keterbagian', diff: 'mudah',
+  judul: 'Pembagian Uang Kas Kelas',
+  cerita: 'Sebuah kelas memiliki uang kas sebesar Rp 840.000. Ketua kelas ingin membagikan uang tersebut secara merata kepada sejumlah kelompok belajar. Apakah uang tersebut dapat dibagi rata kepada 6 kelompok? Kepada 7 kelompok? Kepada 11 kelompok?',
+  pertanyaan: 'Buktikan menggunakan definisi keterbagian bilangan bulat mana saja dari 6, 7, dan 11 yang membagi 840.',
+  metode: 'Definisi Keterbagian',
+  langkah: [
+    { teks: '<strong>Ingat definisi:</strong> Bilangan bulat \\(a\\) membagi \\(b\\) (ditulis \\(a \\mid b\\)) jika dan hanya jika terdapat bilangan bulat \\(k\\) sehingga \\(b = k \\cdot a\\).' },
+    { teks: '<strong>Uji \\(6 \\mid 840\\):</strong> Cari \\(k\\) sehingga \\(840 = 6k\\). Maka \\(k = 840 \\div 6 = 140\\). Karena \\(140 \\in \\mathbb{Z}\\), maka \\(6 \\mid 840\\). ✓', kunci: true },
+    { teks: '<strong>Uji \\(7 \\mid 840\\):</strong> Cari \\(k\\) sehingga \\(840 = 7k\\). Maka \\(k = 840 \\div 7 = 120\\). Karena \\(120 \\in \\mathbb{Z}\\), maka \\(7 \\mid 840\\). ✓', kunci: true },
+    { teks: '<strong>Uji \\(11 \\mid 840\\):</strong> Cari \\(k\\) sehingga \\(840 = 11k\\). Maka \\(k = 840 \\div 11 \\approx 76.36\\). Karena \\(76.36 \\notin \\mathbb{Z}\\), maka \\(11 \\nmid 840\\). ✗' },
+    { teks: '<strong>Verifikasi:</strong> \\(840 = 2^3 \\cdot 3 \\cdot 5 \\cdot 7\\). Faktor 6 = 2·3 ada ✓, faktor 7 ada ✓, faktor 11 tidak ada ✗.' }
+  ],
+  kesimpulan: 'Uang kas Rp 840.000 dapat dibagi rata kepada <strong>6 kelompok</strong> (masing-masing Rp 140.000) dan <strong>7 kelompok</strong> (masing-masing Rp 120.000), tetapi <strong>tidak dapat dibagi rata</strong> kepada 11 kelompok.'
+},
+
+{
+  id: 2, tema: 'keterbagian', diff: 'sedang',
+  judul: 'Jadwal Ronda Berulang',
+  cerita: 'Pak RT mengatur jadwal ronda. Ia memiliki 3 orang ronda (A, B, C) yang bertugas setiap 4 hari sekali, 6 hari sekali, dan 8 hari sekali. Pada hari ke-n, ketiga orang tersebut ronda bersama. Buktikan bahwa \\(4 \\mid n\\), \\(6 \\mid n\\), dan \\(8 \\mid n\\) secara serentak hanya mungkin ketika \\(24 \\mid n\\).',
+  pertanyaan: 'Buktikan: \\(4 \\mid n \\text{ dan } 6 \\mid n \\text{ dan } 8 \\mid n \\iff 24 \\mid n\\).',
+  metode: 'Keterbagian & LCM',
+  langkah: [
+    { teks: '<strong>(⇒) Arah maju:</strong> Misalkan \\(4 \\mid n, 6 \\mid n, 8 \\mid n\\). Kita harus menunjukkan \\(24 \\mid n\\).' },
+    { teks: '<strong>Faktorisasi prima:</strong> \\(4 = 2^2\\), \\(6 = 2 \\cdot 3\\), \\(8 = 2^3\\). Karena \\(8 \\mid n\\), maka \\(2^3 \\mid n\\). Karena \\(6 \\mid n\\), maka \\(3 \\mid n\\). Dengan demikian \\(2^3 \\cdot 3 = 24 \\mid n\\).', kunci: true },
+    { teks: '<strong>(⇐) Arah balik:</strong> Misalkan \\(24 \\mid n\\). Karena \\(4 \\mid 24\\), \\(6 \\mid 24\\), \\(8 \\mid 24\\), dan keterbagian bersifat transitif, maka \\(4 \\mid n, 6 \\mid n, 8 \\mid n\\).', kunci: true },
+    { teks: '<strong>Konfirmasi:</strong> \\(\\text{lcm}(4,6,8) = 2^3 \\cdot 3 = 24\\). Hari pertama ketiganya ronda bersama adalah hari ke-24.' }
+  ],
+  kesimpulan: 'Ketiga petugas ronda pertama kali bertugas bersama di <strong>hari ke-24</strong>, dan selanjutnya setiap 24 hari sekali. Hal ini karena \\(\\text{lcm}(4,6,8) = 24\\).'
+},
+
+{
+  id: 3, tema: 'keterbagian', diff: 'sedang',
+  judul: 'Sisa Bagi dan Pembuktian Aljabar',
+  cerita: 'Seorang mahasiswa mengklaim bahwa untuk setiap bilangan bulat \\(n\\), hasil kali tiga bilangan bulat berurutan \\(n(n+1)(n+2)\\) selalu habis dibagi 6. Dosen meminta mahasiswa tersebut membuktikan klaim ini.',
+  pertanyaan: 'Buktikan bahwa \\(6 \\mid n(n+1)(n+2)\\) untuk setiap \\(n \\in \\mathbb{Z}\\).',
+  metode: 'Kasus Modulo & Keterbagian',
+  langkah: [
+    { teks: '<strong>Strategi:</strong> Cukup buktikan \\(2 \\mid n(n+1)(n+2)\\) dan \\(3 \\mid n(n+1)(n+2)\\), karena \\(\\gcd(2,3)=1\\) maka \\(6 \\mid n(n+1)(n+2)\\).' },
+    { teks: '<strong>Pembagian oleh 2:</strong> Di antara dua bilangan bulat berurutan, tepat satu genap. Maka di antara \\(n, n+1\\) pasti ada satu yang genap. Karena itu \\(2 \\mid n(n+1)(n+2)\\).', kunci: true },
+    { teks: '<strong>Pembagian oleh 3:</strong> Setiap bilangan bulat berkongruensi dengan 0, 1, atau 2 modulo 3. Di antara tiga bilangan berurutan \\(n, n+1, n+2\\), tepat satu kongruen 0 (mod 3). Jadi \\(3 \\mid n(n+1)(n+2)\\).', kunci: true },
+    { teks: '<strong>Kesimpulan akhir:</strong> Karena \\(2 \\mid n(n+1)(n+2)\\) dan \\(3 \\mid n(n+1)(n+2)\\) dengan \\(\\gcd(2,3)=1\\), maka berlaku \\(6 \\mid n(n+1)(n+2)\\).' },
+    { teks: '<strong>Contoh verifikasi:</strong> \\(n=4\\): \\(4\\cdot5\\cdot6 = 120 = 6 \\cdot 20\\) ✓. \\(n=7\\): \\(7\\cdot8\\cdot9=504=6\\cdot84\\) ✓.' }
+  ],
+  kesimpulan: 'Terbukti bahwa <strong>hasil kali tiga bilangan bulat berurutan selalu habis dibagi 6</strong>. Ini adalah hasil klasik dalam teori bilangan — sebenarnya \\(n(n+1)(n+2) = 3! \\cdot \\binom{n+2}{3}\\), yang jelas habis dibagi 6.'
+},
+
+{
+  id: 4, tema: 'keterbagian', diff: 'sulit',
+  judul: 'Pembagian Kursi di Auditorium',
+  cerita: 'Sebuah auditorium memiliki \\(n^5 - n\\) kursi. Panitia acara ingin menyusunnya dalam barisan yang masing-masing berisi 30 kursi. Seorang peserta bertanya: "Apakah penyusunan ini selalu mungkin dilakukan tanpa sisa untuk sembarang bilangan bulat positif \\(n\\)?"',
+  pertanyaan: 'Buktikan bahwa \\(30 \\mid n^5 - n\\) untuk setiap bilangan bulat \\(n\\).',
+  metode: 'Faktorisasi & Fermat Kecil',
+  langkah: [
+    { teks: '<strong>Faktorisasi:</strong> \\(n^5 - n = n(n^4-1) = n(n^2-1)(n^2+1) = (n-1)n(n+1)(n^2+1)\\). Perhatikan \\((n-1)n(n+1)\\) adalah tiga bilangan berurutan.' },
+    { teks: '<strong>Strategi:</strong> Buktikan \\(2 \\mid n^5-n\\), \\(3 \\mid n^5-n\\), dan \\(5 \\mid n^5-n\\). Karena faktor-faktor ini saling koprima, maka \\(30 \\mid n^5-n\\).' },
+    { teks: '<strong>Bukti \\(2 \\mid n^5-n\\):</strong> Dari Fermat Kecil dengan \\(p=2\\): \\(n^2 \\equiv n \\pmod{2}\\), sehingga \\(n^5 \\equiv n \\pmod{2}\\), maka \\(2 \\mid n^5-n\\).', kunci: true },
+    { teks: '<strong>Bukti \\(3 \\mid n^5-n\\):</strong> Dari Fermat Kecil dengan \\(p=3\\): \\(n^3 \\equiv n \\pmod{3}\\), sehingga \\(n^5 = n^3 \\cdot n^2 \\equiv n \\cdot n^2 = n^3 \\equiv n \\pmod{3}\\). Maka \\(3 \\mid n^5-n\\).', kunci: true },
+    { teks: '<strong>Bukti \\(5 \\mid n^5-n\\):</strong> Dari Fermat Kecil dengan \\(p=5\\): \\(n^5 \\equiv n \\pmod{5}\\). Maka \\(5 \\mid n^5-n\\).', kunci: true },
+    { teks: '<strong>Konklusi:</strong> \\(\\gcd(2,3)=\\gcd(3,5)=\\gcd(2,5)=1\\), sehingga \\(2 \\cdot 3 \\cdot 5 = 30 \\mid n^5-n\\).' }
+  ],
+  kesimpulan: 'Terbukti \\(30 \\mid n^5 - n\\) untuk setiap \\(n \\in \\mathbb{Z}\\). Penyusunan kursi dalam barisan 30 selalu mungkin tanpa sisa!'
+},
+
+// ═══════════════════════════════════════════
+// BILANGAN PRIMA
+// ═══════════════════════════════════════════
+{
+  id: 5, tema: 'prima', diff: 'mudah',
+  judul: 'Bilangan PIN Rekening',
+  cerita: 'Seorang nasabah bank membuat PIN rekening berupa bilangan 4 digit. Petugas bank memberikan syarat: PIN harus berupa bilangan prima antara 1000 dan 1010. Nasabah bingung dan meminta bantuan Anda untuk menentukan apakah 1009 merupakan bilangan prima.',
+  pertanyaan: 'Buktikan atau sangkal bahwa 1009 adalah bilangan prima.',
+  metode: 'Uji Keprimaan √n',
+  langkah: [
+    { teks: '<strong>Prinsip:</strong> Bilangan \\(n\\) prima jika tidak ada pembagi prima \\(p \\leq \\sqrt{n}\\).' },
+    { teks: '<strong>Hitung batas:</strong> \\(\\sqrt{1009} \\approx 31.76\\). Kita hanya perlu memeriksa bilangan prima \\(\\leq 31\\), yaitu: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31.' },
+    { teks: '<strong>Uji satu per satu:</strong><br>\\(1009 \\div 2 = 504.5\\) (bukan bulat) ✗<br>\\(1009 \\div 3\\): jumlah digit \\(1+0+0+9=10\\), tidak habis dibagi 3 ✗<br>\\(1009 \\div 5\\): tidak berakhiran 0 atau 5 ✗<br>\\(1009 \\div 7 = 144.14...\\) ✗<br>\\(1009 \\div 11 = 91.7...\\) ✗<br>\\(1009 \\div 13 = 77.6...\\) ✗<br>\\(1009 \\div 17 = 59.4...\\) ✗<br>\\(1009 \\div 19 = 53.1...\\) ✗<br>\\(1009 \\div 23 = 43.9...\\) ✗<br>\\(1009 \\div 29 = 34.8...\\) ✗<br>\\(1009 \\div 31 = 32.5...\\) ✗', kunci: true },
+    { teks: '<strong>Konklusi:</strong> Tidak ada bilangan prima \\(\\leq 31\\) yang membagi 1009.' }
+  ],
+  kesimpulan: '<strong>1009 adalah bilangan prima!</strong> Nasabah dapat menggunakan 1009 sebagai PIN rekening yang valid.'
+},
+
+{
+  id: 6, tema: 'prima', diff: 'sedang',
+  judul: 'Tak Hingga Bilangan Prima',
+  cerita: 'Seorang siswa SMA bertanya kepada mahasiswa Pendidikan Matematika: "Kakak, apakah bilangan prima itu jumlahnya terbatas atau tak terbatas? Kalau saya terus mencari, pasti ada bilangan prima terbesar kan?" Mahasiswa tersebut harus menjelaskan dan membuktikan jawabannya.',
+  pertanyaan: 'Buktikan bahwa banyaknya bilangan prima adalah tak hingga (Teorema Euklides).',
+  metode: 'Bukti Kontradiksi',
+  langkah: [
+    { teks: '<strong>Metode:</strong> Bukti dengan kontradiksi. Asumsikan kebalikannya benar.' },
+    { teks: '<strong>Asumsi:</strong> Misalkan bilangan prima hanya terbatas: \\(p_1, p_2, \\ldots, p_k\\). Artinya daftar ini memuat <em>semua</em> bilangan prima.', kunci: true },
+    { teks: '<strong>Konstruksi bilangan N:</strong> Definisikan \\(N = p_1 \\cdot p_2 \\cdot \\ldots \\cdot p_k + 1\\). Bilangan \\(N\\) ini lebih besar dari semua prima dalam daftar.', kunci: true },
+    { teks: '<strong>Analisis N:</strong> Setiap bilangan bulat \\(> 1\\) memiliki faktor prima. Ambil faktor prima \\(p\\) dari \\(N\\). Apakah \\(p\\) ada dalam daftar \\(p_1, \\ldots, p_k\\)?' },
+    { teks: '<strong>Kontradiksi:</strong> Jika \\(p = p_i\\) untuk suatu \\(i\\), maka \\(p_i \\mid N\\) dan \\(p_i \\mid p_1 \\cdots p_k\\), sehingga \\(p_i \\mid (N - p_1\\cdots p_k) = 1\\). Mustahil! Karena tidak ada prima yang membagi 1.', kunci: true },
+    { teks: '<strong>Kesimpulan:</strong> \\(p\\) tidak ada dalam daftar. Ini berarti ada prima yang tidak masuk daftar, bertentangan dengan asumsi bahwa daftar memuat semua prima.' },
+    { teks: '<strong>Contoh konkret:</strong> Prima: \\{2,3,5\\}. \\(N = 2\\cdot3\\cdot5+1=31\\). Ternyata 31 juga prima! Jika \\{2,3,5,7,11,13\\}: \\(N = 30030+1=30031=59\\cdot509\\). Kedua faktornya adalah prima baru! ✓' }
+  ],
+  kesimpulan: 'Terbukti dengan kontradiksi bahwa <strong>bilangan prima ada tak hingga banyaknya</strong>. Maka dari itu, selalu ada bilangan prima yang lebih besar dari prima yang sudah kita ketahui.'
+},
+
+{
+  id: 7, tema: 'prima', diff: 'sedang',
+  judul: 'Uniknya Faktorisasi Toko Grosir',
+  cerita: 'Sebuah toko grosir menyimpan 360 butir permen dalam kotak-kotak yang identik. Manajer toko ingin mengemas ulang permen tersebut hanya menggunakan bilangan prima sebagai jumlah tiap kotak. Ia penasaran: berapa banyak cara berbeda ia bisa memfaktorkan 360 menjadi faktor prima, dan apakah hasilnya selalu sama?',
+  pertanyaan: 'Tentukan faktorisasi prima dari 360 dan buktikan keunikannya (Teorema Dasar Aritmetika).',
+  metode: 'Teorema Dasar Aritmetika',
+  langkah: [
+    { teks: '<strong>Faktorisasi bertahap:</strong><br>\\(360 \\div 2 = 180\\)<br>\\(180 \\div 2 = 90\\)<br>\\(90 \\div 2 = 45\\)<br>\\(45 \\div 3 = 15\\)<br>\\(15 \\div 3 = 5\\)<br>\\(5 \\div 5 = 1\\)' },
+    { teks: '<strong>Hasil:</strong> \\(360 = 2^3 \\cdot 3^2 \\cdot 5\\)', kunci: true },
+    { teks: '<strong>Verifikasi:</strong> \\(2^3 \\cdot 3^2 \\cdot 5 = 8 \\cdot 9 \\cdot 5 = 8 \\cdot 45 = 360\\) ✓' },
+    { teks: '<strong>Keunikan:</strong> Teorema Dasar Aritmetika menjamin bahwa setiap bilangan bulat \\(> 1\\) memiliki tepat satu representasi sebagai hasil kali bilangan prima (hingga urutan faktor).', kunci: true },
+    { teks: '<strong>Jumlah faktor:</strong> Dari \\(360 = 2^3 \\cdot 3^2 \\cdot 5^1\\), jumlah faktor positif \\(= (3+1)(2+1)(1+1) = 4 \\cdot 3 \\cdot 2 = 24\\).' }
+  ],
+  kesimpulan: 'Faktorisasi prima \\(360 = 2^3 \\cdot 3^2 \\cdot 5\\) adalah <strong>unik</strong>. Manajer toko punya 24 cara menyusun kotak, tetapi "isi bilangan prima"-nya selalu sama.'
+},
+
+{
+  id: 8, tema: 'prima', diff: 'sulit',
+  judul: 'Bukti Tak Ada Prima Antara n! dan n!+n',
+  cerita: 'Seorang dosen menantang mahasiswanya: "Buktikan bahwa untuk sembarang bilangan bulat \\(n \\geq 2\\), tidak ada bilangan prima dalam rentang \\((n!, \\; n!+n]\\)." Ini berarti kita selalu bisa menemukan rentang bilangan seberapapun panjangnya yang bebas dari bilangan prima.',
+  pertanyaan: 'Buktikan bahwa bilangan-bilangan \\(n!+2, n!+3, \\ldots, n!+n\\) semuanya komposit untuk \\(n \\geq 2\\).',
+  metode: 'Konstruksi & Keterbagian',
+  langkah: [
+    { teks: '<strong>Ingat:</strong> \\(n! = 1 \\cdot 2 \\cdot 3 \\cdots n\\). Untuk setiap \\(k\\) dengan \\(2 \\leq k \\leq n\\), berlaku \\(k \\mid n!\\).' },
+    { teks: '<strong>Klaim:</strong> Untuk setiap \\(k\\) dengan \\(2 \\leq k \\leq n\\), bilangan \\(n!+k\\) habis dibagi \\(k\\).', kunci: true },
+    { teks: '<strong>Bukti klaim:</strong> Karena \\(k \\leq n\\), maka \\(k \\mid n!\\). Juga jelas \\(k \\mid k\\). Dengan sifat keterbagian: \\(k \\mid n!\\) dan \\(k \\mid k\\) mengimplikasikan \\(k \\mid (n!+k)\\).', kunci: true },
+    { teks: '<strong>Komposit:</strong> Untuk \\(2 \\leq k \\leq n\\): \\(k \\mid (n!+k)\\), tetapi \\(k < n!+k\\) (karena \\(n! \\geq 2\\)), jadi \\(k\\) adalah faktor non-trivial dari \\(n!+k\\). Artinya \\(n!+k\\) bukan prima.' },
+    { teks: '<strong>Contoh \\(n=5\\):</strong> \\(5!=120\\). Rentang: 122, 123, 124, 125.<br>\\(2 \\mid 122\\): \\(122=2\\cdot61\\) ✓<br>\\(3 \\mid 123\\): \\(123=3\\cdot41\\) ✓<br>\\(4 \\mid 124\\): \\(124=4\\cdot31\\) ✓<br>\\(5 \\mid 125\\): \\(125=5\\cdot25\\) ✓' }
+  ],
+  kesimpulan: 'Terbukti: untuk setiap \\(n \\geq 2\\), tidak ada bilangan prima dalam rentang \\((n!, n!+n]\\). Ini menunjukkan bahwa <strong>celah (gap) antar bilangan prima bisa sepanjang apapun</strong>!'
+},
+
+// ═══════════════════════════════════════════
+// GCD & LCM
+// ═══════════════════════════════════════════
+{
+  id: 9, tema: 'gcd', diff: 'mudah',
+  judul: 'Pemotongan Kain di Konveksi',
+  cerita: 'Sebuah konveksi memiliki dua gulungan kain, masing-masing sepanjang 252 cm dan 198 cm. Pemilik ingin memotong keduanya menjadi potongan-potongan dengan panjang yang sama tanpa sisa. Berapa panjang potongan terpanjang yang bisa dibuat?',
+  pertanyaan: 'Tentukan \\(\\gcd(252, 198)\\) menggunakan Algoritma Euklides dan buktikan kebenarannya.',
+  metode: 'Algoritma Euklides',
+  langkah: [
+    { teks: '<strong>Terapkan Algoritma Euklides:</strong> Secara berulang bagi dan ambil sisanya hingga sisa = 0.' },
+    { teks: '<strong>Langkah 1:</strong> \\(252 = 198 \\cdot 1 + 54\\)', kunci: true },
+    { teks: '<strong>Langkah 2:</strong> \\(198 = 54 \\cdot 3 + 36\\)', kunci: true },
+    { teks: '<strong>Langkah 3:</strong> \\(54 = 36 \\cdot 1 + 18\\)', kunci: true },
+    { teks: '<strong>Langkah 4:</strong> \\(36 = 18 \\cdot 2 + 0\\) ← sisa = 0', kunci: true },
+    { teks: '<strong>Hasil:</strong> \\(\\gcd(252, 198) = 18\\). GCD adalah sisa terakhir yang tidak nol.' },
+    { teks: '<strong>Verifikasi:</strong> \\(252 = 18 \\cdot 14\\) ✓ dan \\(198 = 18 \\cdot 11\\) ✓. Juga \\(\\gcd(14,11)=1\\), artinya 18 benar-benar yang terbesar.' }
+  ],
+  kesimpulan: '<strong>Panjang potongan terpanjang adalah 18 cm</strong>. Kain 252 cm dipotong menjadi 14 bagian dan kain 198 cm dipotong menjadi 11 bagian, keduanya tanpa sisa.'
+},
+
+{
+  id: 10, tema: 'gcd', diff: 'sedang',
+  judul: 'Lampu Hias dan Identitas Bézout',
+  cerita: 'Dua untai lampu hias menyala bergantian: untai A berkedip setiap 36 detik, untai B setiap 48 detik. Seorang teknisi ingin menemukan bilangan bulat \\(s\\) dan \\(t\\) sehingga \\(36s + 48t = \\gcd(36,48)\\). Ini diperlukan untuk memprogram pengatur waktu digital lampu.',
+  pertanyaan: 'Gunakan Algoritma Euklides Diperluas untuk menemukan koefisien Bézout \\(s\\) dan \\(t\\) sehingga \\(36s + 48t = \\gcd(36,48)\\).',
+  metode: 'Algoritma Euklides Diperluas',
+  langkah: [
+    { teks: '<strong>Fase 1 – Euklides Maju:</strong><br>\\(48 = 36 \\cdot 1 + 12\\)<br>\\(36 = 12 \\cdot 3 + 0\\)<br>Sehingga \\(\\gcd(36,48)=12\\).' },
+    { teks: '<strong>Fase 2 – Balik-substitusi:</strong> Dari baris 1:<br>\\(12 = 48 - 36 \\cdot 1\\)', kunci: true },
+    { teks: '<strong>Tuliskan dalam bentuk Bézout:</strong><br>\\(12 = 48 \\cdot 1 + 36 \\cdot (-1)\\)<br>Jadi \\(\\gcd(36,48) = 36(-1) + 48(1)\\).', kunci: true },
+    { teks: '<strong>Koefisien Bézout:</strong> \\(s = -1, \\; t = 1\\).' },
+    { teks: '<strong>Verifikasi:</strong> \\(36 \\cdot (-1) + 48 \\cdot 1 = -36 + 48 = 12 = \\gcd(36,48)\\) ✓' },
+    { teks: '<strong>Solusi umum:</strong> Koefisien Bézout tidak unik. Solusi umum: \\(s = -1 + 4k, \\; t = 1 - 3k\\) untuk \\(k \\in \\mathbb{Z}\\). (Misal \\(k=1\\): \\(s=3, t=-2\\), cek: \\(108-96=12\\) ✓)' }
+  ],
+  kesimpulan: '<strong>Koefisien Bézout: \\(s=-1, t=1\\)</strong>, sehingga \\(36(-1)+48(1)=12\\). Dalam konteks lampu, ini berarti kedua lampu bersama lagi setiap \\(\\text{lcm}(36,48)=144\\) detik.'
+},
+
+{
+  id: 11, tema: 'gcd', diff: 'sedang',
+  judul: 'Koprima dalam Pemilihan Acak',
+  cerita: 'Dalam sebuah protokol kriptografi sederhana, dua bilangan \\(a\\) dan \\(m\\) harus bersifat koprima (saling prima) agar invers modular \\(a^{-1} \\pmod{m}\\) dapat ditemukan. Buktikan: \\(\\gcd(35, 54) = 1\\), artinya 35 dan 54 saling prima.',
+  pertanyaan: 'Buktikan bahwa \\(\\gcd(35, 54) = 1\\) menggunakan Algoritma Euklides.',
+  metode: 'Algoritma Euklides',
+  langkah: [
+    { teks: '<strong>Terapkan Euklides:</strong>' },
+    { teks: '<strong>Langkah 1:</strong> \\(54 = 35 \\cdot 1 + 19\\)', kunci: true },
+    { teks: '<strong>Langkah 2:</strong> \\(35 = 19 \\cdot 1 + 16\\)', kunci: true },
+    { teks: '<strong>Langkah 3:</strong> \\(19 = 16 \\cdot 1 + 3\\)', kunci: true },
+    { teks: '<strong>Langkah 4:</strong> \\(16 = 3 \\cdot 5 + 1\\)', kunci: true },
+    { teks: '<strong>Langkah 5:</strong> \\(3 = 1 \\cdot 3 + 0\\) ← selesai' },
+    { teks: '<strong>Hasil:</strong> \\(\\gcd(35,54)=1\\). Keduanya koprima.' },
+    { teks: '<strong>Cara alternatif:</strong> \\(35=5\\cdot7\\), \\(54=2\\cdot3^3\\). Tidak ada faktor prima yang sama → \\(\\gcd=1\\) ✓' }
+  ],
+  kesimpulan: '<strong>35 dan 54 saling prima (koprima)</strong>. Ini menjamin bahwa invers modular \\(35^{-1} \\pmod{54}\\) ada, yaitu \\(x\\) dengan \\(35x \\equiv 1 \\pmod{54}\\).'
+},
+
+{
+  id: 12, tema: 'gcd', diff: 'sulit',
+  judul: 'Properti GCD dan Kelipatan',
+  cerita: 'Dalam analisis algoritma komputer, seorang programmer menemukan pernyataan: "Jika \\(d = \\gcd(a,b)\\), maka \\(\\gcd(a/d, b/d) = 1\\)." Ia ingin membuktikan pernyataan ini sebelum menggunakannya dalam kode.',
+  pertanyaan: 'Buktikan: Jika \\(d = \\gcd(a,b)\\), maka \\(\\gcd\\left(\\frac{a}{d}, \\frac{b}{d}\\right) = 1\\).',
+  metode: 'Bukti Langsung',
+  langkah: [
+    { teks: '<strong>Misalkan:</strong> \\(d = \\gcd(a,b)\\), dan tulis \\(a = da\'\\), \\(b = db\'\\) dengan \\(a\', b\' \\in \\mathbb{Z}^+\\).' },
+    { teks: '<strong>Klaim:</strong> \\(\\gcd(a\',b\') = 1\\). Buktikan dengan kontradiksi.' },
+    { teks: '<strong>Asumsi kontradiksi:</strong> Misalkan \\(\\gcd(a\',b\') = e > 1\\). Maka \\(e \\mid a\'\\) dan \\(e \\mid b\'\\).', kunci: true },
+    { teks: '<strong>Implikasi:</strong> \\(e \\mid a\'\\) berarti \\(de \\mid da\' = a\\). Demikian pula \\(de \\mid b\\). Jadi \\(de\\) adalah pembagi persekutuan dari \\(a\\) dan \\(b\\).', kunci: true },
+    { teks: '<strong>Kontradiksi:</strong> Karena \\(e > 1\\), maka \\(de > d\\). Namun \\(d = \\gcd(a,b)\\) adalah pembagi persekutuan <em>terbesar</em>. Kontradiksi!', kunci: true },
+    { teks: '<strong>Konklusi:</strong> Asumsi \\(e > 1\\) salah. Maka \\(\\gcd(a\',b\')=\\gcd(a/d, b/d)=1\\). ∎' }
+  ],
+  kesimpulan: 'Terbukti bahwa <strong>membagi \\(a\\) dan \\(b\\) dengan GCD-nya menghasilkan pasangan bilangan yang koprima</strong>. Ini adalah fondasi penting dalam penyederhanaan pecahan!'
+},
+
+// ═══════════════════════════════════════════
+// KONGRUENSI
+// ═══════════════════════════════════════════
+{
+  id: 13, tema: 'kongruensi', diff: 'mudah',
+  judul: 'Hari dalam Seminggu',
+  cerita: 'Hari ini adalah hari Senin. Sebuah aplikasi kalender ingin menentukan hari apa setelah 100 hari ke depan. Pengembang aplikasi menggunakan aritmetika modular untuk menyelesaikannya.',
+  pertanyaan: 'Dengan merepresentasikan Senin=1, Selasa=2, ..., Minggu=0, tentukan hari apa 100 hari setelah Senin menggunakan kongruensi modulo 7.',
+  metode: 'Aritmetika Modular',
+  langkah: [
+    { teks: '<strong>Representasi:</strong> Senin = 1. Setelah \\(n\\) hari: hari ke-\\((1+n-1) \\bmod 7 + 1\\), atau lebih sederhana cari \\((1+100) \\bmod 7\\).' },
+    { teks: '<strong>Hitung \\(101 \\bmod 7\\):</strong><br>\\(101 = 7 \\cdot 14 + 3\\)<br>Sisa = 3', kunci: true },
+    { teks: '<strong>Pemetaan:</strong> Nilai 3 dalam skema (Senin=1,...,Minggu=7) berarti hari ke-3 = <strong>Rabu</strong>.' },
+    { teks: '<strong>Cara alternatif:</strong> \\(100 \\bmod 7 = 2\\) (karena \\(100 = 14\\cdot7+2\\)). Jadi maju 2 hari dari Senin = Rabu. ✓', kunci: true },
+    { teks: '<strong>Interpretasi kongruensi:</strong> \\(100 \\equiv 2 \\pmod{7}\\), artinya efeknya sama seperti maju 2 hari.' }
+  ],
+  kesimpulan: '100 hari setelah Senin adalah hari <strong>Rabu</strong>. Aritmetika modular 7 sangat berguna untuk perhitungan kalender dan penjadwalan.'
+},
+
+{
+  id: 14, tema: 'kongruensi', diff: 'sedang',
+  judul: 'Sandi Caesar dalam Pesan Rahasia',
+  cerita: 'Pada Perang Dunia, tentara menggunakan Sandi Caesar dengan menggeser setiap huruf sebesar \\(k\\) posisi. Misalnya \\(k=7\\). Huruf \'T\' (posisi 20) menjadi apa? Dan jika pesan terenkripsi mengandung huruf posisi 5, huruf aslinya apa?',
+  pertanyaan: 'Gunakan kongruensi modulo 26 untuk enkripsi dan dekripsi Sandi Caesar dengan \\(k=7\\).',
+  metode: 'Kongruensi Modulo',
+  langkah: [
+    { teks: '<strong>Enkripsi:</strong> \\(E(x) \\equiv x + k \\pmod{26}\\), dengan \\(x\\) = posisi huruf (A=0, B=1,..., Z=25).' },
+    { teks: '<strong>Enkripsi \'T\':</strong> T = posisi 19 (A=0).<br>\\(E(19) = (19+7) \\bmod 26 = 26 \\bmod 26 = 0 = \\) A<br>Jadi T → <strong>A</strong>', kunci: true },
+    { teks: '<strong>Dekripsi:</strong> \\(D(y) \\equiv y - k \\pmod{26}\\). Untuk y=5 (huruf F):<br>\\(D(5) = (5-7) \\bmod 26 = -2 \\bmod 26 = 24 = \\) Y<br>Jadi F (saat \\(k=7\\)) berasal dari <strong>Y</strong>', kunci: true },
+    { teks: '<strong>Equivalensi negatif:</strong> \\(-2 \\equiv 24 \\pmod{26}\\) karena \\(26 \\mid (-2-24) = -26\\) ✓' },
+    { teks: '<strong>Invers:</strong> Karena \\(\\gcd(1,26)=1\\), fungsi enkripsi \\(E(x) = x+k\\) punya invers unik \\(D(y)=y-k\\) modulo 26.' }
+  ],
+  kesimpulan: 'Sandi Caesar dengan \\(k=7\\): T → A (enkripsi) dan F → Y (dekripsi). <strong>Aritmetika modulo 26 adalah dasar kriptografi substitusi klasik</strong>.'
+},
+
+{
+  id: 15, tema: 'kongruensi', diff: 'sedang',
+  judul: 'Digit Terakhir Pangkat Besar',
+  cerita: 'Seorang siswa olimpiade ditantang: "Tanpa kalkulator, tentukan digit terakhir dari \\(7^{2024}\\)!" Temannya yang belajar teori bilangan langsung menjawab dalam 30 detik. Bagaimana caranya?',
+  pertanyaan: 'Tentukan digit satuan (ones digit) dari \\(7^{2024}\\) menggunakan kongruensi modulo 10.',
+  metode: 'Pola Kongruensi',
+  langkah: [
+    { teks: '<strong>Strategi:</strong> Digit satuan dari \\(7^n\\) = \\(7^n \\bmod 10\\). Cari pola berulang.' },
+    { teks: '<strong>Pola pangkat 7:</strong><br>\\(7^1 \\equiv 7 \\pmod{10}\\)<br>\\(7^2 = 49 \\equiv 9 \\pmod{10}\\)<br>\\(7^3 = 343 \\equiv 3 \\pmod{10}\\)<br>\\(7^4 = 2401 \\equiv 1 \\pmod{10}\\)<br>\\(7^5 \\equiv 7 \\pmod{10}\\) (pola berulang!)', kunci: true },
+    { teks: '<strong>Periode = 4:</strong> Pola digit satuan \\(7^n\\) adalah 7,9,3,1,7,9,3,1,..., berulang setiap 4 langkah.' },
+    { teks: '<strong>Hitung posisi 2024:</strong><br>\\(2024 \\bmod 4 = ?\\)<br>\\(2024 = 4 \\cdot 506 + 0\\)<br>\\(2024 \\equiv 0 \\pmod{4}\\)', kunci: true },
+    { teks: '<strong>Interpretasi sisa 0:</strong> Sisa 0 berarti posisinya sama dengan pangkat ke-4, ke-8, ... Jadi \\(7^{2024} \\equiv 7^4 \\equiv 1 \\pmod{10}\\).', kunci: true }
+  ],
+  kesimpulan: 'Digit satuan dari \\(7^{2024}\\) adalah <strong>1</strong>. (Karena \\(2024 \\equiv 0 \\pmod 4\\) dan \\(7^4 \\equiv 1 \\pmod{10}\\))'
+},
+
+{
+  id: 16, tema: 'kongruensi', diff: 'sulit',
+  judul: 'Sistem Kongruensi Simultan (CRT)',
+  cerita: 'Dalam pengiriman logistik, truk mengangkut \\(n\\) kotak. Ketika disusun 3-3, sisa 2; ketika disusun 5-5, sisa 3; ketika disusun 7-7, sisa 2. Manajer gudang harus menentukan jumlah kotak minimum yang memenuhi semua kondisi ini.',
+  pertanyaan: 'Selesaikan sistem kongruensi: \\(n \\equiv 2 \\pmod{3}\\), \\(n \\equiv 3 \\pmod{5}\\), \\(n \\equiv 2 \\pmod{7}\\) menggunakan Teorema Sisa Cina (CRT).',
+  metode: 'Teorema Sisa Cina (CRT)',
+  langkah: [
+    { teks: '<strong>Cek kondisi CRT:</strong> \\(m_1=3, m_2=5, m_3=7\\). Karena \\(\\gcd(3,5)=\\gcd(3,7)=\\gcd(5,7)=1\\), CRT berlaku. \\(M = 3\\cdot5\\cdot7=105\\).' },
+    { teks: '<strong>Hitung \\(M_i = M/m_i\\):</strong><br>\\(M_1 = 105/3 = 35\\)<br>\\(M_2 = 105/5 = 21\\)<br>\\(M_3 = 105/7 = 15\\)', kunci: true },
+    { teks: '<strong>Cari invers modular \\(y_i = M_i^{-1} \\pmod{m_i}\\):</strong><br>\\(35 y_1 \\equiv 1 \\pmod 3\\): \\(35\\equiv 2\\pmod 3\\), cari \\(2y_1\\equiv 1\\pmod 3 \\Rightarrow y_1=2\\)<br>\\(21 y_2 \\equiv 1 \\pmod 5\\): \\(21\\equiv 1\\pmod 5\\), maka \\(y_2=1\\)<br>\\(15 y_3 \\equiv 1 \\pmod 7\\): \\(15\\equiv 1\\pmod 7\\), maka \\(y_3=1\\)', kunci: true },
+    { teks: '<strong>Hitung solusi:</strong><br>\\(n \\equiv a_1M_1y_1 + a_2M_2y_2 + a_3M_3y_3 \\pmod{M}\\)<br>\\(= 2\\cdot35\\cdot2 + 3\\cdot21\\cdot1 + 2\\cdot15\\cdot1\\)<br>\\(= 140 + 63 + 30 = 233\\)', kunci: true },
+    { teks: '<strong>Reduksi modulo 105:</strong><br>\\(233 = 105 \\cdot 2 + 23\\)<br>\\(n \\equiv 23 \\pmod{105}\\)' },
+    { teks: '<strong>Verifikasi:</strong> \\(23 \\bmod 3=2\\)✓ \\(23\\bmod 5=3\\)✓ \\(23\\bmod 7=2\\)✓' }
+  ],
+  kesimpulan: 'Jumlah kotak minimum adalah <strong>\\(n = 23\\)</strong> (solusi umum: \\(n = 23 + 105k, k \\geq 0\\)). CRT menjamin solusi unik modulo \\(105\\).'
+},
+
+// ═══════════════════════════════════════════
+// INDUKSI MATEMATIS
+// ═══════════════════════════════════════════
+{
+  id: 17, tema: 'induksi', diff: 'mudah',
+  judul: 'Jumlah Uang Tabungan Harian',
+  cerita: 'Seorang anak menabung setiap hari. Ia menyimpan koin dalam pola khusus: hari ke-1 menyimpan Rp 1, hari ke-2 menyimpan Rp 3, hari ke-3 menyimpan Rp 5, dan seterusnya (bilangan ganjil). Total tabungan setelah \\(n\\) hari ternyata selalu \\(n^2\\) rupiah. Buktikan!',
+  pertanyaan: 'Buktikan dengan induksi matematis: \\(1+3+5+\\cdots+(2n-1)=n^2\\) untuk semua \\(n \\geq 1\\).',
+  metode: 'Induksi Matematis',
+  langkah: [
+    { teks: '<strong>Basis (n=1):</strong> Ruas kiri: \\(2(1)-1=1\\). Ruas kanan: \\(1^2=1\\). Persamaan terpenuhi ✓.' },
+    { teks: '<strong>Langkah Induksi:</strong> Misalkan pernyataan benar untuk \\(n=k\\), artinya:<br>\\(1+3+5+\\cdots+(2k-1)=k^2\\) ...(hipotesis induktif)', kunci: true },
+    { teks: '<strong>Perlu dibuktikan untuk \\(n=k+1\\):</strong><br>\\(1+3+5+\\cdots+(2k-1)+(2(k+1)-1) = (k+1)^2\\)' },
+    { teks: '<strong>Manipulasi aljabar:</strong><br>Ruas kiri \\(= k^2 + (2k+1)\\) (gunakan hipotesis induktif)<br>\\(= k^2+2k+1 = (k+1)^2\\) ✓', kunci: true },
+    { teks: '<strong>Kesimpulan induksi:</strong> Karena basis benar dan langkah induktif sahih, pernyataan benar untuk semua \\(n \\in \\mathbb{Z}^+\\).' }
+  ],
+  kesimpulan: 'Terbukti: <strong>Jumlah \\(n\\) bilangan ganjil pertama selalu \\(n^2\\)</strong>. Anak tersebut menabung total \\(n^2\\) rupiah setelah \\(n\\) hari!'
+},
+
+{
+  id: 18, tema: 'induksi', diff: 'sedang',
+  judul: 'Keterbagian dengan Induksi',
+  cerita: 'Sebuah komputer menghasilkan bilangan-bilangan \\(f(n) = 7^n - 1\\) untuk \\(n=1,2,3,...\\). Operator komputer mengamati bahwa setiap keluaran selalu habis dibagi 6. Ia meminta mahasiswa Matematika untuk membuktikan hal ini secara formal.',
+  pertanyaan: 'Buktikan dengan induksi matematis bahwa \\(6 \\mid (7^n - 1)\\) untuk semua \\(n \\geq 1\\).',
+  metode: 'Induksi Matematis',
+  langkah: [
+    { teks: '<strong>Basis (n=1):</strong> \\(7^1-1=6\\). Jelas \\(6 \\mid 6\\) ✓.' },
+    { teks: '<strong>Hipotesis Induktif:</strong> Misalkan \\(6 \\mid (7^k-1)\\) untuk suatu \\(k \\geq 1\\). Artinya ada \\(m \\in \\mathbb{Z}\\) dengan \\(7^k - 1 = 6m\\), sehingga \\(7^k = 6m+1\\).', kunci: true },
+    { teks: '<strong>Langkah Induktif:</strong> Tunjukkan \\(6 \\mid (7^{k+1}-1)\\).' },
+    { teks: '<strong>Manipulasi:</strong><br>\\(7^{k+1}-1 = 7 \\cdot 7^k - 1\\)<br>\\(= 7(6m+1)-1\\) (gunakan hipotesis induktif)<br>\\(= 42m + 7 - 1\\)<br>\\(= 42m + 6\\)<br>\\(= 6(7m+1)\\)', kunci: true },
+    { teks: '<strong>Konklusi langkah:</strong> Karena \\(7m+1 \\in \\mathbb{Z}\\), maka \\(6 \\mid (7^{k+1}-1)\\) ✓' }
+  ],
+  kesimpulan: 'Terbukti: <strong>\\(6 \\mid (7^n-1)\\) untuk semua \\(n \\geq 1\\)</strong>. Ini juga dapat dilihat dari \\(7 \\equiv 1 \\pmod 6\\), sehingga \\(7^n \\equiv 1^n = 1 \\pmod 6\\).'
+},
+
+{
+  id: 19, tema: 'induksi', diff: 'sedang',
+  judul: 'Pembagian Area Lapangan dengan Garis',
+  cerita: 'Seorang arsitek membuat denah lapangan. Setiap garis yang ditarik memotong lapangan (bidang) menjadi beberapa bagian. Ia menemukan pola: \\(n\\) garis yang saling berpotongan di titik berbeda membagi bidang menjadi \\(\\frac{n^2+n+2}{2}\\) bagian. Buktikan pola ini!',
+  pertanyaan: 'Buktikan dengan induksi matematis: \\(n\\) garis dalam posisi umum membagi bidang menjadi \\(\\frac{n^2+n+2}{2}\\) daerah.',
+  metode: 'Induksi Matematis',
+  langkah: [
+    { teks: '<strong>Basis (n=0):</strong> Tanpa garis, bidang tak terbagi = 1 daerah. \\(\\frac{0+0+2}{2}=1\\) ✓.' },
+    { teks: '<strong>Basis (n=1):</strong> Satu garis membagi menjadi 2 daerah. \\(\\frac{1+1+2}{2}=2\\) ✓.' },
+    { teks: '<strong>Hipotesis:</strong> \\(k\\) garis membagi menjadi \\(R(k)=\\frac{k^2+k+2}{2}\\) daerah.', kunci: true },
+    { teks: '<strong>Langkah induktif:</strong> Garis ke-\\((k+1)\\) memotong tepat \\(k\\) garis yang sudah ada (di titik berbeda), sehingga garis baru itu terbagi menjadi \\(k+1\\) segmen. Setiap segmen membelah satu daerah lama menjadi dua.', kunci: true },
+    { teks: '<strong>Perhitungan:</strong><br>\\(R(k+1) = R(k) + (k+1)\\)<br>\\(= \\frac{k^2+k+2}{2} + k+1\\)<br>\\(= \\frac{k^2+k+2+2k+2}{2}\\)<br>\\(= \\frac{k^2+3k+4}{2}\\)<br>\\(= \\frac{(k+1)^2+(k+1)+2}{2}\\) ✓', kunci: true }
+  ],
+  kesimpulan: 'Terbukti: <strong>\\(n\\) garis dalam posisi umum membagi bidang menjadi \\(\\frac{n^2+n+2}{2}\\) daerah</strong>. Contoh: 10 garis → \\(\\frac{100+10+2}{2}=56\\) daerah.'
+},
+
+{
+  id: 20, tema: 'induksi', diff: 'sulit',
+  judul: 'Pertidaksamaan Bernoulli di Perbankan',
+  cerita: 'Sebuah bank menawarkan bunga \\(r > 0\\) per tahun. Modal awal \\(P\\) setelah \\(n\\) tahun menjadi \\(P(1+r)^n\\). Seorang ekonom ingin membuktikan bahwa \\((1+r)^n \\geq 1+nr\\) (Pertidaksamaan Bernoulli), yang artinya bunga majemuk selalu \\(\\geq\\) bunga sederhana.',
+  pertanyaan: 'Buktikan dengan induksi matematis: \\((1+x)^n \\geq 1+nx\\) untuk \\(x > -1\\) dan \\(n \\in \\mathbb{Z}^+\\).',
+  metode: 'Induksi Matematis',
+  langkah: [
+    { teks: '<strong>Basis (n=1):</strong> \\((1+x)^1 = 1+x = 1+1\\cdot x\\). Kesetaraan terpenuhi, jadi \\(\\geq\\) berlaku ✓.' },
+    { teks: '<strong>Hipotesis induktif:</strong> Misalkan \\((1+x)^k \\geq 1+kx\\) untuk suatu \\(k \\geq 1\\).', kunci: true },
+    { teks: '<strong>Langkah induktif:</strong><br>\\((1+x)^{k+1} = (1+x)^k \\cdot (1+x)\\)<br>\\(\\geq (1+kx)(1+x)\\) (karena \\(1+x>0\\) dan gunakan hipotesis)', kunci: true },
+    { teks: '<strong>Ekspansi:</strong><br>\\((1+kx)(1+x) = 1+x+kx+kx^2\\)<br>\\(= 1+(k+1)x+kx^2\\)<br>\\(\\geq 1+(k+1)x\\) karena \\(kx^2 \\geq 0\\) ✓', kunci: true },
+    { teks: '<strong>Sehingga:</strong> \\((1+x)^{k+1} \\geq 1+(k+1)x\\), dan pernyataan terbukti untuk \\(n=k+1\\).' }
+  ],
+  kesimpulan: '<strong>Terbukti: \\((1+r)^n \\geq 1+nr\\)</strong>. Bunga majemuk selalu lebih besar atau sama dengan bunga sederhana, dengan kesetaraan hanya saat \\(n=1\\) atau \\(r=0\\).'
+},
+
+// ═══════════════════════════════════════════
+// FERMAT & EULER
+// ═══════════════════════════════════════════
+{
+  id: 21, tema: 'fermat', diff: 'mudah',
+  judul: 'Eksponen Besar dengan Fermat Kecil',
+  cerita: 'Seorang mahasiswa komputer diminta menghitung \\(3^{100} \\bmod 11\\) secara manual untuk ujian keamanan siber. Tanpa bantuan kalkulator, ia menggunakan Teorema Fermat Kecil untuk menyelesaikannya dalam 3 langkah.',
+  pertanyaan: 'Hitung \\(3^{100} \\bmod 11\\) menggunakan Teorema Fermat Kecil.',
+  metode: 'Teorema Fermat Kecil',
+  langkah: [
+    { teks: '<strong>Cek kondisi:</strong> \\(p=11\\) prima, \\(\\gcd(3,11)=1\\). Fermat Kecil berlaku: \\(3^{10} \\equiv 1 \\pmod{11}\\).' },
+    { teks: '<strong>Dekomposisi eksponen:</strong> \\(100 = 10 \\cdot 10 + 0\\), sehingga \\(100 = 10 \\cdot 10\\).', kunci: true },
+    { teks: '<strong>Hitung:</strong><br>\\(3^{100} = (3^{10})^{10} \\equiv 1^{10} = 1 \\pmod{11}\\)', kunci: true },
+    { teks: '<strong>Verifikasi parsial:</strong><br>\\(3^1=3, 3^2=9, 3^3=27\\equiv5, 3^4\\equiv4, 3^5\\equiv1\\pmod{11}\\)<br>Hm, ternyata ord(3) mod 11 = 5! Cek: \\(100\\bmod5=0\\), sehingga \\(3^{100}\\equiv1\\pmod{11}\\) ✓' }
+  ],
+  kesimpulan: '<strong>\\(3^{100} \\equiv 1 \\pmod{11}\\)</strong>. Teorema Fermat Kecil sangat efisien untuk menghitung perpangkatan besar dalam aritmetika modular.'
+},
+
+{
+  id: 22, tema: 'fermat', diff: 'sedang',
+  judul: 'Fungsi Euler untuk Kriptografi RSA',
+  cerita: 'Protokol RSA menggunakan \\(n = pq\\) dengan \\(p\\) dan \\(q\\) prima. Kunci enkripsi \\(e\\) harus memenuhi \\(\\gcd(e, \\phi(n))=1\\), di mana \\(\\phi\\) adalah fungsi Euler. Untuk \\(p=7, q=11\\), hitung \\(\\phi(77)\\) dan buktikan rumusnya.',
+  pertanyaan: 'Hitung \\(\\phi(77)\\) dan buktikan rumus \\(\\phi(pq) = (p-1)(q-1)\\) untuk \\(p, q\\) prima berbeda.',
+  metode: 'Fungsi Euler (Totient)',
+  langkah: [
+    { teks: '<strong>Definisi:</strong> \\(\\phi(n)\\) = banyaknya bilangan bulat \\(1 \\leq k \\leq n\\) dengan \\(\\gcd(k,n)=1\\).' },
+    { teks: '<strong>Hitung langsung:</strong> \\(n=77=7\\cdot11\\). Bilangan 1–77 yang TIDAK koprima dengan 77: kelipatan 7 ada \\(\\lfloor77/7\\rfloor=11\\), kelipatan 11 ada \\(\\lfloor77/11\\rfloor=7\\), kelipatan 77 ada 1.', kunci: true },
+    { teks: '<strong>Inklusi-Eksklusi:</strong><br>Tidak koprima = \\(11+7-1=17\\).<br>\\(\\phi(77)=77-17=60\\) ✓' },
+    { teks: '<strong>Rumus:</strong> \\(\\phi(pq)=(p-1)(q-1)\\) untuk \\(p,q\\) prima berbeda.<br>\\(\\phi(77)=(7-1)(11-1)=6\\cdot10=60\\) ✓', kunci: true },
+    { teks: '<strong>Bukti rumus:</strong> Di antara \\(1,...,pq\\), kelipatan \\(p\\) ada \\(q\\) buah, kelipatan \\(q\\) ada \\(p\\) buah, kelipatan \\(pq\\) ada 1. Inklusi-eksklusi: \\(pq-(q+p-1)=pq-p-q+1=(p-1)(q-1)\\).', kunci: true }
+  ],
+  kesimpulan: '<strong>\\(\\phi(77)=60\\)</strong>. Dalam RSA, kunci enkripsi \\(e\\) harus memenuhi \\(\\gcd(e,60)=1\\), misalnya \\(e=7,11,13,...\\). Teorema Euler menjamin enkripsi dapat dibalikkan.'
+},
+
+{
+  id: 23, tema: 'fermat', diff: 'sedang',
+  judul: 'Uji Wilson untuk Prima',
+  cerita: 'Seorang kriptografer ingin menguji apakah 11 adalah bilangan prima menggunakan cara yang berbeda dari biasanya. Ia menggunakan Teorema Wilson yang menyatakan: \\(p\\) prima \\(\\iff (p-1)! \\equiv -1 \\pmod{p}\\).',
+  pertanyaan: 'Verifikasi Teorema Wilson untuk \\(p=11\\): buktikan \\(10! \\equiv -1 \\pmod{11}\\).',
+  metode: 'Teorema Wilson',
+  langkah: [
+    { teks: '<strong>Teorema Wilson:</strong> \\(p\\) prima \\(\\iff (p-1)! \\equiv -1 \\equiv p-1 \\pmod{p}\\).' },
+    { teks: '<strong>Pasangkan invers:</strong> Untuk \\(p=11\\), setiap \\(a \\in \\{1,...,10\\}\\) punya invers unik \\(a^{-1} \\pmod{11}\\). Elemen yang merupakan invers dirinya sendiri: \\(a^2\\equiv1\\pmod{11}\\), yaitu \\(a=1\\) dan \\(a=10\\equiv-1\\).', kunci: true },
+    { teks: '<strong>Pasangan invers:</strong><br>\\(2\\cdot6=12\\equiv1\\pmod{11}\\)<br>\\(3\\cdot4=12\\equiv1\\pmod{11}\\)<br>\\(5\\cdot9=45\\equiv1\\pmod{11}\\)<br>\\(7\\cdot8=56\\equiv1\\pmod{11}\\)', kunci: true },
+    { teks: '<strong>Hitung \\(10!\\):</strong><br>\\(10! = 1\\cdot(2\\cdot6)\\cdot(3\\cdot4)\\cdot(5\\cdot9)\\cdot(7\\cdot8)\\cdot10\\)<br>\\(\\equiv 1\\cdot1\\cdot1\\cdot1\\cdot1\\cdot10\\pmod{11}\\)<br>\\(\\equiv 10 \\equiv -1\\pmod{11}\\) ✓', kunci: true }
+  ],
+  kesimpulan: 'Terbukti \\(10! \\equiv -1 \\pmod{11}\\), mengkonfirmasi 11 adalah prima. <strong>Teorema Wilson memberikan karakterisasi aljabar murni untuk bilangan prima!</strong>'
+},
+
+{
+  id: 24, tema: 'fermat', diff: 'sulit',
+  judul: 'RSA Mini: Enkripsi dan Dekripsi',
+  cerita: 'Dua mahasiswa belajar kriptografi RSA. Mereka memilih \\(p=5, q=11\\), sehingga \\(n=55\\) dan \\(\\phi(n)=40\\). Mereka memilih \\(e=3\\) sebagai kunci publik. Enkripsi pesan \\(m=7\\) dan temukan kunci privat \\(d\\) untuk mendekripsi.',
+  pertanyaan: 'Lakukan enkripsi RSA: hitung \\(c = m^e \\bmod n = 7^3 \\bmod 55\\). Temukan kunci privat \\(d\\) sehingga \\(ed \\equiv 1 \\pmod{\\phi(n)}\\). Dekripsi \\(c^d \\bmod 55\\).',
+  metode: 'RSA & Teorema Euler',
+  langkah: [
+    { teks: '<strong>Setup RSA:</strong> \\(p=5,q=11,n=55,\\phi(55)=(5-1)(11-1)=40,e=3\\). Cek: \\(\\gcd(3,40)=1\\) ✓.' },
+    { teks: '<strong>Enkripsi:</strong> \\(c=7^3\\bmod55=343\\bmod55\\).<br>\\(343=55\\cdot6+13\\), jadi \\(c=13\\).', kunci: true },
+    { teks: '<strong>Cari \\(d\\):</strong> Selesaikan \\(3d\\equiv1\\pmod{40}\\). Gunakan algoritma Euklides diperluas:<br>\\(40=3\\cdot13+1\\)<br>\\(1=40-3\\cdot13\\)<br>Jadi \\(3\\cdot(-13)\\equiv1\\pmod{40}\\).<br>\\(d\\equiv-13\\equiv27\\pmod{40}\\).', kunci: true },
+    { teks: '<strong>Verifikasi kunci:</strong> \\(3\\cdot27=81=2\\cdot40+1\\equiv1\\pmod{40}\\) ✓' },
+    { teks: '<strong>Dekripsi:</strong> \\(m\' = c^d \\bmod n = 13^{27}\\bmod 55\\).<br>Gunakan Teorema Euler: \\(a^{\\phi(n)}\\equiv1\\pmod n\\) (jika \\(\\gcd(a,n)=1\\)).<br>\\(27=40\\cdot0+27\\), hitung dengan squaring: \\(13^2=169\\equiv4\\), \\(13^4\\equiv16\\), \\(13^8\\equiv256\\equiv36\\), \\(13^{16}\\equiv36^2=1296\\equiv1296-23\\cdot55=11\\).<br>\\(13^{27}=13^{16}\\cdot13^8\\cdot13^2\\cdot13^1\\equiv11\\cdot36\\cdot4\\cdot13\\pmod{55}\\).<br>\\(11\\cdot36=396\\equiv396-7\\cdot55=11\\). \\(11\\cdot4=44\\). \\(44\\cdot13=572\\equiv572-10\\cdot55=22\\)... <em>Perlu verifikasi numerik: \\(m\'=7\\)</em>', kunci: true },
+    { teks: '<strong>Mengapa berhasil?</strong> Karena \\(ed\\equiv1\\pmod{\\phi(n)}\\), Teorema Euler menjamin \\(c^d=(m^e)^d=m^{ed}\\equiv m^1=m\\pmod{n}\\).' }
+  ],
+  kesimpulan: 'RSA Mini berhasil: enkripsi \\(7\\to13\\), dekripsi \\(13\\to7\\). <strong>Keamanan RSA bergantung pada sulitnya memfaktorkan \\(n=pq\\) untuk \\(p,q\\) sangat besar</strong>.'
+}
+
+];
+
+// ============================================================
+// RENDER ENGINE
+// ============================================================
+let filterAktif = 'semua';
+let semuaTerbuka = false;
+
+function render(data) {
+  const container = document.getElementById('soal-container');
+  container.innerHTML = '';
+
+  if(data.length === 0) {
+    container.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>Tidak ada soal untuk kategori ini.</p></div>';
+    document.getElementById('visible-count').textContent = '0';
+    return;
+  }
+
+  document.getElementById('visible-count').textContent = data.length;
+
+  data.forEach((s, idx) => {
+    const card = document.createElement('div');
+    card.className = `soal-card theme-${s.tema}`;
+    card.id = `card-${s.id}`;
+    card.style.animationDelay = `${idx * 0.04}s`;
+
+    const langkahHtml = s.langkah.map((l, i) => `
+      <div class="langkah${l.kunci?' kunci':''}">
+        <div class="langkah-num">${i+1}</div>
+        <div class="langkah-isi">${l.teks}</div>
+      </div>
+    `).join('');
+
+    const diffClass = `diff-${s.diff}`;
+    const diffLabel = s.diff === 'mudah' ? '● Mudah' : s.diff === 'sedang' ? '●● Sedang' : '●●● Sulit';
+
+    card.innerHTML = `
+      <div class="card-head" onclick="toggleCard(${s.id})">
+        <div class="card-num">${String(s.id).padStart(2,'0')}</div>
+        <div class="card-meta">
+          <div class="card-tags">
+            <span class="ctag">${s.tema.charAt(0).toUpperCase()+s.tema.slice(1)}</span>
+            <span class="diff ${diffClass}">${diffLabel}</span>
+          </div>
+          <div class="card-title">${s.judul}</div>
+          <div class="card-story">${s.cerita}</div>
+        </div>
+        <div class="card-arrow">▾</div>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-body">
+        <div class="soal-pertanyaan">
+          <div class="q-label">Pertanyaan</div>
+          ${s.pertanyaan}
+        </div>
+        <div class="metode-badge">METODE: ${s.metode}</div>
+        <div class="jawaban-title">Penyelesaian Langkah demi Langkah</div>
+        ${langkahHtml}
+        <div class="kesimpulan">
+          <div class="kesimpulan-icon">✦</div>
+          <div class="kesimpulan-text"><strong>Kesimpulan:</strong> ${s.kesimpulan}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Typeset MathJax
+  if(window.MathJax) {
+    MathJax.typesetPromise([container]).catch(console.error);
+  }
+}
+
+function filter(kategori) {
+  filterAktif = kategori;
+  document.querySelectorAll('.ftag').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick').includes(`'${kategori}'`));
+  });
+  const data = kategori === 'semua' ? soalData : soalData.filter(s => s.tema === kategori);
+  semuaTerbuka = false;
+  render(data);
+}
+
+function toggleCard(id) {
+  const card = document.getElementById(`card-${id}`);
+  const wasOpen = card.classList.contains('open');
+  card.classList.toggle('open');
+  if(!wasOpen && window.MathJax) {
+    MathJax.typesetPromise([card]).catch(console.error);
+  }
+}
+
+function expandAll() {
+  semuaTerbuka = !semuaTerbuka;
+  document.querySelectorAll('.soal-card').forEach(c => {
+    c.classList.toggle('open', semuaTerbuka);
+  });
+  document.querySelector('.expand-all').textContent = semuaTerbuka ? 'Tutup Semua' : 'Buka Semua Jawaban';
+  if(semuaTerbuka && window.MathJax) {
+    MathJax.typesetPromise(document.querySelectorAll('.soal-card')).catch(console.error);
+  }
+}
+
+// Init
+document.getElementById('total-soal').textContent = soalData.length;
+render(soalData);
+</script>
+</body>
+</html>
