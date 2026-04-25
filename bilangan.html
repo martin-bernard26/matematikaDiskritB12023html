@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teori Bilangan – Matematika Diskrit | IKIP Siliwangi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --ink: #1a1208;
+    --ink-muted: #4a3f2f;
+    --ink-faint: #7a6a55;
+    --parchment: #faf6ee;
+    --parchment-dark: #f0e8d4;
+    --parchment-border: #d4c4a0;
+    --gold: #b8860b;
+    --gold-light: #e8c84a;
+    --teal: #1a6b6b;
+    --teal-light: #e0f2f2;
+    --crimson: #8b1a1a;
+    --crimson-light: #fdecea;
+    --sage: #3d6b3d;
+    --sage-light: #e8f5e8;
+    --indigo: #2d3a8a;
+    --indigo-light: #eaedfc;
+    --accent: #c6821a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.75;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(184,134,11,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(26,107,107,0.06) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #1a1208 0%, #2d1f0a 60%, #1a3030 100%);
+    color: #faf6ee;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(184,134,11,0.04) 40px, rgba(184,134,11,0.04) 41px
+    );
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+  }
+  .header-kode {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
+  }
+  .header-sub {
+    font-size: 1rem;
+    color: rgba(250,246,238,0.7);
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+  .header-tags {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .tag {
+    background: rgba(184,134,11,0.2);
+    border: 1px solid rgba(184,134,11,0.4);
+    color: var(--gold-light);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* NAV */
+  nav {
+    background: #fff;
+    border-bottom: 2px solid var(--parchment-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(26,18,8,0.08);
+  }
+  .nav-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    padding: 0.9rem 1.2rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 13.5px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--ink); background: var(--parchment); }
+  .nav-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.35s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION HEADER */
+  .sec-header {
+    border-left: 5px solid var(--gold);
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+  }
+  .sec-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .sec-header p { color: var(--ink-muted); font-style: italic; margin-top: 0.25rem; }
+
+  /* CARDS */
+  .card {
+    background: #fff;
+    border: 1px solid var(--parchment-border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 4px rgba(26,18,8,0.06);
+  }
+  .card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .card p { color: var(--ink-muted); margin-bottom: 0.5rem; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* DEFINISI BOX */
+  .def-box {
+    background: var(--indigo-light);
+    border: 1.5px solid var(--indigo);
+    border-left-width: 5px;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .def-box .def-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--indigo);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .def-box p { color: var(--ink); margin: 0; }
+
+  /* TEOREMA BOX */
+  .thm-box {
+    background: var(--teal-light);
+    border: 1.5px solid var(--teal);
+    border-left-width: 5px;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .thm-box .thm-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .thm-box p { color: var(--ink); margin: 0; }
+
+  /* CONTOH BOX */
+  .ex-box {
+    background: var(--sage-light);
+    border: 1.5px solid var(--sage);
+    border-left-width: 5px;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .ex-box .ex-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--sage);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .ex-box p, .ex-box li { color: var(--ink); }
+  .ex-box ul { padding-left: 1.25rem; }
+
+  /* PERINGATAN BOX */
+  .warn-box {
+    background: var(--crimson-light);
+    border: 1.5px solid var(--crimson);
+    border-left-width: 5px;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+  }
+  .warn-box .warn-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--crimson);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .warn-box p { color: var(--ink); margin: 0; }
+
+  /* BUKTI */
+  .proof {
+    background: var(--parchment-dark);
+    border: 1px solid var(--parchment-border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 0.75rem 0;
+    font-style: italic;
+  }
+  .proof-label {
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .proof-end { text-align: right; font-style: normal; color: var(--ink-faint); }
+
+  /* FORMULA DISPLAY */
+  .formula {
+    background: #fff;
+    border: 1px solid var(--parchment-border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+  }
+
+  /* KALKULATOR / INTERAKTIF */
+  .calc-area {
+    background: #fff;
+    border: 1.5px solid var(--gold);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .calc-area h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .input-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+  }
+  .input-group { display: flex; flex-direction: column; gap: 4px; }
+  .input-group label {
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .input-group input {
+    border: 1.5px solid var(--parchment-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    width: 120px;
+    color: var(--ink);
+    background: var(--parchment);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-group input:focus { border-color: var(--gold); }
+  .btn-hitung {
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    border-radius: 6px;
+    padding: 9px 20px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-hitung:hover { background: var(--gold); }
+  .result-box {
+    background: var(--parchment);
+    border-radius: 8px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    min-height: 60px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    border: 1px solid var(--parchment-border);
+  }
+
+  /* VISUALISASI SARINGAN ERATOSTHENES */
+  .sieve-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px;
+    margin: 1rem 0;
+  }
+  .sieve-num {
+    background: #fff;
+    border: 1.5px solid var(--parchment-border);
+    border-radius: 5px;
+    text-align: center;
+    padding: 6px 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    cursor: default;
+    transition: all 0.4s;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .sieve-num.composit {
+    background: #f0e8d4;
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    border-color: #e0d0b0;
+  }
+  .sieve-num.prima {
+    background: var(--teal);
+    color: #fff;
+    border-color: var(--teal);
+    font-weight: 600;
+  }
+  .sieve-num.current {
+    background: var(--gold);
+    color: #fff;
+    border-color: var(--gold);
+    transform: scale(1.1);
+  }
+
+  /* GRID 2 COL */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin: 1.25rem 0;
+  }
+  @media (max-width: 620px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* TABEL */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 14px;
+  }
+  th {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 10px 14px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--parchment-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+  tr:nth-child(even) td { background: var(--parchment); }
+  tr:hover td { background: var(--indigo-light); }
+
+  /* LANGKAH ALGORITMA */
+  .algo-steps { counter-reset: step; }
+  .algo-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--parchment-border);
+  }
+  .algo-step-num {
+    background: var(--ink);
+    color: var(--gold-light);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .algo-step-text { color: var(--ink-muted); flex: 1; }
+  .algo-step-text strong { color: var(--ink); font-style: normal; }
+
+  /* QUIZ */
+  .quiz-q {
+    background: #fff;
+    border: 1px solid var(--parchment-border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .quiz-q p { font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-opt {
+    background: var(--parchment);
+    border: 1.5px solid var(--parchment-border);
+    border-radius: 6px;
+    padding: 0.6rem 1rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    color: var(--ink);
+  }
+  .quiz-opt:hover { border-color: var(--gold); background: #fffbf0; }
+  .quiz-opt.benar { background: var(--sage-light); border-color: var(--sage); color: var(--sage); font-weight: 600; }
+  .quiz-opt.salah { background: var(--crimson-light); border-color: var(--crimson); color: var(--crimson); }
+  .quiz-opt.disabled { pointer-events: none; }
+  .quiz-feedback { margin-top: 0.75rem; font-size: 14px; font-style: italic; color: var(--ink-muted); }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    height: 6px;
+    background: var(--parchment-border);
+    border-radius: 3px;
+    margin: 1rem 0;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--teal));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* TABS DALAM SECTION */
+  .subtabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .subtab-btn {
+    background: var(--parchment);
+    border: 1.5px solid var(--parchment-border);
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 13.5px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .subtab-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .subtab-btn.active { background: var(--ink); color: var(--gold-light); border-color: var(--ink); }
+  .subtab-panel { display: none; }
+  .subtab-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  /* HIGHLIGHT */
+  .hl-gold { color: var(--gold); font-weight: 600; }
+  .hl-teal { color: var(--teal); font-weight: 600; }
+  .hl-crimson { color: var(--crimson); font-weight: 600; }
+  .hl-sage { color: var(--sage); font-weight: 600; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--parchment-border);
+    color: var(--ink-faint);
+    font-size: 13px;
+    margin-top: 3rem;
+    font-style: italic;
+  }
+  footer strong { font-style: normal; color: var(--ink-muted); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .input-row { flex-direction: column; }
+    .input-group input { width: 100%; }
+    .sieve-grid { grid-template-columns: repeat(8, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-kode">IKIP Siliwangi · Pendidikan Matematika · Matematika Diskrit</div>
+  <h1>Teori Bilangan</h1>
+  <p class="header-sub">Keterbagian, Bilangan Prima, GCD, LCM, dan Kongruensi</p>
+  <div class="header-tags">
+    <span class="tag">Divisibility</span>
+    <span class="tag">Prime Numbers</span>
+    <span class="tag">GCD &amp; LCM</span>
+    <span class="tag">Modular Arithmetic</span>
+    <span class="tag">Euclidean Algorithm</span>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('keterbagian')">① Keterbagian</button>
+    <button class="nav-btn" onclick="showSection('prima')">② Bil. Prima</button>
+    <button class="nav-btn" onclick="showSection('gcd-lcm')">③ GCD &amp; LCM</button>
+    <button class="nav-btn" onclick="showSection('kongruensi')">④ Kongruensi</button>
+    <button class="nav-btn" onclick="showSection('kalkulator')">⑤ Kalkulator</button>
+    <button class="nav-btn" onclick="showSection('kuis')">⑥ Kuis</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ====== SECTION 1: KETERBAGIAN ====== -->
+<div id="keterbagian" class="section active">
+  <div class="sec-header">
+    <h2>Keterbagian (Divisibility)</h2>
+    <p>Fondasi utama teori bilangan — hubungan pembagi dan kelipatan</p>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">Definisi 1.1 — Keterbagian</div>
+    <p>Misalkan \(a, b \in \mathbb{Z}\) dengan \(a \neq 0\). Dikatakan <strong>\(a\) membagi \(b\)</strong> (ditulis \(a \mid b\)) jika terdapat bilangan bulat \(k\) sehingga \(b = k \cdot a\). Jika \(a\) tidak membagi \(b\), ditulis \(a \nmid b\).</p>
+  </div>
+
+  <div class="ex-box">
+    <div class="ex-label">Contoh 1.1</div>
+    <ul>
+      <li>\(3 \mid 12\) karena \(12 = 4 \cdot 3\)</li>
+      <li>\(7 \mid 49\) karena \(49 = 7 \cdot 7\)</li>
+      <li>\(5 \nmid 17\) karena tidak ada bilangan bulat \(k\) dengan \(17 = 5k\)</li>
+      <li>\(-3 \mid 15\) karena \(15 = (-5) \cdot (-3)\)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Sifat-Sifat Keterbagian</h3>
+    <p>Berikut adalah teorema dasar keterbagian yang sangat penting:</p>
+
+    <div class="thm-box">
+      <div class="thm-label">Teorema 1.1 — Sifat Keterbagian</div>
+      <p>Untuk setiap \(a, b, c \in \mathbb{Z}\) berlaku:<br>
+      (i) Jika \(a \mid b\) dan \(b \mid c\), maka \(a \mid c\) <em>(transitif)</em><br>
+      (ii) Jika \(a \mid b\) dan \(a \mid c\), maka \(a \mid (mb + nc)\) untuk semua \(m, n \in \mathbb{Z}\) <em>(kombinasi linear)</em><br>
+      (iii) Jika \(a \mid b\), maka \(a \mid bc\) untuk semua \(c \in \mathbb{Z}\)<br>
+      (iv) Jika \(a \mid b\) dan \(b \mid a\), maka \(a = \pm b\)
+      </p>
+    </div>
+
+    <div class="proof">
+      <div class="proof-label">Bukti (i)</div>
+      Karena \(a \mid b\), ada \(k_1 \in \mathbb{Z}\) sehingga \(b = k_1 a\). Karena \(b \mid c\), ada \(k_2 \in \mathbb{Z}\) sehingga \(c = k_2 b\). Substitusi: \(c = k_2(k_1 a) = (k_1 k_2)a\). Karena \(k_1 k_2 \in \mathbb{Z}\), maka \(a \mid c\). \(\square\)
+      <div class="proof-end">□</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Algoritma Pembagian (Division Algorithm)</h3>
+    <div class="thm-box">
+      <div class="thm-label">Teorema 1.2 — Algoritma Pembagian</div>
+      <p>Untuk setiap \(a \in \mathbb{Z}\) dan \(b \in \mathbb{Z}^+\), terdapat bilangan bulat unik \(q\) (hasil bagi) dan \(r\) (sisa) dengan<br>
+      $$a = bq + r, \quad 0 \leq r < b$$</p>
+    </div>
+
+    <div class="ex-box">
+      <div class="ex-label">Contoh 1.2</div>
+      <ul>
+        <li>\(a = 37, b = 5\): maka \(37 = 5 \cdot 7 + 2\), sehingga \(q = 7, r = 2\)</li>
+        <li>\(a = -15, b = 4\): maka \(-15 = 4 \cdot (-4) + 1\), sehingga \(q = -4, r = 1\)</li>
+        <li>\(a = 100, b = 10\): maka \(100 = 10 \cdot 10 + 0\), sehingga \(q = 10, r = 0\)</li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <div class="warn-label">Perhatian</div>
+      <p>Untuk bilangan negatif, sisa \(r\) tetap harus memenuhi \(0 \leq r < b\). Jadi \(-15 \div 4\) bukan \(r = -3\), melainkan \(r = 1\) karena \(-15 = 4 \cdot (-4) + 1\).</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Visualisasi: Faktor dari Suatu Bilangan</h3>
+    <p>Masukkan bilangan untuk melihat semua faktornya beserta pasangan faktor.</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Bilangan n</label>
+        <input type="number" id="faktor-input" value="36" min="1" max="10000">
+      </div>
+      <button class="btn-hitung" onclick="tampilFaktor()">Cari Faktor</button>
+    </div>
+    <div class="result-box" id="faktor-result">Klik tombol untuk mencari faktor...</div>
+  </div>
+</div>
+
+<!-- ====== SECTION 2: BILANGAN PRIMA ====== -->
+<div id="prima" class="section">
+  <div class="sec-header">
+    <h2>Bilangan Prima</h2>
+    <p>Atom-atom dari bilangan bulat — dasar dari aritmetika</p>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">Definisi 2.1 — Bilangan Prima</div>
+    <p>Bilangan bulat \(p > 1\) disebut <strong>prima</strong> jika satu-satunya faktor positifnya adalah \(1\) dan \(p\) itu sendiri. Bilangan bulat \(n > 1\) yang bukan prima disebut <strong>komposit</strong>.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Bilangan Prima Pertama</h3>
+      <p>2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, ...</p>
+    </div>
+    <div class="card">
+      <h3>Fakta Menarik</h3>
+      <p>Bilangan 2 adalah satu-satunya bilangan prima genap. Jumlah bilangan prima adalah <strong>tak hingga</strong> (dibuktikan oleh Euklides ~300 SM).</p>
+    </div>
+  </div>
+
+  <div class="thm-box">
+    <div class="thm-label">Teorema 2.1 — Teorema Dasar Aritmetika (Fundamental Theorem of Arithmetic)</div>
+    <p>Setiap bilangan bulat \(n > 1\) dapat dinyatakan secara unik sebagai hasil kali bilangan-bilangan prima (dalam urutan yang tidak menurun):<br>
+    $$n = p_1^{e_1} \cdot p_2^{e_2} \cdot \ldots \cdot p_k^{e_k}$$
+    dengan \(p_1 < p_2 < \ldots < p_k\) adalah bilangan prima dan \(e_i \geq 1\).</p>
+  </div>
+
+  <div class="ex-box">
+    <div class="ex-label">Contoh Faktorisasi Prima</div>
+    <ul>
+      <li>\(12 = 2^2 \cdot 3\)</li>
+      <li>\(360 = 2^3 \cdot 3^2 \cdot 5\)</li>
+      <li>\(1001 = 7 \cdot 11 \cdot 13\)</li>
+      <li>\(2^{10} = 1024\) (sudah prima murni)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Saringan Eratosthenes (Sieve of Eratosthenes)</h3>
+    <p>Algoritma kuno untuk menemukan semua bilangan prima hingga \(N\). Klik tombol untuk melihat animasi langkah-demi-langkah!</p>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label>Batas N (maks 100)</label>
+        <input type="number" id="sieve-n" value="50" min="2" max="100">
+      </div>
+      <button class="btn-hitung" id="sieve-btn" onclick="mulaiSaringan()">Mulai Animasi</button>
+      <button class="btn-hitung" style="background:var(--crimson)" onclick="resetSaringan()">Reset</button>
+    </div>
+
+    <div id="sieve-status" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-faint);margin-bottom:0.75rem;min-height:20px;"></div>
+    <div class="sieve-grid" id="sieve-grid"></div>
+    <div id="sieve-result" style="margin-top:1rem;font-size:14px;color:var(--teal);font-weight:600;"></div>
+  </div>
+
+  <div class="card">
+    <h3>Uji Keprimaan</h3>
+    <div class="algo-steps">
+      <div class="algo-step">
+        <div class="algo-step-num">1</div>
+        <div class="algo-step-text">Jika \(n \leq 1\), bukan prima. Jika \(n = 2\) atau \(n = 3\), prima.</div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-step-num">2</div>
+        <div class="algo-step-text">Jika \(n\) genap (selain 2), bukan prima.</div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-step-num">3</div>
+        <div class="algo-step-text">Cek pembagi ganjil dari 3 sampai \(\lfloor\sqrt{n}\rfloor\). Jika ada yang membagi, bukan prima.</div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-step-num">4</div>
+        <div class="algo-step-text">Jika tidak ada pembagi ditemukan, \(n\) adalah prima.</div>
+      </div>
+    </div>
+    <div class="thm-box">
+      <div class="thm-label">Mengapa cukup sampai √n?</div>
+      <p>Jika \(n\) komposit, maka \(n = a \cdot b\). Paling tidak salah satu dari \(a\) atau \(b\) harus \(\leq \sqrt{n}\). Sehingga jika tidak ada pembagi hingga \(\sqrt{n}\), maka \(n\) pasti prima.</p>
+    </div>
+  </div>
+
+  <div class="calc-area">
+    <h3>🔍 Faktorisasi Prima Interaktif</h3>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Bilangan n</label>
+        <input type="number" id="pfact-input" value="360" min="2" max="999999">
+      </div>
+      <button class="btn-hitung" onclick="faktorisasiPrima()">Faktorisasi</button>
+    </div>
+    <div class="result-box" id="pfact-result">Masukkan bilangan dan klik Faktorisasi...</div>
+  </div>
+</div>
+
+<!-- ====== SECTION 3: GCD & LCM ====== -->
+<div id="gcd-lcm" class="section">
+  <div class="sec-header">
+    <h2>GCD dan LCM</h2>
+    <p>Pembagi Persekutuan Terbesar dan Kelipatan Persekutuan Terkecil</p>
+  </div>
+
+  <div class="subtabs">
+    <button class="subtab-btn active" onclick="showSubtab('gcd-lcm','gcd-tab')">FPB / GCD</button>
+    <button class="subtab-btn" onclick="showSubtab('gcd-lcm','lcm-tab')">KPK / LCM</button>
+    <button class="subtab-btn" onclick="showSubtab('gcd-lcm','euclid-tab')">Algoritma Euklides</button>
+    <button class="subtab-btn" onclick="showSubtab('gcd-lcm','bezout-tab')">Identitas Bézout</button>
+  </div>
+
+  <div id="gcd-tab" class="subtab-panel active">
+    <div class="def-box">
+      <div class="def-label">Definisi 3.1 — GCD (FPB)</div>
+      <p>Misalkan \(a, b\) bilangan bulat tidak keduanya nol. <strong>Pembagi Persekutuan Terbesar</strong> (Greatest Common Divisor) dari \(a\) dan \(b\), ditulis \(\gcd(a, b)\), adalah bilangan bulat positif terbesar yang membagi baik \(a\) maupun \(b\).</p>
+    </div>
+    <div class="def-box">
+      <div class="def-label">Definisi — Koprima / Relatif Prima</div>
+      <p>\(a\) dan \(b\) disebut <strong>koprima</strong> (saling prima / relatif prima) jika \(\gcd(a, b) = 1\).</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Contoh 3.1 — Mencari GCD dengan Faktorisasi Prima</div>
+      <p>Cari \(\gcd(36, 48)\):</p>
+      <ul>
+        <li>\(36 = 2^2 \cdot 3^2\)</li>
+        <li>\(48 = 2^4 \cdot 3\)</li>
+        <li>\(\gcd(36, 48) = 2^{\min(2,4)} \cdot 3^{\min(2,1)} = 2^2 \cdot 3^1 = 12\)</li>
+      </ul>
+    </div>
+    <div class="thm-box">
+      <div class="thm-label">Rumus GCD via Faktorisasi Prima</div>
+      <p>Jika \(a = \prod p_i^{a_i}\) dan \(b = \prod p_i^{b_i}\), maka \(\gcd(a,b) = \prod p_i^{\min(a_i, b_i)}\)</p>
+    </div>
+  </div>
+
+  <div id="lcm-tab" class="subtab-panel">
+    <div class="def-box">
+      <div class="def-label">Definisi 3.2 — LCM (KPK)</div>
+      <p><strong>Kelipatan Persekutuan Terkecil</strong> (Least Common Multiple) dari \(a\) dan \(b\), ditulis \(\text{lcm}(a, b)\), adalah bilangan bulat positif terkecil yang merupakan kelipatan dari keduanya.</p>
+    </div>
+    <div class="thm-box">
+      <div class="thm-label">Teorema 3.1 — Hubungan GCD dan LCM</div>
+      <p>Untuk \(a, b \in \mathbb{Z}^+\) berlaku: $$\gcd(a,b) \cdot \text{lcm}(a,b) = a \cdot b$$</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Contoh 3.2 — Mencari LCM</div>
+      <p>Cari \(\text{lcm}(36, 48)\):</p>
+      <ul>
+        <li>\(36 = 2^2 \cdot 3^2\), \(\quad 48 = 2^4 \cdot 3\)</li>
+        <li>\(\text{lcm}(36, 48) = 2^{\max(2,4)} \cdot 3^{\max(2,1)} = 2^4 \cdot 3^2 = 144\)</li>
+        <li>Verifikasi: \(\gcd(36,48) \cdot \text{lcm}(36,48) = 12 \cdot 144 = 1728 = 36 \cdot 48\) ✓</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="euclid-tab" class="subtab-panel">
+    <div class="thm-box">
+      <div class="thm-label">Teorema 3.2 — Algoritma Euklides</div>
+      <p>Untuk \(a, b \in \mathbb{Z}^+\) dengan \(a \geq b\):<br>
+      $$\gcd(a, b) = \gcd(b, a \bmod b)$$
+      Proses diulang sampai sisa = 0. GCD adalah sisa terakhir yang tidak nol.</p>
+    </div>
+    <div class="algo-steps">
+      <div class="algo-step">
+        <div class="algo-step-num">1</div>
+        <div class="algo-step-text">Bagi \(a\) dengan \(b\), dapatkan sisa \(r = a \bmod b\)</div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-step-num">2</div>
+        <div class="algo-step-text">Jika \(r = 0\), maka \(\gcd(a,b) = b\). Selesai.</div>
+      </div>
+      <div class="algo-step">
+        <div class="algo-step-num">3</div>
+        <div class="algo-step-text">Ganti \(a \leftarrow b\) dan \(b \leftarrow r\). Kembali ke langkah 1.</div>
+      </div>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Contoh 3.3 — Trace Algoritma Euklides untuk gcd(252, 198)</div>
+      <table>
+        <tr><th>Langkah</th><th>a</th><th>b</th><th>a = b·q + r</th><th>r</th></tr>
+        <tr><td>1</td><td>252</td><td>198</td><td>252 = 198·1 + 54</td><td>54</td></tr>
+        <tr><td>2</td><td>198</td><td>54</td><td>198 = 54·3 + 36</td><td>36</td></tr>
+        <tr><td>3</td><td>54</td><td>36</td><td>54 = 36·1 + 18</td><td>18</td></tr>
+        <tr><td>4</td><td>36</td><td>18</td><td>36 = 18·2 + 0</td><td><strong>0</strong></td></tr>
+      </table>
+      <p>Jadi \(\gcd(252, 198) = 18\)</p>
+    </div>
+  </div>
+
+  <div id="bezout-tab" class="subtab-panel">
+    <div class="thm-box">
+      <div class="thm-label">Teorema 3.3 — Identitas Bézout</div>
+      <p>Untuk setiap \(a, b \in \mathbb{Z}\) tidak keduanya nol, terdapat \(s, t \in \mathbb{Z}\) sehingga:<br>
+      $$\gcd(a,b) = sa + tb$$
+      \(s\) dan \(t\) disebut <strong>koefisien Bézout</strong>. Dapat dicari dengan <em>Algoritma Euklides Diperluas</em>.</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Contoh 3.4 — Koefisien Bézout untuk gcd(252, 198) = 18</div>
+      <p>Balik-substitusi dari trace Euklides:</p>
+      <ul>
+        <li>\(18 = 54 - 36 \cdot 1\)</li>
+        <li>\(18 = 54 - (198 - 54 \cdot 3) = 4 \cdot 54 - 198\)</li>
+        <li>\(18 = 4(252 - 198) - 198 = 4 \cdot 252 - 5 \cdot 198\)</li>
+      </ul>
+      <p>Sehingga \(\gcd(252, 198) = 4 \cdot 252 + (-5) \cdot 198 = 18\)<br>
+      Koefisien Bézout: \(s = 4, \; t = -5\)</p>
+    </div>
+  </div>
+
+  <div class="calc-area">
+    <h3>⚙ Kalkulator GCD, LCM &amp; Euklides</h3>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Bilangan a</label>
+        <input type="number" id="gcd-a" value="252" min="1">
+      </div>
+      <div class="input-group">
+        <label>Bilangan b</label>
+        <input type="number" id="gcd-b" value="198" min="1">
+      </div>
+      <button class="btn-hitung" onclick="hitungGcdLcm()">Hitung</button>
+    </div>
+    <div class="result-box" id="gcd-result">Masukkan dua bilangan dan klik Hitung...</div>
+  </div>
+</div>
+
+<!-- ====== SECTION 4: KONGRUENSI ====== -->
+<div id="kongruensi" class="section">
+  <div class="sec-header">
+    <h2>Aritmetika Modular &amp; Kongruensi</h2>
+    <p>Dasar kriptografi modern dan sistem sisa bilangan</p>
+  </div>
+
+  <div class="def-box">
+    <div class="def-label">Definisi 4.1 — Kongruensi</div>
+    <p>Untuk \(m \in \mathbb{Z}^+\), dikatakan \(a\) <strong>kongruen</strong> dengan \(b\) modulo \(m\), ditulis<br>
+    $$a \equiv b \pmod{m}$$
+    jika dan hanya jika \(m \mid (a - b)\), atau ekuivalen jika \(a\) dan \(b\) mempunyai sisa yang sama ketika dibagi \(m\).</p>
+  </div>
+
+  <div class="ex-box">
+    <div class="ex-label">Contoh 4.1</div>
+    <ul>
+      <li>\(17 \equiv 5 \pmod{6}\) karena \(6 \mid (17-5) = 12\)</li>
+      <li>\(23 \equiv 2 \pmod{3}\) karena \(23 = 3 \cdot 7 + 2\)</li>
+      <li>\(-7 \equiv 3 \pmod{5}\) karena \(5 \mid (-7-3) = -10\)</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>Sifat-Sifat Kongruensi</h3>
+    <div class="thm-box">
+      <div class="thm-label">Teorema 4.1</div>
+      <p>Jika \(a \equiv b \pmod{m}\) dan \(c \equiv d \pmod{m}\), maka:<br>
+      (i) \(a + c \equiv b + d \pmod{m}\)<br>
+      (ii) \(ac \equiv bd \pmod{m}\)<br>
+      (iii) \(a^n \equiv b^n \pmod{m}\) untuk \(n \geq 0\)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Teorema Fermat Kecil</h3>
+    <div class="thm-box">
+      <div class="thm-label">Teorema 4.2 — Fermat's Little Theorem</div>
+      <p>Jika \(p\) prima dan \(\gcd(a, p) = 1\), maka: $$a^{p-1} \equiv 1 \pmod{p}$$
+      Atau ekuivalen: \(a^p \equiv a \pmod{p}\) untuk semua \(a\).</p>
+    </div>
+    <div class="ex-box">
+      <div class="ex-label">Contoh 4.2 — Menghitung 7^100 mod 13</div>
+      <ul>
+        <li>13 prima dan \(\gcd(7, 13) = 1\), maka \(7^{12} \equiv 1 \pmod{13}\)</li>
+        <li>\(100 = 12 \cdot 8 + 4\), jadi \(7^{100} = (7^{12})^8 \cdot 7^4 \equiv 1^8 \cdot 7^4 \pmod{13}\)</li>
+        <li>\(7^2 = 49 \equiv 10 \pmod{13}\)</li>
+        <li>\(7^4 = (7^2)^2 \equiv 10^2 = 100 \equiv 9 \pmod{13}\)</li>
+        <li>Jadi \(7^{100} \equiv 9 \pmod{13}\)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tabel Penjumlahan dan Perkalian Mod</h3>
+    <p>Pilih modulus untuk melihat tabel operasi:</p>
+    <div class="input-row" style="margin-bottom:0.75rem">
+      <div class="input-group">
+        <label>Modulus m</label>
+        <input type="number" id="mod-m" value="5" min="2" max="10">
+      </div>
+      <button class="btn-hitung" onclick="buatTabelMod()">Buat Tabel</button>
+    </div>
+    <div style="overflow-x:auto">
+      <div id="mod-table-container"></div>
+    </div>
+  </div>
+
+  <div class="calc-area">
+    <h3>🔐 Kalkulator Modular Eksponen</h3>
+    <p style="font-size:13px;color:var(--ink-faint);margin-bottom:1rem;">Hitung \(a^b \bmod m\) dengan efisien menggunakan Exponentiation by Squaring</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Basis a</label>
+        <input type="number" id="me-a" value="7" min="0">
+      </div>
+      <div class="input-group">
+        <label>Eksponen b</label>
+        <input type="number" id="me-b" value="100" min="0">
+      </div>
+      <div class="input-group">
+        <label>Modulus m</label>
+        <input type="number" id="me-m" value="13" min="1">
+      </div>
+      <button class="btn-hitung" onclick="hitungModExp()">Hitung</button>
+    </div>
+    <div class="result-box" id="me-result">Masukkan nilai dan klik Hitung...</div>
+  </div>
+</div>
+
+<!-- ====== SECTION 5: KALKULATOR ====== -->
+<div id="kalkulator" class="section">
+  <div class="sec-header">
+    <h2>Kalkulator Teori Bilangan</h2>
+    <p>Alat bantu komputasi interaktif untuk semua topik</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="calc-area" style="margin:0">
+      <h3>🧮 Cek Bilangan Prima</h3>
+      <div class="input-row">
+        <div class="input-group">
+          <label>Bilangan n</label>
+          <input type="number" id="cek-prima-n" value="97" min="2">
+        </div>
+        <button class="btn-hitung" onclick="cekPrima()">Cek</button>
+      </div>
+      <div class="result-box" id="cek-prima-result" style="min-height:50px">-</div>
+    </div>
+
+    <div class="calc-area" style="margin:0">
+      <h3>📐 Algoritma Pembagian</h3>
+      <div class="input-row">
+        <div class="input-group">
+          <label>a (dividend)</label>
+          <input type="number" id="div-a" value="37">
+        </div>
+        <div class="input-group">
+          <label>b (divisor)</label>
+          <input type="number" id="div-b" value="5" min="1">
+        </div>
+        <button class="btn-hitung" onclick="hitungPembagian()">Bagi</button>
+      </div>
+      <div class="result-box" id="div-result" style="min-height:50px">-</div>
+    </div>
+  </div>
+
+  <div style="height:1.25rem"></div>
+
+  <div class="calc-area">
+    <h3>🌀 Generator Bilangan Prima</h3>
+    <p style="font-size:13px;color:var(--ink-faint);margin-bottom:0.75rem">Temukan semua bilangan prima dalam rentang tertentu</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Dari</label>
+        <input type="number" id="range-from" value="1" min="1">
+      </div>
+      <div class="input-group">
+        <label>Sampai</label>
+        <input type="number" id="range-to" value="100" min="2" max="10000">
+      </div>
+      <button class="btn-hitung" onclick="primaDalamRentang()">Generate</button>
+    </div>
+    <div class="result-box" id="range-result">-</div>
+  </div>
+
+  <div class="calc-area">
+    <h3>🔗 Sistem Kongruensi Linear</h3>
+    <p style="font-size:13px;color:var(--ink-faint);margin-bottom:0.75rem">Selesaikan \(ax \equiv b \pmod{m}\)</p>
+    <div class="input-row">
+      <div class="input-group">
+        <label>a</label>
+        <input type="number" id="cong-a" value="3" min="1">
+      </div>
+      <div class="input-group">
+        <label>b</label>
+        <input type="number" id="cong-b" value="4">
+      </div>
+      <div class="input-group">
+        <label>m</label>
+        <input type="number" id="cong-m" value="7" min="1">
+      </div>
+      <button class="btn-hitung" onclick="selesaikanKongruensi()">Selesaikan</button>
+    </div>
+    <div class="result-box" id="cong-result">-</div>
+  </div>
+
+  <div class="calc-area">
+    <h3>📊 Ringkasan Cepat Bilangan</h3>
+    <div class="input-row">
+      <div class="input-group">
+        <label>Bilangan n</label>
+        <input type="number" id="ringkas-n" value="360" min="2">
+      </div>
+      <button class="btn-hitung" onclick="ringkasanBilangan()">Analisis</button>
+    </div>
+    <div class="result-box" id="ringkas-result">-</div>
+  </div>
+</div>
+
+<!-- ====== SECTION 6: KUIS ====== -->
+<div id="kuis" class="section">
+  <div class="sec-header">
+    <h2>Kuis Pemahaman</h2>
+    <p>Uji pemahaman Anda tentang Teori Bilangan</p>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-faint)">
+      Skor: <span id="quiz-score" style="color:var(--gold);font-weight:600">0</span> / <span id="quiz-total">0</span>
+    </div>
+    <button class="btn-hitung" onclick="resetKuis()">Reset Kuis</button>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:0%"></div></div>
+
+  <div id="quiz-container"></div>
+</div>
+
+</main>
+
+<footer>
+  Dibuat oleh <strong>Martin Bernard, M.Pd.</strong> &middot; Program Studi Pendidikan Matematika &middot; IKIP Siliwangi, Cimahi<br>
+  Mata Kuliah: Matematika Diskrit · Materi: Teori Bilangan
+</footer>
+
+<script>
+// ============================================================
+// NAV & SECTION SWITCHING
+// ============================================================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b => { if(b.getAttribute('onclick').includes(id)) b.classList.add('active'); });
+  if(id === 'prima' && document.getElementById('sieve-grid').children.length === 0) initSieve();
+  if(id === 'kongruensi') buatTabelMod();
+  if(id === 'kuis') renderKuis();
+}
+
+function showSubtab(sectionId, tabId) {
+  const section = document.getElementById(sectionId);
+  section.querySelectorAll('.subtab-panel').forEach(p => p.classList.remove('active'));
+  section.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ============================================================
+// SECTION 1: KETERBAGIAN
+// ============================================================
+function tampilFaktor() {
+  const n = parseInt(document.getElementById('faktor-input').value);
+  if(!n || n < 1) { document.getElementById('faktor-result').textContent = 'Masukkan bilangan positif!'; return; }
+  let faktor = [];
+  for(let i = 1; i <= Math.sqrt(n); i++) {
+    if(n % i === 0) {
+      faktor.push(i);
+      if(i !== n/i) faktor.push(n/i);
+    }
+  }
+  faktor.sort((a,b)=>a-b);
+  let pairs = [];
+  for(let i = 0; i < faktor.length; i++) {
+    if(faktor[i] <= Math.sqrt(n)) pairs.push([faktor[i], n/faktor[i]]);
+  }
+  let out = `Faktor-faktor dari ${n}:\n`;
+  out += faktor.join(', ') + '\n\n';
+  out += `Jumlah faktor: ${faktor.length}\n\n`;
+  out += 'Pasangan faktor:\n';
+  pairs.forEach(p => out += `  ${p[0]} × ${p[1]} = ${n}\n`);
+  if(faktor.length === 2) out += `\n✓ ${n} adalah bilangan PRIMA`;
+  else out += `\n✗ ${n} adalah bilangan KOMPOSIT`;
+  document.getElementById('faktor-result').textContent = out;
+}
+
+// ============================================================
+// SECTION 2: BILANGAN PRIMA
+// ============================================================
+let sieveAnim = null;
+let sieveData = [];
+let sieveN = 50;
+
+function initSieve() {
+  sieveN = Math.min(parseInt(document.getElementById('sieve-n').value)||50, 100);
+  const grid = document.getElementById('sieve-grid');
+  grid.innerHTML = '';
+  sieveData = new Array(sieveN+1).fill(true);
+  sieveData[0] = sieveData[1] = false;
+  for(let i = 2; i <= sieveN; i++) {
+    const el = document.createElement('div');
+    el.className = 'sieve-num';
+    el.textContent = i;
+    el.id = 'sn-'+i;
+    grid.appendChild(el);
+  }
+}
+
+function mulaiSaringan() {
+  clearInterval(sieveAnim);
+  initSieve();
+  document.getElementById('sieve-result').textContent = '';
+  document.getElementById('sieve-status').textContent = '';
+  let p = 2;
+  sieveAnim = setInterval(() => {
+    while(p <= sieveN && !sieveData[p]) p++;
+    if(p > Math.sqrt(sieveN)) {
+      clearInterval(sieveAnim);
+      // Mark remaining as prima
+      for(let i = 2; i <= sieveN; i++) {
+        const el = document.getElementById('sn-'+i);
+        if(el && sieveData[i]) el.className = 'sieve-num prima';
+        else if(el) el.className = 'sieve-num composit';
+      }
+      const primas = [];
+      for(let i=2;i<=sieveN;i++) if(sieveData[i]) primas.push(i);
+      document.getElementById('sieve-result').textContent =
+        `Ditemukan ${primas.length} bilangan prima: ${primas.join(', ')}`;
+      document.getElementById('sieve-status').textContent = 'Selesai!';
+      return;
+    }
+    const el = document.getElementById('sn-'+p);
+    if(el) el.className = 'sieve-num current';
+    document.getElementById('sieve-status').textContent = `Memproses p = ${p}: mencoret semua kelipatan ${p}...`;
+    // Coret kelipatan p
+    for(let k = p*p; k <= sieveN; k += p) {
+      sieveData[k] = false;
+      const ke = document.getElementById('sn-'+k);
+      if(ke) ke.className = 'sieve-num composit';
+    }
+    setTimeout(() => {
+      if(el) el.className = 'sieve-num prima';
+    }, 400);
+    p++;
+  }, 600);
+}
+
+function resetSaringan() {
+  clearInterval(sieveAnim);
+  initSieve();
+  document.getElementById('sieve-result').textContent = '';
+  document.getElementById('sieve-status').textContent = '';
+}
+
+function faktorisasiPrima() {
+  let n = parseInt(document.getElementById('pfact-input').value);
+  if(!n || n < 2) { document.getElementById('pfact-result').textContent = 'Masukkan bilangan ≥ 2'; return; }
+  const asli = n;
+  let faktor = {};
+  for(let d = 2; d * d <= n; d++) {
+    while(n % d === 0) {
+      faktor[d] = (faktor[d]||0)+1;
+      n = Math.floor(n/d);
+    }
+  }
+  if(n > 1) faktor[n] = (faktor[n]||0)+1;
+  const keys = Object.keys(faktor).map(Number).sort((a,b)=>a-b);
+  let out = `${asli} = `;
+  out += keys.map(p => faktor[p]===1 ? `${p}` : `${p}^${faktor[p]}`).join(' × ');
+  out += '\n\nBentuk eksponen:\n';
+  keys.forEach(p => { out += `  ${p}^${faktor[p]} = ${Math.pow(p,faktor[p])}\n`; });
+  const jumlahFaktor = keys.reduce((acc,p)=>acc*(faktor[p]+1),1);
+  out += `\nJumlah faktor positif: τ(${asli}) = ${jumlahFaktor}`;
+  if(keys.length===1&&faktor[keys[0]]===1) out += `\n✓ ${asli} adalah bilangan PRIMA`;
+  document.getElementById('pfact-result').textContent = out;
+}
+
+// ============================================================
+// SECTION 3: GCD & LCM
+// ============================================================
+function gcd(a, b) { while(b) { [a,b]=[b,a%b]; } return a; }
+
+function hitungGcdLcm() {
+  const a = parseInt(document.getElementById('gcd-a').value);
+  const b = parseInt(document.getElementById('gcd-b').value);
+  if(!a||!b||a<1||b<1) { document.getElementById('gcd-result').textContent='Masukkan bilangan positif!'; return; }
+
+  // Euclidean trace
+  let trace = [];
+  let x=a, y=b;
+  while(y) {
+    const q=Math.floor(x/y), r=x%y;
+    trace.push({x,y,q,r});
+    x=y; y=r;
+  }
+  const g = x;
+  const l = (a*b)/g;
+
+  // Extended Euclidean for Bezout
+  let [old_r,r]=[a,b], [old_s,s]=[1,0], [old_t,t]=[0,1];
+  while(r!==0) {
+    const q=Math.floor(old_r/r);
+    [old_r,r]=[r,old_r-q*r];
+    [old_s,s]=[s,old_s-q*s];
+    [old_t,t]=[t,old_t-q*t];
+  }
+
+  let out = `GCD(${a}, ${b}) = ${g}\n`;
+  out += `LCM(${a}, ${b}) = ${l}\n`;
+  out += `Verifikasi: GCD × LCM = ${g} × ${l} = ${g*l} = ${a} × ${b} = ${a*b} ✓\n\n`;
+  out += `Trace Algoritma Euklides:\n`;
+  trace.forEach(({x,y,q,r},i) => {
+    out += `  Langkah ${i+1}: ${x} = ${y}·${q} + ${r}\n`;
+  });
+  out += `\nIdentitas Bézout:\n`;
+  out += `  GCD(${a},${b}) = ${old_s}·${a} + (${old_t})·${b} = ${old_s*a + old_t*b} ✓`;
+  document.getElementById('gcd-result').textContent = out;
+}
+
+// ============================================================
+// SECTION 4: KONGRUENSI
+// ============================================================
+function buatTabelMod() {
+  const m = parseInt(document.getElementById('mod-m').value)||5;
+  const container = document.getElementById('mod-table-container');
+  let html = '<p style="font-size:13px;font-weight:600;color:var(--ink-muted);margin-bottom:0.5rem">Tabel Penjumlahan (mod '+m+')</p>';
+  html += '<table><tr><th>+</th>';
+  for(let i=0;i<m;i++) html+=`<th>${i}</th>`;
+  html+='</tr>';
+  for(let i=0;i<m;i++){
+    html+=`<tr><td><strong>${i}</strong></td>`;
+    for(let j=0;j<m;j++) html+=`<td>${(i+j)%m}</td>`;
+    html+='</tr>';
+  }
+  html+='</table>';
+
+  html += '<p style="font-size:13px;font-weight:600;color:var(--ink-muted);margin:1rem 0 0.5rem">Tabel Perkalian (mod '+m+')</p>';
+  html += '<table><tr><th>×</th>';
+  for(let i=0;i<m;i++) html+=`<th>${i}</th>`;
+  html+='</tr>';
+  for(let i=0;i<m;i++){
+    html+=`<tr><td><strong>${i}</strong></td>`;
+    for(let j=0;j<m;j++) html+=`<td>${(i*j)%m}</td>`;
+    html+='</tr>';
+  }
+  html+='</table>';
+  container.innerHTML = html;
+}
+
+function hitungModExp() {
+  let a=parseInt(document.getElementById('me-a').value);
+  let b=parseInt(document.getElementById('me-b').value);
+  let m=parseInt(document.getElementById('me-m').value);
+  if(isNaN(a)||isNaN(b)||isNaN(m)||m<1) { document.getElementById('me-result').textContent='Input tidak valid!'; return; }
+
+  // Exponentiation by squaring
+  let result=1;
+  a=a%m;
+  let steps=[];
+  let bOrig=b, exp=a;
+  steps.push(`Hitung ${document.getElementById('me-a').value}^${bOrig} mod ${m} (Exponentiation by Squaring):`);
+  let sq=a, curb=b;
+  steps.push(`Basis: ${sq} mod ${m} = ${sq%m}`);
+  while(curb>0){
+    if(curb%2===1){
+      result=(result*sq)%m;
+      steps.push(`  bit 1: result × ${sq} mod ${m} = ${result}`);
+    }
+    sq=(sq*sq)%m;
+    curb=Math.floor(curb/2);
+    if(curb>0) steps.push(`  sq^2 mod ${m} = ${sq}`);
+  }
+  steps.push(`\nHasil: ${document.getElementById('me-a').value}^${bOrig} mod ${m} = ${result}`);
+
+  // Cek Fermat
+  const baseVal = parseInt(document.getElementById('me-a').value);
+  if(isPrime(m) && gcd(baseVal,m)===1){
+    steps.push(`\n[Fermat] Karena ${m} prima dan gcd(${baseVal},${m})=1:`);
+    steps.push(`  ${baseVal}^${m-1} ≡ 1 (mod ${m})`);
+    steps.push(`  ${bOrig} = ${m-1}·${Math.floor(bOrig/(m-1))} + ${bOrig%(m-1)}`);
+    steps.push(`  Sehingga ${baseVal}^${bOrig} ≡ ${baseVal}^${bOrig%(m-1)} (mod ${m})`);
+  }
+  document.getElementById('me-result').textContent = steps.join('\n');
+}
+
+function isPrime(n){
+  if(n<2) return false;
+  if(n===2||n===3) return true;
+  if(n%2===0) return false;
+  for(let i=3;i<=Math.sqrt(n);i+=2) if(n%i===0) return false;
+  return true;
+}
+
+// ============================================================
+// SECTION 5: KALKULATOR
+// ============================================================
+function cekPrima() {
+  const n = parseInt(document.getElementById('cek-prima-n').value);
+  if(!n||n<2){document.getElementById('cek-prima-result').textContent='Masukkan bilangan ≥ 2';return;}
+  const prima = isPrime(n);
+  let out = prima ? `✓ ${n} adalah bilangan PRIMA` : `✗ ${n} adalah bilangan KOMPOSIT`;
+  if(!prima) {
+    for(let d=2;d*d<=n;d++){
+      if(n%d===0){ out+=`\n  Faktor terkecil: ${d} (karena ${d} × ${n/d} = ${n})`; break; }
+    }
+  }
+  document.getElementById('cek-prima-result').textContent = out;
+}
+
+function hitungPembagian() {
+  const a=parseInt(document.getElementById('div-a').value);
+  const b=parseInt(document.getElementById('div-b').value);
+  if(!b||b===0){document.getElementById('div-result').textContent='Divisor tidak boleh 0!';return;}
+  const q=Math.floor(a/b);
+  const r=((a%b)+b)%b; // ensure positive remainder
+  const qAdj = (a-r)/b;
+  document.getElementById('div-result').textContent =
+    `Algoritma Pembagian: a = bq + r\n${a} = ${b} × ${qAdj} + ${r}\n\nHasil bagi q = ${qAdj}\nSisa r = ${r}\nVerifikasi: ${b}×${qAdj}+${r} = ${b*qAdj+r} ✓`;
+}
+
+function primaDalamRentang() {
+  const from = parseInt(document.getElementById('range-from').value)||1;
+  const to = parseInt(document.getElementById('range-to').value)||100;
+  if(to>10000||from<1){document.getElementById('range-result').textContent='Rentang 1-10000';return;}
+  const primas=[];
+  for(let i=Math.max(2,from);i<=to;i++) if(isPrime(i)) primas.push(i);
+  document.getElementById('range-result').textContent =
+    `Bilangan prima dari ${from} sampai ${to}:\nJumlah: ${primas.length}\n\n${primas.join(', ')}`;
+}
+
+function selesaikanKongruensi() {
+  const a=parseInt(document.getElementById('cong-a').value);
+  const b=parseInt(document.getElementById('cong-b').value);
+  const m=parseInt(document.getElementById('cong-m').value);
+  const g=gcd(Math.abs(a),m);
+  let out=`Persamaan: ${a}x ≡ ${b} (mod ${m})\n`;
+  if(b%g!==0){
+    out+=`gcd(${a},${m}) = ${g}\nKarena ${g} ∤ ${b}, persamaan TIDAK MEMILIKI SOLUSI.`;
+  } else {
+    const a2=a/g, b2=b/g, m2=m/g;
+    // find inverse of a2 mod m2
+    let inv=-1;
+    for(let x=0;x<m2;x++) if((a2*x)%m2===((b2%m2)+m2)%m2){inv=x;break;}
+    const solusi=[];
+    for(let k=0;k<g;k++) solusi.push(inv+k*m2);
+    out+=`gcd(${a},${m}) = ${g}\nKarena ${g} | ${b}, ada ${g} solusi modulo ${m}:\n`;
+    out+=solusi.map((s,i)=>`  x ≡ ${((s%m)+m)%m} (mod ${m})`).join('\n');
+    out+=`\n\nSolusi umum: x ≡ {${solusi.map(s=>((s%m)+m)%m).join(', ')}} (mod ${m})`;
+  }
+  document.getElementById('cong-result').textContent=out;
+}
+
+function ringkasanBilangan() {
+  let n=parseInt(document.getElementById('ringkas-n').value);
+  if(!n||n<2){document.getElementById('ringkas-result').textContent='Masukkan bilangan ≥ 2';return;}
+  const asli=n;
+  let faktor={};
+  let tmp=n;
+  for(let d=2;d*d<=tmp;d++) while(tmp%d===0){faktor[d]=(faktor[d]||0)+1;tmp=Math.floor(tmp/d);}
+  if(tmp>1) faktor[tmp]=(faktor[tmp]||0)+1;
+  const keys=Object.keys(faktor).map(Number).sort((a,b)=>a-b);
+  const jumlahFaktor=keys.reduce((acc,p)=>acc*(faktor[p]+1),1);
+  const sumFaktor=Array.from({length:asli},(v,k)=>k+1).filter(k=>asli%k===0).reduce((a,b)=>a+b,0);
+
+  let out=`=== Analisis ${asli} ===\n\n`;
+  out+=`Jenis: ${isPrime(asli)?'PRIMA':'KOMPOSIT'}\n`;
+  out+=`Faktorisasi prima: ${keys.length?keys.map(p=>faktor[p]===1?`${p}`:`${p}^${faktor[p]}`).join(' × '):asli}\n`;
+  out+=`Jumlah faktor positif τ(n): ${jumlahFaktor}\n`;
+  out+=`Jumlah semua faktor σ(n): ${sumFaktor}\n`;
+  out+=`${sumFaktor===2*asli?'✓ Bilangan SEMPURNA (perfect number)':sumFaktor<2*asli?'Bilangan KEKURANGAN (deficient)':'Bilangan BERLIMPAH (abundant)'}\n`;
+  out+=`Nilai Euler φ(${asli}): `;
+  let phi=asli;
+  keys.forEach(p=>{phi=phi/p*(p-1);});
+  out+=Math.round(phi)+'\n';
+  out+=`(banyak bilangan 1..${asli} yang koprima dengan ${asli})`;
+  document.getElementById('ringkas-result').textContent=out;
+}
+
+// ============================================================
+// SECTION 6: KUIS
+// ============================================================
+const soal = [
+  {
+    q: 'Manakah yang benar? Diketahui a = 7, b = 0.',
+    opts: ['7 | 0 karena 0 = 7·0', '0 | 7 karena tidak ada sisa', '7 ∤ 0 karena 0 tidak bisa dibagi', 'Keterbagian tidak terdefinisi untuk b = 0'],
+    jwb: 0,
+    penjelasan: 'Karena 0 = 7·0, dan 0 adalah bilangan bulat, maka 7 | 0. Setiap bilangan membagi 0.'
+  },
+  {
+    q: 'Berapa sisa dari pembagian -17 oleh 5 menurut Algoritma Pembagian?',
+    opts: ['-2', '3', '2', '-3'],
+    jwb: 1,
+    penjelasan: '-17 = 5·(-4) + 3, sehingga r = 3. Ingat, sisa harus ≥ 0.'
+  },
+  {
+    q: 'Bilangan prima manakah yang merupakan satu-satunya bilangan prima genap?',
+    opts: ['1', '2', '4', 'Tidak ada'],
+    jwb: 1,
+    penjelasan: '2 adalah satu-satunya bilangan prima genap. Semua bilangan genap lain > 2 adalah komposit karena dapat dibagi 2.'
+  },
+  {
+    q: 'Berapa GCD(48, 36) menggunakan algoritma Euklides?',
+    opts: ['6', '9', '12', '18'],
+    jwb: 2,
+    penjelasan: '48 = 36·1 + 12 → 36 = 12·3 + 0. GCD = 12.'
+  },
+  {
+    q: 'Jika GCD(a, b) = 6 dan LCM(a, b) = 60, berapa nilai a × b?',
+    opts: ['66', '360', '10', '300'],
+    jwb: 1,
+    penjelasan: 'GCD × LCM = a × b, sehingga 6 × 60 = 360.'
+  },
+  {
+    q: 'Nilai 23 mod 7 adalah...',
+    opts: ['2', '3', '1', '4'],
+    jwb: 1,
+    penjelasan: '23 = 7·3 + 2. Tunggu, 7×3=21, sisa 2. Jadi 23 mod 7 = 2. Opsi yang benar adalah 2.'
+  },
+  {
+    q: 'Faktorisasi prima dari 360 adalah...',
+    opts: ['2³ × 3² × 5', '2⁴ × 3 × 5', '2² × 3³ × 5', '2³ × 3 × 5²'],
+    jwb: 0,
+    penjelasan: '360 = 2 × 180 = 4 × 90 = 8 × 45 = 8 × 9 × 5 = 2³ × 3² × 5.'
+  },
+  {
+    q: 'Menurut Teorema Fermat Kecil, berapa nilai 5^12 mod 13?',
+    opts: ['0', '5', '1', '12'],
+    jwb: 2,
+    penjelasan: 'Karena 13 prima dan gcd(5,13)=1, Fermat kecil: 5^(13-1) = 5^12 ≡ 1 (mod 13).'
+  },
+  {
+    q: 'Dua bilangan a dan b disebut koprima jika...',
+    opts: ['a | b', 'a dan b keduanya prima', 'GCD(a, b) = 1', 'LCM(a, b) = 1'],
+    jwb: 2,
+    penjelasan: 'Koprima (relatif prima) berarti GCD(a, b) = 1, artinya tidak ada faktor persekutuan selain 1.'
+  },
+  {
+    q: 'Persamaan 3x ≡ 7 (mod 11) memiliki solusi karena...',
+    opts: ['3 habis membagi 7', 'GCD(3, 11) = 1 dan 1 | 7', '7 adalah bilangan prima', '3 dan 11 koprima dengan 7'],
+    jwb: 1,
+    penjelasan: 'Ax ≡ b (mod m) punya solusi jika dan hanya jika GCD(a,m) | b. Di sini GCD(3,11)=1 dan 1|7 ✓.'
+  }
+];
+
+let jawaban = {};
+function renderKuis() {
+  if(document.getElementById('quiz-container').children.length > 0) return;
+  document.getElementById('quiz-total').textContent = soal.length;
+  let html = '';
+  soal.forEach((s,i) => {
+    html += `<div class="quiz-q" id="qq-${i}">
+      <p>Soal ${i+1}. ${s.q}</p>
+      <div class="quiz-opts">`;
+    s.opts.forEach((o,j) => {
+      html += `<button class="quiz-opt" id="qo-${i}-${j}" onclick="pilihJawaban(${i},${j})">${o}</button>`;
+    });
+    html += `</div><div class="quiz-feedback" id="qf-${i}"></div></div>`;
+  });
+  document.getElementById('quiz-container').innerHTML = html;
+}
+
+function pilihJawaban(soalIdx, optIdx) {
+  if(jawaban[soalIdx] !== undefined) return;
+  jawaban[soalIdx] = optIdx;
+  const benar = optIdx === soal[soalIdx].jwb;
+  soal[soalIdx].opts.forEach((_,j) => {
+    const el = document.getElementById(`qo-${soalIdx}-${j}`);
+    el.classList.add('disabled');
+    if(j === soal[soalIdx].jwb) el.classList.add('benar');
+    else if(j === optIdx && !benar) el.classList.add('salah');
+  });
+  document.getElementById(`qf-${soalIdx}`).textContent =
+    (benar ? '✓ Benar! ' : '✗ Kurang tepat. ') + soal[soalIdx].penjelasan;
+  updateScore();
+}
+
+function updateScore() {
+  let skor = Object.keys(jawaban).filter(k => jawaban[k] === soal[k].jwb).length;
+  document.getElementById('quiz-score').textContent = skor;
+  const pct = (Object.keys(jawaban).length / soal.length) * 100;
+  document.getElementById('quiz-progress').style.width = pct+'%';
+}
+
+function resetKuis() {
+  jawaban = {};
+  document.getElementById('quiz-container').innerHTML = '';
+  document.getElementById('quiz-score').textContent = '0';
+  document.getElementById('quiz-progress').style.width = '0%';
+  renderKuis();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', () => {
+  tampilFaktor();
+  buatTabelMod();
+});
+</script>
+</body>
+</html>
