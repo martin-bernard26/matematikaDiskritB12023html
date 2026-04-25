@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Tes Awal Teori Bilangan</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: rgba(255,255,255,0.95);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+h1 {
+    text-align: center;
+}
+
+input {
+    width: 48%;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.card {
+    background: #f1f5f9;
+    margin: 15px 0;
+    padding: 15px;
+    border-left: 5px solid #22c55e;
+    border-radius: 10px;
+}
+
+button {
+    display: block;
+    margin: 25px auto;
+    padding: 12px 25px;
+    border-radius: 20px;
+    border: none;
+    background: #22c55e;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>Tes Awal Teori Bilangan</h1>
+
+<input type="text" id="nama" placeholder="Nama">
+<input type="text" id="nim" placeholder="NIM">
+
+<div id="soalContainer"></div>
+
+<button onclick="kirimData()">Kumpulkan Jawaban</button>
+</div>
+
+<script>
+// soal + kunci
+const soal = [
+{
+t:"Seorang mahasiswa menyatakan bahwa jika a|b dan b|c maka a|c. Apa alasan yang benar?",
+o:["Karena definisi pembagian","Karena a=b","Tidak selalu benar"],
+k:0
+},
+{
+t:"Jika suatu bilangan n habis dibagi 2 dan 3, maka n habis dibagi...",
+o:["5","6","9"],
+k:1
+},
+{
+t:"Seorang siswa mengklaim bahwa setiap bilangan prima adalah ganjil. Pernyataan ini...",
+o:["Benar","Salah karena 2","Tidak pasti"],
+k:1
+},
+{
+t:"Jika gcd(a,b)=1 maka a dan b disebut...",
+o:["Relatif prima","Bilangan prima","Kongruen"],
+k:0
+},
+{
+t:"Jika a ≡ b (mod n), maka artinya...",
+o:["a-b habis dibagi n","a+b habis dibagi n","a×b habis dibagi n"],
+k:0
+},
+{
+t:"Jika a|b dan a|c maka a|(b+c). Ini adalah sifat...",
+o:["Penjumlahan","Perkalian","Kongruensi"],
+k:0
+},
+{
+t:"Seorang mahasiswa menyatakan 15 adalah bilangan prima. Ini...",
+o:["Benar","Salah","Tergantung"],
+k:1
+},
+{
+t:"Jika n bilangan genap, maka n² adalah...",
+o:["Genap","Ganjil","Prima"],
+k:0
+},
+{
+t:"Jika a ≡ b (mod n), maka a dan b memiliki...",
+o:["Sisa yang sama","Nilai sama","Faktor sama"],
+k:0
+},
+{
+t:"Jika bilangan prima p membagi ab maka...",
+o:["p membagi a atau b","p membagi a saja","p tidak membagi"],
+k:0
+}
+];
+
+// tampilkan soal
+let container = document.getElementById("soalContainer");
+
+soal.forEach((s, i) => {
+    let opsiHTML = "";
+    s.o.forEach((opsi, j) => {
+        opsiHTML += `
+        <input type="radio" name="q${i}" value="${j}"> ${opsi}<br>`;
+    });
+
+    container.innerHTML += `
+    <div class="card">
+        <b>${i+1}. ${s.t}</b><br>
+        ${opsiHTML}
+    </div>`;
+});
+</script>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGpG2vAoWqwn46upNtU9M-Cx1gkKwBE-c",
+  authDomain: "chatting-matematika.firebaseapp.com",
+  databaseURL: "https://chatting-matematika-default-rtdb.firebaseio.com",
+  projectId: "chatting-matematika",
+  storageBucket: "chatting-matematika.appspot.com",
+  messagingSenderId: "811492413631",
+  appId: "1:811492413631:web:a29a4bba38a6541f90360a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.kirimData = function(){
+
+    let nama = document.getElementById("nama").value;
+    let nim = document.getElementById("nim").value;
+
+    let skor = 0;
+    let jawaban = [];
+
+    for(let i=0;i<10;i++){
+        let pilih = document.querySelector('input[name="q'+i+'"]:checked');
+        if(pilih){
+            let val = parseInt(pilih.value);
+            jawaban.push(val);
+            if(val === soal[i].k){
+                skor++;
+            }
+        } else {
+            jawaban.push(null);
+        }
+    }
+
+    push(ref(db, "diagnosa_teori_bilangan"), {
+        nama: nama,
+        nim: nim,
+        skor: skor,
+        jawaban: jawaban,
+        waktu: new Date().toLocaleString()
+    });
+
+    alert("Jawaban terkirim! Skor Anda: " + skor);
+}
+</script>
+
+</body>
+</html>
