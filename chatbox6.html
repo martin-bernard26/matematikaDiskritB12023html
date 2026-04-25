@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Diskusi Pembelajaran</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+.header {
+    padding: 15px;
+    text-align: center;
+    background: #2563eb;
+    color: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f1f5f9;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: #e0f2fe;
+}
+
+.message strong {
+    color: #1e40af;
+}
+
+.input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+input, textarea {
+    font-family: 'Poppins', sans-serif;
+}
+
+#nama {
+    width: 30%;
+    margin-right: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+#pesan {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin-left: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e3a8a;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Diskusi Belajar Matematika</h2>
+    </div>
+
+    <div id="chatBox" class="chat-box"></div>
+
+    <div class="input-area">
+        <input type="text" id="nama" placeholder="Nama">
+        <input type="text" id="pesan" placeholder="Tulis pesan...">
+        <button onclick="kirimPesan()">Kirim</button>
+    </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDGpG2vAoWqwn46upNtU9M-Cx1gkKwBE-c",
+  authDomain: "chatting-matematika.firebaseapp.com",
+  databaseURL: "https://chatting-matematika-default-rtdb.firebaseio.com",
+  projectId: "chatting-matematika",
+  storageBucket: "chatting-matematika.appspot.com",
+  messagingSenderId: "811492413631",
+  appId: "1:811492413631:web:a29a4bba38a6541f90360a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Kirim pesan
+window.kirimPesan = function(){
+    let nama = document.getElementById("nama").value;
+    let pesan = document.getElementById("pesan").value;
+
+    if(nama === "" || pesan === ""){
+        alert("Nama dan pesan harus diisi!");
+        return;
+    }
+
+    push(ref(db, "chat_diskusi"), {
+        nama: nama,
+        pesan: pesan,
+        waktu: new Date().toLocaleTimeString()
+    });
+
+    document.getElementById("pesan").value = "";
+}
+
+// Tampilkan pesan real-time
+const chatRef = ref(db, "chat_diskusi");
+
+onChildAdded(chatRef, (data) => {
+    let msg = data.val();
+
+    let div = document.createElement("div");
+    div.classList.add("message");
+
+    div.innerHTML = `<strong>${msg.nama}</strong><br>${msg.pesan}<br><small>${msg.waktu}</small>`;
+
+    document.getElementById("chatBox").appendChild(div);
+
+    // auto scroll
+    let chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+});
+</script>
+
+</body>
+</html>
