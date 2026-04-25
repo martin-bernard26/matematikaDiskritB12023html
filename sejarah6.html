@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teori Bilangan — Sejarah & Filsafat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { 'afacad': ['Afacad', 'sans-serif'] }
+            }
+        }
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Afacad', sans-serif; background: #050505; color: #e5e5e5; overflow-x: hidden; }
+
+        #canvas3d { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+
+        .content { position: relative; z-index: 10; }
+
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+        }
+
+        .section { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 24px; }
+
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1), transform 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        .timeline-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: transparent; transition: all 0.3s ease; cursor: pointer; position: relative; }
+        .timeline-dot.active { background: #ffffff; border-color: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.4); }
+        .timeline-dot:hover { transform: scale(1.4); }
+        .timeline-dot .dot-label { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-size: 11px; color: rgba(255,255,255,0.4); opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+        .timeline-dot:hover .dot-label, .timeline-dot.active .dot-label { opacity: 1; color: rgba(255,255,255,0.7); }
+
+        .formula { font-family: 'Courier New', monospace; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 12px 20px; display: inline-block; font-size: 1.05rem; letter-spacing: 0.03em; color: rgba(255,255,255,0.7); }
+
+        .progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.6)); z-index: 100; transition: width 0.1s linear; }
+
+        .hero-title { font-size: clamp(2.8rem, 8vw, 6.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; }
+
+        .era-year { font-size: clamp(3rem, 10vw, 8rem); font-weight: 700; opacity: 0.06; position: absolute; top: -20px; left: -10px; letter-spacing: -0.05em; pointer-events: none; }
+
+        .quote { border-left: 2px solid rgba(255,255,255,0.25); padding-left: 20px; font-style: italic; opacity: 0.6; }
+
+        .nav-link { transition: color 0.15s ease; }
+
+        .divider { width: 60px; height: 1px; background: rgba(255,255,255,0.15); margin: 24px 0; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+        @media (max-width: 768px) {
+            .section { padding: 60px 16px; }
+            .era-year { font-size: clamp(2rem, 15vw, 4rem); }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas3d"></canvas>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Timeline Nav (Desktop) -->
+    <div class="fixed left-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col items-center gap-4" id="timelineNav"></div>
+
+    <!-- Nav Bar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-4 flex items-center justify-between" style="background: linear-gradient(to bottom, rgba(5,5,5,0.95), transparent);">
+        <div class="text-white font-bold text-xl tracking-widest">ℕ</div>
+        <div class="flex gap-6 text-sm">
+            <a href="#sejarah" class="nav-link text-white/40 hover:text-white">Sejarah</a>
+            <a href="#filsafat" class="nav-link text-white/40 hover:text-white">Filsafat</a>
+            <a href="#refleksi" class="nav-link text-white/40 hover:text-white">Refleksi</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="content">
+
+        <!-- HERO -->
+        <section class="section" id="hero">
+            <div class="max-w-4xl text-center">
+                <div class="reveal">
+                    <p class="text-xs md:text-sm uppercase tracking-[0.3em] text-white/30 mb-6">Sejarah &amp; Filsafat</p>
+                    <h1 class="hero-title text-white mb-8">Teori<br>Bilangan</h1>
+                    <p class="text-lg md:text-xl text-white/40 max-w-2xl mx-auto leading-relaxed">
+                        Perjalanan ribuan tahun manusia memahami bahasa kosmos — dari tanah liat Babylon
+                        hingga pembuktian terakhir Fermat, dari misteri bilangan prima hingga pertanyaan
+                        tentang hakikat kenyataan matematis.
+                    </p>
+                    <div class="mt-14 flex items-center justify-center gap-2 text-white/20">
+                        <span class="text-xs uppercase tracking-[0.2em]">Gulir ke bawah</span>
+                        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 1 -->
+        <section class="section" id="sejarah" data-section="0">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">~3000 SM</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Era Kuno</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Babylon &amp; Mesir</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Pada lembah Sungai Efrat dan Nil, peradaban pertama mulai menuliskan bilangan.
+                            Tablet tanah liat Babylon (<em>Plimpton 322</em>, ~1800 SM) memuat tabel tripel Pythagoras —
+                            bukti bahwa mereka memahami hubungan bilangan jauh sebelum Pythagoras lahir.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Di Mesir, <em>Rhind Papyrus</em> (~1650 SM) berisi soal aritmetika dan pecahan.
+                            Babylon menggunakan basis-60 (<em>sexagesimal</em>) — warisan yang masih kita rasakan
+                            dalam 60 menit per jam dan 360 derajat per lingkaran.
+                        </p>
+                        <div class="formula mt-6">
+                            3² + 4² = 5² &nbsp;&nbsp;|&nbsp;&nbsp; 1° = 1/360 lingkaran
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 2 -->
+        <section class="section" data-section="1">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">~530 SM</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Yunani Kuno</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Pythagoras &amp; Sekte Bilangan</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Pythagoras mendirikan komunitas semi-religius di Kroton. Bagi para Pythagoras,
+                            bilangan adalah <em>arkhé</em>, prinsip dasar seluruh realitas. Bilangan ganjil
+                            dianggap maskulin dan terbatas, genap feminin dan tak terbatas.
+                        </p>
+                        <div class="quote mb-5 text-base md:text-lg text-white/40">
+                            "Segalanya adalah bilangan." — Pythagoras
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Krisis datang ketika mereka menemukan √2 bukan bilangan rasional. Legenda mengisahkan
+                            Hippasus dilempar ke laut karena membongkar keyakinan ini — krisis fondasional pertama
+                            dalam sejarah matematika.
+                        </p>
+                        <div class="formula mt-6">
+                            √2 ≠ a/b &nbsp;&nbsp;→&nbsp;&nbsp; Krisis Irrasional
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 3 -->
+        <section class="section" data-section="2">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">~300 SM</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Iskandariyah</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Euclid &amp; Bilangan Prima</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Euclid menulis <em>Elemen</em>, buku paling berpengaruh dalam sejarah matematika.
+                            Buku IX Proposisi 20 membuktikan bahwa terdapat tak berhingga banyak bilangan prima.
+                            Argumennya elegan: jika prima berhingga, kalikan semua dan tambahkan 1 — bilangan baru
+                            ini tidak habis dibagi prima manapun. Kontradiksi.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Algoritma Euclidean untuk pembagi bersama terbesar — algoritma tertua yang masih
+                            digunakan, 2300 tahun kemudian.
+                        </p>
+                        <div class="formula mt-6">
+                            p₁ · p₂ · … · pₙ + 1 → prima baru
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 4 -->
+        <section class="section" data-section="3">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">~250 M</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Iskandariyah Romawi</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Diophantus &amp; Persamaan Tak Tentu</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            <em>Arithmetica</em> karya Diophantus memuat 130 soal yang mencari solusi bilangan bulat
+                            untuk persamaan polinomial — cikal bakal teori bilangan aljabar modern.
+                            Ia menggunakan singkatan untuk variabel, langkah awal menuju notasi aljabar.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Persamaan Diophantine — yang solusinya harus bilangan bulat — menjadi topik paling subur
+                            dalam teori bilangan. Di margin salinan <em>Arithmetica</em> miliknya,
+                            Pierre de Fermat menulis catatan yang mengguncang dunia selama 358 tahun.
+                        </p>
+                        <div class="formula mt-6">
+                            x² + y² = z² &nbsp;&nbsp;(solusi bilangan bulat)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 5 -->
+        <section class="section" data-section="4">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">~800 M</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Zaman Keemasan Islam</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Warisan Para Ilmuwan Muslim</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Al-Khawarizmi (~780–850) menulis <em>Al-Kitab al-Mukhtasar fi Hisab al-Jabr
+                            wal-Muqabalah</em> — asal kata "aljabar." Ia memperkenalkan sistem bilangan
+                            Hindu-Arab ke dunia Barat, termasuk konsep nol yang revolusioner.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Thabit ibn Qurra (~836–901) menemukan rumus bilangan persahabatan — pasangan bilangan
+                            yang jumlah pembaginya sama dengan bilangan lainnya. Ibn al-Haytham dan al-Banna
+                            berkontribusi pada bilangan prima dan bilangan sempurna.
+                        </p>
+                        <div class="formula mt-6">
+                            220 &amp; 284 → Bilangan Persahabatan
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 6 -->
+        <section class="section" data-section="5">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">1637</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Renaisans Prancis</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Fermat &amp; Teorema yang Menantang Dunia</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Pierre de Fermat menulis di margin <em>Arithmetica</em>: "Aku telah menemukan bukti
+                            yang benar-benar menakjubkan, namun margin ini terlalu kecil untuk memuatnya."
+                            Pernyataannya: untuk n &gt; 2, persamaan xⁿ + yⁿ = zⁿ tidak memiliki
+                            solusi bilangan bulat positif.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Fermat juga meletakkan fondasi teori bilangan modern melalui Teorema Kecil Fermat,
+                            prinsip turunan tak hingga, dan korespondensi dengan Pascal yang melahirkan
+                            teori probabilitas.
+                        </p>
+                        <div class="formula mt-6">
+                            xⁿ + yⁿ = zⁿ &nbsp;→&nbsp; tidak ada solusi untuk n &gt; 2
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 7 -->
+        <section class="section" data-section="6">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">1700–1855</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Zaman Keemasan</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Euler &amp; Gauss: Arsitek Modern</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Leonhard Euler (1707–1783) membuktikan Teorema Kecil Fermat, menemukan fungsi zeta,
+                            dan menunjukkan Σ 1/p divergen — bukti elegan bahwa prima tak berhingga.
+                            Ia juga menemukan rumus euler: V − E + F = 2, menjembatani geometri dan topologi.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Carl Friedrich Gauss (1777–1855) menulis <em>Disquisitiones Arithmeticae</em>
+                            (1801) pada usia 24 tahun — buku ini mendefinisikan ulang teori bilangan.
+                            Ia membuktikan hukum resiprositas kuadratik, "teorema emas" teori bilangan.
+                        </p>
+                        <div class="quote mb-5 text-base md:text-lg text-white/40">
+                            "Matematika adalah ratu ilmu pengetahuan, dan teori bilangan adalah ratu matematika." — Gauss
+                        </div>
+                        <div class="formula mt-6">
+                            ζ(s) = Σ 1/nˢ &nbsp;&nbsp;|&nbsp;&nbsp; Π(1 − 1/pˢ)⁻¹
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 8 -->
+        <section class="section" data-section="7">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">1913</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">India &amp; Cambridge</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Ramanujan: Sang Mistikus Bilangan</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Srinivasa Ramanujan (1887–1920) tumbuh miskin di Madras, hampir tanpa pendidikan formal.
+                            Dari lubang kantornya sebagai klerus, ia menghasilkan rumus yang menakjubkan —
+                            seolah diberikan dewi Namagiri dalam mimpi, katanya.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Suratnya kepada G.H. Hardy berisi rumus yang tak bisa dijelaskan matematikawan Barat manapun.
+                            Hardy menilai Ramanujan sebagai penemuan terbesarnya. Kontribusi pada fungsi partisi,
+                            bilangan hampir prima, dan identitas modular masih mendorong riset hari ini.
+                        </p>
+                        <div class="quote mb-5 text-base md:text-lg text-white/40">
+                            "Sebuah persamaan tidak memiliki nilai bagiku kecuali ia mengekspresikan pikiran Tuhan." — Ramanujan
+                        </div>
+                        <div class="formula mt-6">
+                            p(n) ~ e^(π√(2n/3)) / 4n√3
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERA 9 -->
+        <section class="section" data-section="8">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal relative overflow-hidden">
+                    <div class="era-year">1994</div>
+                    <div class="relative z-10">
+                        <p class="text-xs uppercase tracking-[0.2em] text-white/30 mb-3">Era Kontemporer</p>
+                        <h2 class="text-2xl md:text-4xl font-semibold text-white mb-6">Wiles &amp; Akhir Teorema Fermat</h2>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Pada 23 Juni 1993, Andrew Wiles mengumumkan pembuktian Teorema Terakhir Fermat di Cambridge —
+                            mengakhiri 358 tahun misteri. Namun sebuah celah ditemukan. Setelah setahun penderitaan,
+                            Wiles dan muridnya Richard Taylor menutup celah pada September 1994.
+                        </p>
+                        <p class="text-base md:text-lg leading-relaxed text-white/50 mb-5">
+                            Pembuktian Wiles membuktikan teorema Taniyama-Shimura, menghubungkan kurva eliptik
+                            dengan bentuk modular — koneksi terlalu dalam untuk dijelaskan dalam ratusan halaman.
+                            Fermat mungkin tidak pernah membuktikan teorema yang ia klaim — alat modern baru ada di abad ke-20.
+                        </p>
+                        <div class="formula mt-6">
+                            Kurva Elliptik ↔ Bentuk Modular → Fermat's Last Theorem
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHILOSOPHY -->
+        <section class="section" id="filsafat" data-section="9">
+            <div class="max-w-4xl w-full">
+                <div class="text-center mb-16 reveal">
+                    <p class="text-xs uppercase tracking-[0.3em] text-white/30 mb-4">Bagian II</p>
+                    <h2 class="text-3xl md:text-5xl font-semibold text-white">Filsafat Teori Bilangan</h2>
+                    <p class="text-white/30 mt-4 text-lg">Apakah bilangan ditemukan atau diciptakan?</p>
+                    <div class="divider mx-auto mt-6"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-8 reveal">
+                        <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Aliran I</div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Platonisme Matematika</h3>
+                        <p class="text-white/50 leading-relaxed mb-4">
+                            Bilangan dan struktur matematis eksis secara independen dari pikiran manusia,
+                            di sebuah "alam ideasional." Bilangan prima ada sebelum ada manusia yang menghitung.
+                            Matematikawan adalah <em>penjelajah</em>, bukan pencipta.
+                        </p>
+                        <div class="quote text-sm text-white/30">
+                            "Bilangan prima adalah ciptaan Tuhan, segala sesuatu yang lain adalah ciptaan manusia." — Kronecker
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 reveal reveal-delay-1">
+                        <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Aliran II</div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Formalisme</h3>
+                        <p class="text-white/50 leading-relaxed mb-4">
+                            Matematika adalah permainan simbol — manipulasi aksioma dan aturan inferensi.
+                            Bilangan tidak "ada" di alam metafisik; mereka adalah konsekuensi logis
+                            dari sistem formal yang kita pilih. Hilbert: matematika hanyalah "chess dengan simbol."
+                        </p>
+                        <div class="quote text-sm text-white/30">
+                            "Matematika adalah permainan yang dimainkan menurut aturan sederhana dengan simbol yang tidak berarti." — Hilbert
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 reveal reveal-delay-2">
+                        <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Aliran III</div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Konstruktivisme</h3>
+                        <p class="text-white/50 leading-relaxed mb-4">
+                            Objek matematis hanya ada jika dapat dikonstruksi secara eksplisit. Bukti eksistensi
+                            melalui kontradiksi (<em>reductio ad absurdum</em>) tidak cukup — kita harus
+                            <em>membuat</em> objeknya. Brouwer menolak hukum tengah ter-excluded.
+                        </p>
+                        <div class="quote text-sm text-white/30">
+                            "Bilangan tidak berdiam diri menunggu ditemukan; mereka hidup dalam aktivitas pikiran." — Brouwer
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-8 reveal reveal-delay-3">
+                        <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Aliran IV</div>
+                        <h3 class="text-xl font-semibold text-white mb-4">Fisikalisme Emergen</h3>
+                        <p class="text-white/50 leading-relaxed mb-4">
+                            Bilangan muncul dari struktur fisik alam semesta. Sifat bilangan prima mencerminkan
+                            diskretisasi kuantum. Fungsi zeta Riemann terkait tingkat energi nuklir.
+                            Mungkin bilangan "ada" karena alam semesta adalah mesin komputasi —
+                            dan bilangan adalah unit operasinya.
+                        </p>
+                        <div class="quote text-sm text-white/30">
+                            "Alam semesta bukan hanya lebih aneh dari yang kita bayangkan, ia lebih aneh dari yang bisa kita bayangkan." — Haldane
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gödel -->
+                <div class="glass-panel p-8 md:p-10 mt-8 reveal">
+                    <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Teorema Ketidaklengkapan</div>
+                    <h3 class="text-xl font-semibold text-white mb-4">Gödel &amp; Batas Pengetahuan</h3>
+                    <p class="text-white/50 leading-relaxed mb-4">
+                        Pada 1931, Kurt Gödel membuktikan bahwa dalam setiap sistem formal yang cukup kuat
+                        untuk mengandung aritmetika, terdapat proposisi yang <em>benar namun tidak dapat dibuktikan</em>
+                        di dalam sistem itu sendiri. Teorema Ketidaklengkapan ini mengguncang keyakinan
+                        bahwa matematika bisa sepenuhnya dituangkan ke dalam aksioma.
+                    </p>
+                    <p class="text-white/50 leading-relaxed mb-4">
+                        Konsekuensinya: kebenaran matematis melampaui pembuktian formal. Ada kebenaran
+                        bilangan yang "ada" di luar jangkauan sistem apapun yang kita bangun.
+                        Platonis menganggap ini bukti dunia ideasional; Formalis melihatnya sebagai batas
+                        alat mereka; Konstruktivis mempertanyakan makna "kebenaran" itu sendiri.
+                    </p>
+                    <div class="formula mt-4">
+                        ∃ G : G benar ∧ G tidak dapat dibuktikan
+                    </div>
+                </div>
+
+                <!-- Unreasonable Effectiveness -->
+                <div class="glass-panel p-8 md:p-10 mt-8 reveal">
+                    <div class="text-white/20 text-xs uppercase tracking-[0.15em] mb-3">Pertanyaan Terbuka</div>
+                    <h3 class="text-xl font-semibold text-white mb-4">Ketidakselarasan yang Tak Masuk Akal</h3>
+                    <p class="text-white/50 leading-relaxed mb-4">
+                        Eugene Wigner menanyakan: mengapa matematika — produk pemikiran murni — begitu
+                        efektif menjelaskan alam fisik? Mengapa fungsi zeta, lahir dari kepala Riemann,
+                        ternyata terkait dengan tingkat energi inti atom? Mengapa grup Lie, abstraksi
+                        aljabar murni, menjadi bahasa Standar Model fisika partikel?
+                    </p>
+                    <p class="text-white/50 leading-relaxed">
+                        Pertanyaan ini — hubungan misterius antara bilangan dan realitas — mungkin
+                        adalah pertanyaan filsafat terdalam yang diwariskan teori bilangan kepada kita.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- REFLEKSI -->
+        <section class="section" id="refleksi" data-section="10">
+            <div class="max-w-3xl w-full">
+                <div class="glass-panel p-8 md:p-12 reveal text-center">
+                    <h2 class="text-2xl md:text-4xl font-semibold text-white mb-8">Refleksi</h2>
+                    <p class="text-base md:text-lg leading-relaxed text-white/50 mb-6">
+                        Mengapa teori bilangan — cabang matematika paling "murni" — demikian dalam dan tak terduga?
+                        Bilangan prima, objek paling sederhana dalam matematika, menyimpan pola yang menentang
+                        segala usaha untuk mengungkapnya. Hipotesis Riemann, setelah 160 tahun, masih terbuka.
+                    </p>
+                    <p class="text-base md:text-lg leading-relaxed text-white/50 mb-6">
+                        Mungkin di sinilah letak keindahan teori bilangan: di pertemuan antara ketakterbatasan
+                        pertanyaan dan kesederhanaan aksioma. Setiap jawaban melahirkan tiga pertanyaan baru.
+                        Setiap pembuktian membuka wilayah yang lebih luas dari ketidaktahuan.
+                    </p>
+                    <p class="text-base md:text-lg leading-relaxed text-white/50 mb-8">
+                        Apakah kita menemukan bilangan, atau menciptakannya? Mungkin jawabannya: keduanya.
+                        Bilangan adalah cermin — memantulkan struktur pikiran kita dan struktur alam semesta
+                        sekaligus. Dan dalam pantulan itu, kita melihat diri kita sendiri.
+                    </p>
+                    <div class="divider mx-auto"></div>
+                    <div class="formula inline-block mt-4">
+                        ∃∞ pertanyaan &nbsp;→&nbsp; ∃∞ keindahan
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-16 text-center text-white/15 text-sm">
+            <p>Teori Bilangan — Sejarah &amp; Filsafat</p>
+            <p class="mt-2">Sebuah perjalanan melalui bilangan, dari ∞ menuju ∞</p>
+        </footer>
+
+    </main>
+
+    <!-- Three.js -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+
+        const canvas = document.getElementById('canvas3d');
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.025);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 18);
+
+        // Outer icosahedron wireframe
+        const icoGeo = new THREE.IcosahedronGeometry(3.5, 1);
+        const wireGeo = new THREE.WireframeGeometry(icoGeo);
+        const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.12, transparent: true });
+        const wireframe = new THREE.LineSegments(wireGeo, wireMat);
+        scene.add(wireframe);
+
+        // Inner dodecahedron wireframe
+        const dodGeo = new THREE.DodecahedronGeometry(1.8, 0);
+        const dodWireGeo = new THREE.WireframeGeometry(dodGeo);
+        const dodWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.06, transparent: true });
+        const innerWire = new THREE.LineSegments(dodWireGeo, dodWireMat);
+        scene.add(innerWire);
+
+        // Orbiting shapes
+        const orbiters = [];
+        const geos = [
+            new THREE.TetrahedronGeometry(0.2),
+            new THREE.OctahedronGeometry(0.15),
+            new THREE.IcosahedronGeometry(0.18),
+            new THREE.DodecahedronGeometry(0.12),
+            new THREE.BoxGeometry(0.2, 0.2, 0.2),
+            new THREE.TorusGeometry(0.15, 0.05, 6, 12),
+        ];
+        for (let i = 0; i < 6; i++) {
+            const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.15, transparent: true });
+            const mesh = new THREE.Mesh(geos[i], mat);
+            const angle = (i / 6) * Math.PI * 2;
+            const radius = 5.5 + Math.random() * 2;
+            mesh.userData = { angle, radius, speed: 0.08 + Math.random() * 0.12, yOff: (Math.random() - 0.5) * 3 };
+            scene.add(mesh);
+            orbiters.push(mesh);
+        }
+
+        // Particles
+        const pCount = 1800;
+        const pPos = new Float32Array(pCount * 3);
+        for (let i = 0; i < pCount; i++) {
+            const r = 7 + Math.random() * 35;
+            const t = Math.random() * Math.PI * 2;
+            const p = Math.acos(2 * Math.random() - 1);
+            pPos[i*3] = r * Math.sin(p) * Math.cos(t);
+            pPos[i*3+1] = r * Math.sin(p) * Math.sin(t);
+            pPos[i*3+2] = r * Math.cos(p);
+        }
+        const pGeo = new THREE.BufferGeometry();
+        pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+        const pMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.04, transparent: true, opacity: 0.35, sizeAttenuation: true });
+        const particles = new THREE.Points(pGeo, pMat);
+        scene.add(particles);
+
+        // Scroll tracking
+        let scrollProg = 0, targetProg = 0;
+        window.addEventListener('scroll', () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            targetProg = max > 0 ? window.scrollY / max : 0;
+        });
+
+        const clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const t = clock.getElapsedTime();
+            scrollProg += (targetProg - scrollProg) * 0.04;
+
+            wireframe.rotation.x = t * 0.04 + scrollProg * Math.PI * 0.6;
+            wireframe.rotation.y = t * 0.06 + scrollProg * Math.PI * 0.4;
+            const sc = 1 + scrollProg * 0.4;
+            wireframe.scale.setScalar(sc);
+
+            innerWire.rotation.x = -t * 0.06 + scrollProg * Math.PI * 0.3;
+            innerWire.rotation.y = t * 0.09 - scrollProg * Math.PI * 0.5;
+            innerWire.scale.setScalar(sc * 0.9);
+
+            orbiters.forEach(o => {
+                const d = o.userData;
+                d.angle += d.speed * 0.008;
+                o.position.x = Math.cos(d.angle) * d.radius;
+                o.position.z = Math.sin(d.angle) * d.radius;
+                o.position.y = d.yOff + Math.sin(t * d.speed + d.angle) * 0.5;
+                o.rotation.x += 0.008;
+                o.rotation.y += 0.012;
+            });
+
+            particles.rotation.y = t * 0.008;
+            particles.rotation.x = scrollProg * 0.15;
+
+            camera.position.x = Math.sin(t * 0.08) * 0.6;
+            camera.position.y = Math.cos(t * 0.06) * 0.4 - scrollProg * 4;
+            camera.lookAt(0, -scrollProg * 4, 0);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+
+    <script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+            document.getElementById('progressBar').style.width = pct + '%';
+        });
+
+        // Reveal on scroll
+        const reveals = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(el => obs.observe(el));
+
+        // Timeline nav
+        const sections = document.querySelectorAll('[data-section]');
+        const nav = document.getElementById('timelineNav');
+        const names = ['Kuno','Pythagoras','Euclid','Diophantus','Islam','Fermat','Euler & Gauss','Ramanujan','Modern','Filsafat','Refleksi'];
+        sections.forEach((s, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'timeline-dot';
+            const label = document.createElement('span');
+            label.className = 'dot-label';
+            label.textContent = names[i];
+            dot.appendChild(label);
+            dot.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+            nav.appendChild(dot);
+        });
+        const dots = nav.querySelectorAll('.timeline-dot');
+        window.addEventListener('scroll', () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? window.scrollY / max : 0;
+            const idx = Math.min(Math.floor(p * sections.length), sections.length - 1);
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        });
+
+        // Smooth anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+</body>
+</html>
