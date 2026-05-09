@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lembar Soal – Matematika Diskrit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --ink:    #1a1a2e;
+      --paper:  #faf7f2;
+      --cream:  #f0ebe0;
+      --accent: #8b1a1a;
+      --gold:   #c9a84c;
+      --muted:  #5a5467;
+      --rule:   #c8b89a;
+      --shadow: rgba(26,26,46,.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Source Serif 4', Georgia, serif;
+      font-weight: 300;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      box-shadow: 0 8px 40px var(--shadow), 0 2px 8px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .page::before, .page::after {
+      content: '';
+      position: absolute;
+      width: 72px; height: 72px;
+      border: 2.5px solid var(--gold);
+      opacity: .45;
+      pointer-events: none;
+    }
+    .page::before { top: 14px; left: 14px; border-right: none; border-bottom: none; }
+    .page::after  { bottom: 14px; right: 14px; border-left: none; border-top: none; }
+
+    /* HEADER */
+    .header {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 2.2rem 3rem 2rem;
+    }
+    .header-band {
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--accent), var(--gold));
+      margin-bottom: 1.4rem;
+    }
+    .institution {
+      font-size: .7rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: .5rem;
+    }
+    .subject-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      line-height: 1.15;
+      color: #fff;
+    }
+    .subject-subtitle {
+      font-style: italic;
+      font-size: .93rem;
+      color: #b8b0c8;
+      margin-top: .35rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .6rem;
+      margin-top: 1.6rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .meta-item { display: flex; flex-direction: column; gap: .18rem; }
+    .meta-label { font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+    .meta-value { font-size: .84rem; color: #ddd; font-weight: 400; }
+
+    /* IDENTITY */
+    .identity-strip {
+      background: var(--cream);
+      border-bottom: 2px solid var(--rule);
+      padding: 1.2rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 2rem;
+    }
+    .field-row {
+      display: flex;
+      align-items: flex-end;
+      gap: .5rem;
+      border-bottom: 1.5px solid var(--ink);
+      padding-bottom: .2rem;
+    }
+    .field-label { font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .field-line { flex: 1; min-height: 1.2rem; }
+
+    /* INSTRUCTIONS */
+    .instructions {
+      padding: 1.3rem 3rem 1rem;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .section-heading {
+      font-size: .62rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .6rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .section-heading::before, .section-heading::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+    .instructions ol { padding-left: 1.2rem; font-size: .82rem; color: var(--muted); line-height: 1.85; }
+
+    /* SECTION LABEL */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 3rem .3rem;
+    }
+    .section-label span { font-size: .6rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); font-weight: 600; flex-shrink: 0; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--rule), transparent); }
+
+    /* QUESTIONS */
+    .question-list { padding: .4rem 3rem 2rem; display: flex; flex-direction: column; gap: 1.9rem; }
+
+    .question-card { display: grid; grid-template-columns: 2.4rem 1fr; gap: 0 1rem; }
+    .q-number {
+      width: 2.4rem; height: 2.4rem;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .q-topic { font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: .32rem; }
+    .q-text { font-size: .91rem; line-height: 1.78; color: var(--ink); }
+    .q-text strong { font-weight: 600; }
+    .q-text em { font-style: italic; color: var(--muted); }
+
+    .notation-box {
+      background: var(--cream);
+      border-left: 3px solid var(--gold);
+      padding: .55rem .9rem;
+      margin: .65rem 0;
+      font-size: .87rem;
+      font-style: italic;
+      color: var(--ink);
+      border-radius: 0 4px 4px 0;
+      line-height: 1.7;
+    }
+
+    .answer-area { margin-top: .9rem; }
+    .answer-label { font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .38rem; display: block; }
+    .answer-line { border-bottom: 1px solid var(--rule); height: 1.9rem; width: 100%; }
+
+    /* SCORE */
+    .score-zone {
+      margin: 0 3rem 2.6rem;
+      border: 1.5px solid var(--rule);
+      padding: 1rem 1.4rem;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: .6rem;
+      background: var(--cream);
+    }
+    .score-cell { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+    .score-cell .lbl { font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .score-box-inner { width: 2.6rem; height: 2.6rem; border: 1.5px solid var(--rule); background: var(--paper); }
+
+    /* FOOTER */
+    .footer-rule { height: 3px; background: linear-gradient(90deg, var(--gold), var(--accent), var(--gold)); }
+    .footer-text {
+      text-align: center;
+      font-size: .63rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: .85rem 3rem;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-band"></div>
+    <div class="institution">Program Studi Pendidikan Matematika &nbsp;·&nbsp; Fakultas Keguruan dan Ilmu Pendidikan</div>
+    <div class="subject-title">Matematika Diskrit</div>
+    <div class="subject-subtitle">Lembar Soal Latihan — Aplikasi Konsep untuk Pembelajaran SMA</div>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="meta-label">Semester</span><span class="meta-value">Genap 2024/2025</span></div>
+      <div class="meta-item"><span class="meta-label">Jumlah Soal</span><span class="meta-value">5 Soal Uraian</span></div>
+      <div class="meta-item"><span class="meta-label">Waktu</span><span class="meta-value">60 Menit</span></div>
+    </div>
+  </div>
+
+  <!-- IDENTITAS -->
+  <div class="identity-strip">
+    <div class="field-row"><span class="field-label">Nama</span><div class="field-line"></div></div>
+    <div class="field-row"><span class="field-label">NIM</span><div class="field-line"></div></div>
+    <div class="field-row"><span class="field-label">Kelas</span><div class="field-line"></div></div>
+    <div class="field-row"><span class="field-label">Tanggal</span><div class="field-line"></div></div>
+  </div>
+
+  <!-- PETUNJUK -->
+  <div class="instructions">
+    <div class="section-heading">Petunjuk Pengerjaan</div>
+    <ol>
+      <li>Kerjakan semua soal dengan menuliskan langkah-langkah penyelesaian secara jelas dan runtut.</li>
+      <li>Setiap soal dikontekstualisasikan dalam pembelajaran SMA; sertakan penjelasan yang dapat digunakan saat mengajar.</li>
+      <li>Tidak diperkenankan menggunakan kalkulator atau alat bantu elektronik.</li>
+      <li>Waktu pengerjaan <strong>60 menit</strong>. Periksalah kembali pekerjaan sebelum dikumpulkan.</li>
+    </ol>
+  </div>
+
+  <!-- SOAL -->
+  <div class="section-label"><span>Soal</span></div>
+  <div class="question-list">
+
+    <!-- 1 -->
+    <div class="question-card">
+      <div class="q-number">1</div>
+      <div class="q-body">
+        <div class="q-topic">Proposisi Logika</div>
+        <p class="q-text">Seorang guru SMA ingin menjelaskan nilai kebenaran pernyataan majemuk. Diberikan dua proposisi:</p>
+        <div class="notation-box">
+          <em>p</em> : "Jumlah sudut dalam segitiga adalah 180°"<br>
+          <em>q</em> : "Bilangan prima selalu bilangan ganjil"
+        </div>
+        <p class="q-text">
+          Tentukan nilai kebenaran dari <strong>(p ∧ q)</strong>, <strong>(p ∨ q)</strong>, dan <strong>(p → q)</strong>.
+          Kemudian jelaskan bagaimana Anda akan menyampaikan hasil tersebut kepada siswa SMA dengan bahasa yang mudah dipahami.
+        </p>
+        <div class="answer-area">
+          <span class="answer-label">Penyelesaian</span>
+          <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+          <div class="answer-line"></div><div class="answer-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="question-card">
+      <div class="q-number">2</div>
+      <div class="q-body">
+        <div class="q-topic">Kuantor Logika</div>
+        <p class="q-text">Dalam materi persamaan kuadrat SMA, seorang guru menuliskan dua pernyataan:</p>
+        <div class="notation-box">
+          (i)  "Terdapat bilangan real <em>x</em> sehingga x² − 4 = 0"<br>
+          (ii) "Untuk semua bilangan real <em>x</em>, berlaku x² ≥ 0"
+        </div>
+        <p class="q-text">
+          Nyatakan setiap pernyataan menggunakan notasi kuantor (∃ atau ∀) lalu tentukan nilai kebenarannya.
+          Tuliskan pula <strong>negasi</strong> dari masing-masing pernyataan beserta nilai kebenarannya,
+          dan jelaskan makna kuantor tersebut dengan cara yang sesuai untuk siswa SMA.
+        </p>
+        <div class="answer-area">
+          <span class="answer-label">Penyelesaian</span>
+          <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+          <div class="answer-line"></div><div class="answer-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="question-card">
+      <div class="q-number">3</div>
+      <div class="q-body">
+        <div class="q-topic">Kesimpulan Logika</div>
+        <p class="q-text">Seorang guru menyajikan dua premis berikut untuk melatih penalaran logis siswa SMA:</p>
+        <div class="notation-box">
+          Premis 1 : "Jika seorang siswa rajin belajar, maka ia akan lulus ujian."<br>
+          Premis 2 : "Jika siswa lulus ujian, maka orang tuanya akan bangga."
+        </div>
+        <p class="q-text">
+          Gunakan <strong>Silogisme Hipotetis</strong> untuk menarik kesimpulan yang sah.
+          Tuliskan bentuk simbolik argumen tersebut menggunakan notasi logika,
+          dan jelaskan mengapa argumen ini valid kepada siswa SMA.
+        </p>
+        <div class="answer-area">
+          <span class="answer-label">Penyelesaian</span>
+          <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+          <div class="answer-line"></div><div class="answer-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="question-card">
+      <div class="q-number">4</div>
+      <div class="q-body">
+        <div class="q-topic">Teori Himpunan</div>
+        <p class="q-text">Seorang guru SMA mengajarkan operasi himpunan dengan konteks ekstrakurikuler:</p>
+        <div class="notation-box">
+          S = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} &nbsp; (himpunan semesta — seluruh siswa)<br>
+          A = {1, 2, 3, 4, 5} &nbsp;&nbsp;&nbsp; (siswa yang ikut basket)<br>
+          B = {3, 4, 5, 6, 7} &nbsp;&nbsp;&nbsp; (siswa yang ikut voli)
+        </div>
+        <p class="q-text">
+          Tentukan: <strong>(a)</strong> A ∩ B &nbsp; <strong>(b)</strong> A ∪ B &nbsp;
+          <strong>(c)</strong> A − B &nbsp; <strong>(d)</strong> Aᶜ terhadap S.
+          Interpretasikan setiap hasil dalam konteks cerita agar mudah dipahami siswa SMA.
+        </p>
+        <div class="answer-area">
+          <span class="answer-label">Penyelesaian</span>
+          <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+          <div class="answer-line"></div><div class="answer-line"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="question-card">
+      <div class="q-number">5</div>
+      <div class="q-body">
+        <div class="q-topic">Fungsi dan Relasi</div>
+        <p class="q-text">Dalam pembelajaran fungsi SMA, seorang guru mendefinisikan relasi dari himpunan <strong>A</strong> ke <strong>B</strong>:</p>
+        <div class="notation-box">
+          A = {1, 2, 3, 4} &nbsp;&nbsp; B = {a, b, c}<br>
+          R = {(1, a), (2, b), (3, a), (4, c)}
+        </div>
+        <p class="q-text">
+          <strong>(a)</strong> Tentukan apakah relasi R merupakan sebuah <em>fungsi</em>. Berikan alasannya.<br>
+          <strong>(b)</strong> Jika ya, periksa apakah fungsi tersebut <em>injektif</em>, <em>surjektif</em>, atau <em>bijektif</em>.
+          Jelaskan definisi ketiga jenis fungsi tersebut dengan cara yang dapat Anda sampaikan kepada siswa SMA.
+        </p>
+        <div class="answer-area">
+          <span class="answer-label">Penyelesaian</span>
+          <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+          <div class="answer-line"></div><div class="answer-line"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PENILAIAN -->
+  <div class="section-label"><span>Kolom Penilaian</span></div>
+  <div class="score-zone">
+    <div class="score-cell"><span class="lbl">Soal 1</span><div class="score-box-inner"></div></div>
+    <div class="score-cell"><span class="lbl">Soal 2</span><div class="score-box-inner"></div></div>
+    <div class="score-cell"><span class="lbl">Soal 3</span><div class="score-box-inner"></div></div>
+    <div class="score-cell"><span class="lbl">Soal 4</span><div class="score-box-inner"></div></div>
+    <div class="score-cell"><span class="lbl">Soal 5</span><div class="score-box-inner"></div></div>
+    <div class="score-cell" style="grid-column: span 2; align-items:flex-start;">
+      <span class="lbl">Nilai Akhir</span>
+      <div class="score-box-inner" style="width:100%; height:2.8rem;"></div>
+    </div>
+    <div class="score-cell" style="grid-column: span 3; align-items:flex-start;">
+      <span class="lbl">Tanda Tangan Dosen</span>
+      <div class="score-box-inner" style="width:100%; height:2.8rem;"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-rule"></div>
+  <div class="footer-text">Pendidikan Matematika &nbsp;·&nbsp; Matematika Diskrit &nbsp;·&nbsp; Dilarang memperbanyak tanpa izin</div>
+
+</div>
+</body>
+</html>
