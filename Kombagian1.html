@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aturan Pencacahan | IKIP Siliwangi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau: #1D9E75;
+    --hijau-gelap: #085041;
+    --hijau-muda: #E1F5EE;
+    --hijau-terang: #9FE1CB;
+    --kuning: #EF9F27;
+    --kuning-muda: #FAEEDA;
+    --merah: #D85A30;
+    --merah-muda: #FAECE7;
+    --ungu: #7F77DD;
+    --ungu-muda: #EEEDFE;
+    --biru: #378ADD;
+    --biru-muda: #E6F1FB;
+    --abu: #888780;
+    --abu-muda: #F1EFE8;
+    --teks: #2C2C2A;
+    --teks-muted: #5F5E5A;
+    --putih: #FFFFFF;
+    --bg: #faf9f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--teks);
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, var(--hijau-gelap) 0%, #0F6E56 60%, #1D9E75 100%);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 20%;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 32px 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .badge-institusi {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #9FE1CB;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  header p.subtitle {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 28px;
+    max-width: 540px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .nav-tab {
+    padding: 9px 20px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+    background: transparent;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-tab:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-tab.aktif { background: white; color: var(--hijau-gelap); border-color: white; font-weight: 600; }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 40px 32px 80px; }
+
+  .panel { display: none; }
+  .panel.aktif { display: block; }
+
+  /* SECTION HEADER */
+  .seksi-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .ikon-seksi {
+    width: 54px; height: 54px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .seksi-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .seksi-header p { color: var(--teks-muted); font-size: 0.95rem; }
+
+  /* CARDS */
+  .kartu {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e8e6e0;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .kartu h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: var(--hijau-muda);
+    border: 1.5px solid var(--hijau-terang);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .formula-box .rumus {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--hijau-gelap);
+    margin-bottom: 6px;
+  }
+  .formula-box .keterangan {
+    font-size: 0.85rem;
+    color: var(--hijau-gelap);
+    opacity: 0.8;
+  }
+
+  .formula-kuning {
+    background: var(--kuning-muda);
+    border-color: #FAC775;
+  }
+  .formula-kuning .rumus { color: #633806; }
+  .formula-kuning .keterangan { color: #633806; }
+
+  .formula-ungu {
+    background: var(--ungu-muda);
+    border-color: #AFA9EC;
+  }
+  .formula-ungu .rumus { color: #26215C; }
+  .formula-ungu .keterangan { color: #26215C; }
+
+  .formula-merah {
+    background: var(--merah-muda);
+    border-color: #F0997B;
+  }
+  .formula-merah .rumus { color: #4A1B0C; }
+  .formula-merah .keterangan { color: #4A1B0C; }
+
+  /* CONTOH */
+  .contoh-soal {
+    background: var(--biru-muda);
+    border-left: 4px solid var(--biru);
+    border-radius: 0 10px 10px 0;
+    padding: 18px 20px;
+    margin: 14px 0;
+  }
+  .contoh-soal .label-contoh {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--biru);
+    margin-bottom: 8px;
+  }
+  .contoh-soal p { font-size: 0.93rem; color: var(--teks); }
+
+  /* LANGKAH */
+  .langkah-list { list-style: none; margin: 14px 0; }
+  .langkah-list li {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+  .no-langkah {
+    width: 26px; height: 26px;
+    background: var(--hijau);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .no-langkah.kuning { background: var(--kuning); }
+  .no-langkah.ungu { background: var(--ungu); }
+  .no-langkah.merah { background: var(--merah); }
+
+  /* VISUALISASI POHON */
+  .pohon-wrap {
+    background: white;
+    border: 1px solid #e8e6e0;
+    border-radius: 12px;
+    padding: 20px;
+    overflow-x: auto;
+    margin: 16px 0;
+  }
+
+  /* KALKULATOR INTERAKTIF */
+  .kalkulator {
+    background: white;
+    border: 1px solid #e8e6e0;
+    border-radius: 16px;
+    padding: 28px;
+    margin: 24px 0;
+  }
+  .kalkulator h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kalkulator h3 .ikon-kalk {
+    width: 34px; height: 34px;
+    background: var(--hijau-muda);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .input-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teks-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .input-group input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: border-color 0.2s;
+    background: var(--bg);
+  }
+  .input-group input:focus { outline: none; border-color: var(--hijau); }
+  .tombol-hitung {
+    padding: 12px 28px;
+    background: var(--hijau);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .tombol-hitung:hover { background: var(--hijau-gelap); }
+  .tombol-hitung:active { transform: scale(0.97); }
+  .tombol-hitung.kuning { background: var(--kuning); }
+  .tombol-hitung.kuning:hover { background: #BA7517; }
+  .tombol-hitung.ungu { background: var(--ungu); }
+  .tombol-hitung.ungu:hover { background: #534AB7; }
+  .tombol-hitung.merah { background: var(--merah); }
+  .tombol-hitung.merah:hover { background: #993C1D; }
+  .hasil-box {
+    margin-top: 18px;
+    padding: 18px 20px;
+    background: var(--hijau-muda);
+    border-radius: 10px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .hasil-box.kuning { background: var(--kuning-muda); }
+  .hasil-box.ungu { background: var(--ungu-muda); }
+  .hasil-box.merah { background: var(--merah-muda); }
+  .hasil-angka {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--hijau-gelap);
+    margin-bottom: 6px;
+  }
+  .hasil-angka.kuning { color: #633806; }
+  .hasil-angka.ungu { color: #26215C; }
+  .hasil-angka.merah { color: #4A1B0C; }
+  .hasil-langkah { font-size: 0.88rem; color: var(--teks-muted); font-family: 'JetBrains Mono', monospace; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* DIAGRAM PERBANDINGAN */
+  .tabel-compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 16px 0;
+  }
+  .tabel-compare th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--teks-muted);
+    border-bottom: 2px solid #e8e6e0;
+  }
+  .tabel-compare td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0ede8;
+    vertical-align: top;
+  }
+  .tabel-compare tr:last-child td { border-bottom: none; }
+  .tabel-compare .sel-label { font-weight: 600; color: var(--teks); }
+
+  /* CHIP */
+  .chip {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .chip-hijau { background: var(--hijau-muda); color: var(--hijau-gelap); }
+  .chip-kuning { background: var(--kuning-muda); color: #633806; }
+  .chip-ungu { background: var(--ungu-muda); color: #26215C; }
+  .chip-merah { background: var(--merah-muda); color: #4A1B0C; }
+
+  /* ILUSTRASI VISUAL */
+  .kotak-pilihan {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+    align-items: center;
+  }
+  .kotak-item {
+    width: 48px; height: 48px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .kotak-x {
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    color: var(--teks-muted);
+  }
+  .kotak-sama {
+    display: flex; align-items: center;
+    font-size: 1.1rem; font-weight: 600; color: var(--hijau);
+    padding: 0 8px;
+  }
+
+  /* QUIZ MINI */
+  .quiz-soal {
+    background: white;
+    border: 1px solid #e8e6e0;
+    border-radius: 14px;
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .quiz-soal .pertanyaan {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .pilihan-list { list-style: none; }
+  .pilihan-list li {
+    margin-bottom: 8px;
+  }
+  .pilihan-list li label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border: 1.5px solid #e0ddd8;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.93rem;
+    transition: all 0.15s;
+  }
+  .pilihan-list li label:hover { border-color: var(--hijau); background: var(--hijau-muda); }
+  .pilihan-list input[type=radio] { accent-color: var(--hijau); }
+  .tombol-cek {
+    margin-top: 12px;
+    padding: 9px 22px;
+    background: var(--teks);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .feedback-quiz {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: none;
+  }
+  .feedback-benar { background: var(--hijau-muda); color: var(--hijau-gelap); }
+  .feedback-salah { background: var(--merah-muda); color: #4A1B0C; }
+
+  /* FOOTER */
+  footer {
+    background: var(--hijau-gelap);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px;
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--hijau-terang); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .header-inner { padding: 32px 20px 28px; }
+    header h1 { font-size: 1.8rem; }
+    main { padding: 24px 16px 60px; }
+    .nav-tab { font-size: 12px; padding: 7px 14px; }
+  }
+
+  /* GRID 2 COL */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* HIGHLIGHT */
+  mark {
+    background: var(--kuning-muda);
+    color: #633806;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* GARIS WAKTU */
+  .aturan-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .aturan-dot {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+    color: white;
+  }
+  .aturan-teks strong { display: block; font-size: 1rem; margin-bottom: 3px; }
+  .aturan-teks p { font-size: 0.9rem; color: var(--teks-muted); }
+
+  /* POHON KEPUTUSAN */
+  .pohon-svg { display: block; width: 100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="badge-institusi">IKIP Siliwangi · Pendidikan Matematika</div>
+    <h1>Aturan Pencacahan</h1>
+    <p class="subtitle">Penjumlahan, Perkalian, Permutasi, dan Kombinasi — lengkap dengan kalkulator interaktif dan latihan soal</p>
+    <div class="nav-tabs">
+      <button class="nav-tab aktif" onclick="tampilPanel('pengantar', this)">📖 Pengantar</button>
+      <button class="nav-tab" onclick="tampilPanel('penjumlahan', this)">➕ Penjumlahan</button>
+      <button class="nav-tab" onclick="tampilPanel('perkalian', this)">✖️ Perkalian</button>
+      <button class="nav-tab" onclick="tampilPanel('permutasi', this)">🔄 Permutasi</button>
+      <button class="nav-tab" onclick="tampilPanel('kombinasi', this)">🎯 Kombinasi</button>
+      <button class="nav-tab" onclick="tampilPanel('latihan', this)">📝 Latihan</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ===================== PANEL PENGANTAR ===================== -->
+<div class="panel aktif" id="panel-pengantar">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:var(--hijau-muda);font-size:22px;">📐</div>
+    <div>
+      <h2>Apa itu Aturan Pencacahan?</h2>
+      <p>Teknik matematika untuk menghitung banyaknya cara suatu kejadian dapat terjadi</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Definisi & Tujuan</h3>
+    <p>Aturan pencacahan (<em>counting rules</em>) adalah sekumpulan prinsip matematika yang digunakan untuk menentukan <mark>banyaknya kemungkinan hasil</mark> dari suatu percobaan atau pemilihan, tanpa harus mendaftar semua kemungkinan satu per satu.</p>
+    <br>
+    <p>Materi ini mencakup empat aturan utama yang saling berkaitan:</p>
+  </div>
+
+  <div class="grid-2" style="margin: 20px 0;">
+    <div class="kartu" style="border-left: 4px solid var(--hijau);">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">➕</div>
+      <h3 style="color:var(--hijau-gelap);">Aturan Penjumlahan</h3>
+      <p style="font-size:0.9rem;color:var(--teks-muted);">Digunakan saat kejadian-kejadian <strong>tidak bisa terjadi bersamaan</strong> (saling eksklusif). Pilih salah satu dari beberapa kelompok.</p>
+    </div>
+    <div class="kartu" style="border-left: 4px solid var(--kuning);">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">✖️</div>
+      <h3 style="color:#633806;">Aturan Perkalian</h3>
+      <p style="font-size:0.9rem;color:var(--teks-muted);">Digunakan saat kejadian terjadi <strong>secara berurutan dan bersamaan</strong>. Setiap tahap dilakukan satu per satu.</p>
+    </div>
+    <div class="kartu" style="border-left: 4px solid var(--ungu);">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">🔄</div>
+      <h3 style="color:#26215C;">Permutasi</h3>
+      <p style="font-size:0.9rem;color:var(--teks-muted);">Pengaturan objek di mana <strong>urutan sangat penting</strong>. ABC ≠ BAC ≠ CAB.</p>
+    </div>
+    <div class="kartu" style="border-left: 4px solid var(--merah);">
+      <div style="font-size: 1.6rem; margin-bottom: 8px;">🎯</div>
+      <h3 style="color:#4A1B0C;">Kombinasi</h3>
+      <p style="font-size:0.9rem;color:var(--teks-muted);">Pemilihan objek di mana <strong>urutan tidak penting</strong>. ABC = BAC = CAB.</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Peta Konsep Penggunaan</h3>
+    <div style="overflow-x:auto;">
+    <svg viewBox="0 0 720 260" class="pohon-svg" xmlns="http://www.w3.org/2000/svg" style="min-width:480px;">
+      <!-- Garis-garis -->
+      <line x1="360" y1="50" x2="180" y2="120" stroke="#9FE1CB" stroke-width="2"/>
+      <line x1="360" y1="50" x2="540" y2="120" stroke="#9FE1CB" stroke-width="2"/>
+      <line x1="180" y1="150" x2="90" y2="210" stroke="#AFA9EC" stroke-width="1.5"/>
+      <line x1="180" y1="150" x2="270" y2="210" stroke="#AFA9EC" stroke-width="1.5"/>
+      <line x1="540" y1="150" x2="450" y2="210" stroke="#F0997B" stroke-width="1.5"/>
+      <line x1="540" y1="150" x2="630" y2="210" stroke="#F0997B" stroke-width="1.5"/>
+
+      <!-- Node utama -->
+      <rect x="270" y="18" width="180" height="40" rx="10" fill="#085041"/>
+      <text x="360" y="44" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="14" font-weight="600">Aturan Pencacahan</text>
+
+      <!-- Cabang kiri: saling eksklusif -->
+      <rect x="90" y="118" width="180" height="38" rx="8" fill="#9FE1CB"/>
+      <text x="180" y="141" text-anchor="middle" fill="#085041" font-family="DM Sans,sans-serif" font-size="12" font-weight="600">Saling Eksklusif?</text>
+
+      <!-- Cabang kanan: berurutan -->
+      <rect x="450" y="118" width="180" height="38" rx="8" fill="#9FE1CB"/>
+      <text x="540" y="141" text-anchor="middle" fill="#085041" font-family="DM Sans,sans-serif" font-size="12" font-weight="600">Berurutan?</text>
+
+      <!-- Label ya/tidak -->
+      <text x="120" y="112" text-anchor="middle" fill="#085041" font-family="DM Sans,sans-serif" font-size="11">Ya</text>
+      <text x="590" y="112" text-anchor="middle" fill="#085041" font-family="DM Sans,sans-serif" font-size="11">Ya</text>
+
+      <!-- Leaf nodes -->
+      <rect x="30" y="208" width="120" height="38" rx="8" fill="#1D9E75"/>
+      <text x="90" y="232" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600">➕ Penjumlahan</text>
+
+      <rect x="210" y="208" width="120" height="38" rx="8" fill="#7F77DD"/>
+      <text x="270" y="232" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="12" font-weight="600">✖️ Perkalian</text>
+
+      <rect x="390" y="208" width="120" height="38" rx="8" fill="#534AB7"/>
+      <text x="450" y="225" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="11" font-weight="600">🔄 Permutasi</text>
+      <text x="450" y="240" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif" font-size="10">(urutan penting)</text>
+
+      <rect x="570" y="208" width="120" height="38" rx="8" fill="#D85A30"/>
+      <text x="630" y="225" text-anchor="middle" fill="white" font-family="DM Sans,sans-serif" font-size="11" font-weight="600">🎯 Kombinasi</text>
+      <text x="630" y="240" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif" font-size="10">(urutan tidak)</text>
+
+      <!-- Label cabang -->
+      <text x="243" y="196" text-anchor="middle" fill="#5F5E5A" font-family="DM Sans,sans-serif" font-size="10">Tidak</text>
+      <text x="493" y="196" text-anchor="middle" fill="#5F5E5A" font-family="DM Sans,sans-serif" font-size="10">Tidak</text>
+    </svg>
+    </div>
+  </div>
+
+  <div class="kartu" style="background:var(--abu-muda); border:none;">
+    <p style="font-size:0.88rem;color:var(--teks-muted);">
+      <strong style="color:var(--teks);">Dosen Pengampu:</strong> Martin Bernard, M.Pd. &nbsp;·&nbsp; Program Studi Pendidikan Matematika &nbsp;·&nbsp; IKIP Siliwangi, Cimahi
+    </p>
+  </div>
+</div>
+
+<!-- ===================== PANEL PENJUMLAHAN ===================== -->
+<div class="panel" id="panel-penjumlahan">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:var(--hijau-muda);">➕</div>
+    <div>
+      <h2>Aturan Penjumlahan</h2>
+      <p>Digunakan saat hanya salah satu kejadian yang dapat dipilih (saling eksklusif)</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Konsep Dasar</h3>
+    <p>Jika terdapat <strong>k</strong> kejadian yang <strong>saling eksklusif</strong> (tidak bisa terjadi bersamaan), di mana kejadian ke-i memiliki <strong>n<sub>i</sub></strong> cara, maka total cara melakukan <em>salah satu</em> kejadian adalah:</p>
+    <div class="formula-box">
+      <div class="rumus">Total = n₁ + n₂ + n₃ + ... + nₖ</div>
+      <div class="keterangan">nᵢ = banyaknya cara kejadian ke-i terjadi</div>
+    </div>
+    <p><strong>Kata kunci:</strong> <mark>atau</mark> — "pilih ini ATAU itu" → gunakan penjumlahan.</p>
+  </div>
+
+  <div class="kartu">
+    <h3>Ilustrasi Visual</h3>
+    <p>Seorang siswa ingin ke kelas. Ada <strong>3 jalan dari rumah</strong> dan <strong>2 jalan pintas</strong> (tidak bisa dikombinasikan). Banyaknya pilihan rute:</p>
+    <div class="kotak-pilihan">
+      <div>
+        <div style="font-size:11px;text-align:center;color:var(--teks-muted);margin-bottom:6px;">Jalan Biasa</div>
+        <div style="display:flex;gap:6px;">
+          <div class="kotak-item" style="background:var(--hijau-muda);color:var(--hijau-gelap);">J1</div>
+          <div class="kotak-item" style="background:var(--hijau-muda);color:var(--hijau-gelap);">J2</div>
+          <div class="kotak-item" style="background:var(--hijau-muda);color:var(--hijau-gelap);">J3</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 8px;font-size:1.4rem;color:var(--hijau);font-weight:700;">+</div>
+      <div>
+        <div style="font-size:11px;text-align:center;color:var(--teks-muted);margin-bottom:6px;">Jalan Pintas</div>
+        <div style="display:flex;gap:6px;">
+          <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;">P1</div>
+          <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;">P2</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;padding:0 8px;font-size:1.4rem;color:var(--teks-muted);font-weight:700;">=</div>
+      <div style="display:flex;align-items:center;">
+        <div style="width:60px;height:60px;border-radius:10px;background:var(--hijau);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-size:1.3rem;font-weight:700;">5</div>
+          <div style="font-size:9px;">rute</div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;color:var(--teks-muted);">3 + 2 = <strong>5</strong> pilihan rute</p>
+  </div>
+
+  <div class="kartu">
+    <h3>Contoh-Contoh</h3>
+    <div class="contoh-soal">
+      <div class="label-contoh">Contoh 1 — Pilihan Ekstrakurikuler</div>
+      <p>Di sekolah tersedia <strong>4</strong> jenis olahraga dan <strong>3</strong> jenis seni. Seorang siswa hanya boleh memilih <em>satu</em> kegiatan. Berapa banyak pilihan?</p>
+      <div style="margin-top:10px;padding:10px 14px;background:white;border-radius:8px;">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:var(--hijau-gelap);">Total = 4 + 3 = <strong>7 pilihan</strong></p>
+      </div>
+    </div>
+    <div class="contoh-soal">
+      <div class="label-contoh">Contoh 2 — Memilih Buku</div>
+      <p>Perpustakaan memiliki <strong>5</strong> buku matematika, <strong>8</strong> buku sains, dan <strong>3</strong> buku sejarah. Seorang siswa ingin meminjam <em>satu</em> buku. Berapa banyak pilihan?</p>
+      <div style="margin-top:10px;padding:10px 14px;background:white;border-radius:8px;">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:var(--hijau-gelap);">Total = 5 + 8 + 3 = <strong>16 pilihan</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Penjumlahan -->
+  <div class="kalkulator">
+    <h3><div class="ikon-kalk">🧮</div> Kalkulator Aturan Penjumlahan</h3>
+    <p style="font-size:0.88rem;color:var(--teks-muted);margin-bottom:16px;">Masukkan banyaknya cara untuk setiap kelompok (pisahkan dengan koma)</p>
+    <div class="input-grid">
+      <div class="input-group" style="grid-column: 1 / -1;">
+        <label>Jumlah cara per kelompok (pisahkan koma)</label>
+        <input type="text" id="input-jumlah" placeholder="Contoh: 4, 3, 7" value="4, 3">
+      </div>
+    </div>
+    <button class="tombol-hitung" onclick="hitungPenjumlahan()">Hitung Total</button>
+    <div class="hasil-box" id="hasil-jumlah">
+      <div class="hasil-angka" id="angka-jumlah"></div>
+      <div class="hasil-langkah" id="langkah-jumlah"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANEL PERKALIAN ===================== -->
+<div class="panel" id="panel-perkalian">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:var(--kuning-muda);font-size:20px;">✖️</div>
+    <div>
+      <h2>Aturan Perkalian</h2>
+      <p>Digunakan saat beberapa kejadian terjadi secara berurutan dan serentak</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Konsep Dasar</h3>
+    <p>Jika suatu pekerjaan terdiri dari <strong>k tahap</strong> yang dilakukan berurutan, di mana tahap ke-i dapat dilakukan dengan <strong>n<sub>i</sub></strong> cara, maka total cara menyelesaikan pekerjaan adalah:</p>
+    <div class="formula-box formula-kuning">
+      <div class="rumus">Total = n₁ × n₂ × n₃ × ... × nₖ</div>
+      <div class="keterangan">nᵢ = banyaknya cara pada tahap ke-i</div>
+    </div>
+    <p><strong>Kata kunci:</strong> <mark>dan</mark> — "lakukan ini DAN itu DAN itu" → gunakan perkalian.</p>
+  </div>
+
+  <div class="kartu">
+    <h3>Ilustrasi — Kode Pin</h3>
+    <p>Membuat kode PIN 4 angka (0–9), angka boleh berulang:</p>
+    <div class="kotak-pilihan" style="margin-top:14px;">
+      <div style="text-align:center;">
+        <div style="font-size:10px;color:var(--teks-muted);margin-bottom:5px;">Digit 1</div>
+        <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;font-size:11px;width:52px;">10 cara</div>
+      </div>
+      <div class="kotak-x">×</div>
+      <div style="text-align:center;">
+        <div style="font-size:10px;color:var(--teks-muted);margin-bottom:5px;">Digit 2</div>
+        <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;font-size:11px;width:52px;">10 cara</div>
+      </div>
+      <div class="kotak-x">×</div>
+      <div style="text-align:center;">
+        <div style="font-size:10px;color:var(--teks-muted);margin-bottom:5px;">Digit 3</div>
+        <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;font-size:11px;width:52px;">10 cara</div>
+      </div>
+      <div class="kotak-x">×</div>
+      <div style="text-align:center;">
+        <div style="font-size:10px;color:var(--teks-muted);margin-bottom:5px;">Digit 4</div>
+        <div class="kotak-item" style="background:var(--kuning-muda);color:#633806;font-size:11px;width:52px;">10 cara</div>
+      </div>
+      <div class="kotak-sama">=</div>
+      <div style="width:60px;height:60px;border-radius:10px;background:var(--kuning);color:white;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="font-size:1rem;font-weight:700;">10.000</div>
+        <div style="font-size:9px;">PIN</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Contoh-Contoh</h3>
+    <div class="contoh-soal" style="background:#FFF9EC;border-color:var(--kuning);">
+      <div class="label-contoh" style="color:var(--kuning);">Contoh 1 — Pakaian</div>
+      <p>Seorang siswa memiliki <strong>3</strong> baju, <strong>4</strong> celana, dan <strong>2</strong> sepatu. Berapa banyak kombinasi pakaian?</p>
+      <div style="margin-top:10px;padding:10px 14px;background:white;border-radius:8px;">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#633806;">Total = 3 × 4 × 2 = <strong>24 kombinasi</strong></p>
+      </div>
+    </div>
+    <div class="contoh-soal" style="background:#FFF9EC;border-color:var(--kuning);">
+      <div class="label-contoh" style="color:var(--kuning);">Contoh 2 — Plat Nomor</div>
+      <p>Plat nomor terdiri dari <strong>2 huruf</strong> (A–Z) diikuti <strong>4 angka</strong> (0–9). Berapa banyak plat yang mungkin (huruf/angka boleh berulang)?</p>
+      <div style="margin-top:10px;padding:10px 14px;background:white;border-radius:8px;">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#633806;">Total = 26² × 10⁴ = 676 × 10.000 = <strong>6.760.000</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Perkalian -->
+  <div class="kalkulator">
+    <h3><div class="ikon-kalk" style="background:var(--kuning-muda);">🧮</div> Kalkulator Aturan Perkalian</h3>
+    <p style="font-size:0.88rem;color:var(--teks-muted);margin-bottom:16px;">Masukkan banyaknya cara untuk setiap tahap (pisahkan dengan koma)</p>
+    <div class="input-grid">
+      <div class="input-group" style="grid-column: 1 / -1;">
+        <label>Jumlah cara per tahap (pisahkan koma)</label>
+        <input type="text" id="input-kali" placeholder="Contoh: 3, 4, 2" value="3, 4, 2">
+      </div>
+    </div>
+    <button class="tombol-hitung kuning" onclick="hitungPerkalian()">Hitung Total</button>
+    <div class="hasil-box kuning" id="hasil-kali">
+      <div class="hasil-angka kuning" id="angka-kali"></div>
+      <div class="hasil-langkah" id="langkah-kali"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANEL PERMUTASI ===================== -->
+<div class="panel" id="panel-permutasi">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:var(--ungu-muda);font-size:20px;">🔄</div>
+    <div>
+      <h2>Permutasi</h2>
+      <p>Pengaturan objek di mana urutan merupakan hal yang penting</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Notasi Faktorial</h3>
+    <p>Sebelum memahami permutasi, kita perlu memahami <strong>faktorial</strong>:</p>
+    <div class="formula-box formula-ungu">
+      <div class="rumus">n! = n × (n−1) × (n−2) × ... × 2 × 1</div>
+      <div class="keterangan">0! = 1 &nbsp;|&nbsp; 1! = 1 &nbsp;|&nbsp; 5! = 120 &nbsp;|&nbsp; 10! = 3.628.800</div>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Jenis-Jenis Permutasi</h3>
+
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span class="chip chip-ungu">Tipe 1</span>
+        <strong>Permutasi n objek dari n objek (semua diambil)</strong>
+      </div>
+      <div class="formula-box formula-ungu">
+        <div class="rumus">P(n,n) = n!</div>
+        <div class="keterangan">Menyusun semua n objek dalam satu baris</div>
+      </div>
+      <div class="contoh-soal" style="background:#F0EFFD;border-color:var(--ungu);">
+        <div class="label-contoh" style="color:var(--ungu);">Contoh</div>
+        <p>Berapa cara menyusun 4 buku berbeda di rak? &nbsp;→&nbsp; <strong>4! = 24 cara</strong></p>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span class="chip chip-ungu">Tipe 2</span>
+        <strong>Permutasi r objek dari n objek</strong>
+      </div>
+      <div class="formula-box formula-ungu">
+        <div class="rumus">P(n,r) = n! / (n−r)!</div>
+        <div class="keterangan">Memilih dan menyusun r objek dari n objek berbeda (r ≤ n)</div>
+      </div>
+      <div class="contoh-soal" style="background:#F0EFFD;border-color:var(--ungu);">
+        <div class="label-contoh" style="color:var(--ungu);">Contoh</div>
+        <p>Dari 6 kandidat, dipilih ketua, wakil, sekretaris. Berapa banyak susunan pengurus?</p>
+        <div style="margin-top:8px;padding:8px 12px;background:white;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#26215C;">
+          P(6,3) = 6!/(6−3)! = 720/6 = <strong>120 cara</strong>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span class="chip chip-ungu">Tipe 3</span>
+        <strong>Permutasi dengan pengulangan</strong>
+      </div>
+      <div class="formula-box formula-ungu">
+        <div class="rumus">P = n! / (n₁! × n₂! × ... × nₖ!)</div>
+        <div class="keterangan">Jika terdapat objek yang identik</div>
+      </div>
+      <div class="contoh-soal" style="background:#F0EFFD;border-color:var(--ungu);">
+        <div class="label-contoh" style="color:var(--ungu);">Contoh</div>
+        <p>Berapa cara menyusun huruf-huruf pada kata "MATEMATIKA"? (10 huruf: M=2, A=3, T=2, E=1, I=1, K=1)</p>
+        <div style="margin-top:8px;padding:8px 12px;background:white;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#26215C;">
+          P = 10! / (2! × 3! × 2! × 1! × 1! × 1!) = 3.628.800 / 24 = <strong>151.200 cara</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Permutasi -->
+  <div class="kalkulator">
+    <h3><div class="ikon-kalk" style="background:var(--ungu-muda);">🧮</div> Kalkulator Permutasi P(n,r)</h3>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>n (jumlah objek tersedia)</label>
+        <input type="number" id="input-perm-n" value="6" min="0" max="20">
+      </div>
+      <div class="input-group">
+        <label>r (jumlah yang dipilih)</label>
+        <input type="number" id="input-perm-r" value="3" min="0" max="20">
+      </div>
+    </div>
+    <button class="tombol-hitung ungu" onclick="hitungPermutasi()">Hitung P(n,r)</button>
+    <div class="hasil-box ungu" id="hasil-perm">
+      <div class="hasil-angka ungu" id="angka-perm"></div>
+      <div class="hasil-langkah" id="langkah-perm"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANEL KOMBINASI ===================== -->
+<div class="panel" id="panel-kombinasi">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:var(--merah-muda);font-size:20px;">🎯</div>
+    <div>
+      <h2>Kombinasi</h2>
+      <p>Pemilihan objek di mana urutan tidak diperhatikan</p>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Rumus Kombinasi</h3>
+    <p>Kombinasi r objek dari n objek berbeda (urutan <em>tidak</em> dipentingkan):</p>
+    <div class="formula-box formula-merah">
+      <div class="rumus">C(n,r) = n! / (r! × (n−r)!)</div>
+      <div class="keterangan">Juga ditulis sebagai ⁿCᵣ atau C(n,r)</div>
+    </div>
+    <div class="formula-box formula-merah" style="margin-top:8px;">
+      <div class="rumus">C(n,r) = P(n,r) / r!</div>
+      <div class="keterangan">Kombinasi = Permutasi dibagi dengan banyaknya susunan r objek</div>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Perbedaan Permutasi vs Kombinasi</h3>
+    <p style="margin-bottom:14px;">Misal memilih 2 dari {A, B, C}:</p>
+    <div class="grid-2">
+      <div style="background:var(--ungu-muda);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;font-weight:700;color:#534AB7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">🔄 Permutasi — urutan penting</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#26215C;line-height:2;">
+          AB ≠ BA<br>AC ≠ CA<br>BC ≠ CB
+        </div>
+        <div style="margin-top:10px;font-weight:600;color:#26215C;">Total: P(3,2) = 6</div>
+      </div>
+      <div style="background:var(--merah-muda);border-radius:10px;padding:16px;">
+        <div style="font-size:11px;font-weight:700;color:#993C1D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">🎯 Kombinasi — urutan tidak penting</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.88rem;color:#4A1B0C;line-height:2;">
+          {A,B} = {B,A} ✓<br>{A,C} = {C,A} ✓<br>{B,C} = {C,B} ✓
+        </div>
+        <div style="margin-top:10px;font-weight:600;color:#4A1B0C;">Total: C(3,2) = 3</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kartu">
+    <h3>Sifat-Sifat Kombinasi</h3>
+    <ul class="langkah-list">
+      <li>
+        <div class="no-langkah merah">1</div>
+        <div><strong>C(n,r) = C(n, n−r)</strong><br><span style="font-size:0.88rem;color:var(--teks-muted);">Memilih 3 dari 10 sama banyaknya dengan tidak memilih 7 dari 10</span></div>
+      </li>
+      <li>
+        <div class="no-langkah merah">2</div>
+        <div><strong>C(n,0) = C(n,n) = 1</strong><br><span style="font-size:0.88rem;color:var(--teks-muted);">Tidak memilih apapun atau memilih semua hanya ada 1 cara</span></div>
+      </li>
+      <li>
+        <div class="no-langkah merah">3</div>
+        <div><strong>C(n,1) = n</strong><br><span style="font-size:0.88rem;color:var(--teks-muted);">Memilih 1 dari n objek ada n cara</span></div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="kartu">
+    <h3>Contoh Aplikasi</h3>
+    <div class="contoh-soal" style="background:#FEF0ED;border-color:var(--merah);">
+      <div class="label-contoh" style="color:var(--merah);">Contoh 1 — Panitia</div>
+      <p>Dari 10 orang, dipilih 4 orang sebagai panitia (tidak ada jabatan). Berapa banyak cara?</p>
+      <div style="margin-top:8px;padding:8px 12px;background:white;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#4A1B0C;">
+        C(10,4) = 10!/(4!×6!) = 3628800/(24×720) = <strong>210 cara</strong>
+      </div>
+    </div>
+    <div class="contoh-soal" style="background:#FEF0ED;border-color:var(--merah);">
+      <div class="label-contoh" style="color:var(--merah);">Contoh 2 — Kartu</div>
+      <p>Berapa banyak cara memilih 5 kartu dari 52 kartu bridge?</p>
+      <div style="margin-top:8px;padding:8px 12px;background:white;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:#4A1B0C;">
+        C(52,5) = 52!/(5!×47!) = <strong>2.598.960 cara</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Kombinasi -->
+  <div class="kalkulator">
+    <h3><div class="ikon-kalk" style="background:var(--merah-muda);">🧮</div> Kalkulator Kombinasi C(n,r)</h3>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>n (jumlah objek tersedia)</label>
+        <input type="number" id="input-komb-n" value="10" min="0" max="20">
+      </div>
+      <div class="input-group">
+        <label>r (jumlah yang dipilih)</label>
+        <input type="number" id="input-komb-r" value="4" min="0" max="20">
+      </div>
+    </div>
+    <button class="tombol-hitung merah" onclick="hitungKombinasi()">Hitung C(n,r)</button>
+    <div class="hasil-box merah" id="hasil-komb">
+      <div class="hasil-angka merah" id="angka-komb"></div>
+      <div class="hasil-langkah" id="langkah-komb"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PANEL LATIHAN ===================== -->
+<div class="panel" id="panel-latihan">
+  <div class="seksi-header">
+    <div class="ikon-seksi" style="background:#EAF3DE;font-size:22px;">📝</div>
+    <div>
+      <h2>Latihan Soal</h2>
+      <p>Uji pemahaman Anda dengan soal-soal berikut</p>
+    </div>
+  </div>
+
+  <!-- Ringkasan Rumus -->
+  <div class="kartu" style="margin-bottom:28px;">
+    <h3 style="margin-bottom:16px;">📋 Ringkasan Semua Rumus</h3>
+    <table class="tabel-compare">
+      <thead>
+        <tr>
+          <th>Aturan</th>
+          <th>Rumus</th>
+          <th>Kapan Digunakan</th>
+          <th>Kata Kunci</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sel-label"><span class="chip chip-hijau">➕ Penjumlahan</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;">n₁ + n₂ + ... + nₖ</td>
+          <td style="font-size:0.88rem;">Pilih salah satu kelompok</td>
+          <td><span class="chip chip-hijau">ATAU</span></td>
+        </tr>
+        <tr>
+          <td class="sel-label"><span class="chip chip-kuning">✖️ Perkalian</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;">n₁ × n₂ × ... × nₖ</td>
+          <td style="font-size:0.88rem;">Lakukan semua tahap berurutan</td>
+          <td><span class="chip chip-kuning">DAN</span></td>
+        </tr>
+        <tr>
+          <td class="sel-label"><span class="chip chip-ungu">🔄 Permutasi</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;">n! / (n−r)!</td>
+          <td style="font-size:0.88rem;">Pilih dan susun, urutan penting</td>
+          <td><span class="chip chip-ungu">URUTAN PENTING</span></td>
+        </tr>
+        <tr>
+          <td class="sel-label"><span class="chip chip-merah">🎯 Kombinasi</span></td>
+          <td style="font-family:'JetBrains Mono',monospace;font-size:0.85rem;">n! / (r!(n−r)!)</td>
+          <td style="font-size:0.88rem;">Pilih saja, urutan tidak penting</td>
+          <td><span class="chip chip-merah">URUTAN TIDAK</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Soal 1 -->
+  <div class="quiz-soal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="background:var(--hijau);color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Soal 1</span>
+      <span class="chip chip-hijau">Penjumlahan</span>
+    </div>
+    <p class="pertanyaan">Sebuah toko menawarkan 5 jenis celana panjang, 3 jenis celana pendek, dan 4 jenis rok. Seorang pembeli ingin membeli salah satu bawahan. Berapa banyak pilihan yang tersedia?</p>
+    <ul class="pilihan-list">
+      <li><label><input type="radio" name="q1" value="a"> 60</label></li>
+      <li><label><input type="radio" name="q1" value="b"> 12</label></li>
+      <li><label><input type="radio" name="q1" value="c"> 7</label></li>
+      <li><label><input type="radio" name="q1" value="d"> 8</label></li>
+    </ul>
+    <button class="tombol-cek" onclick="cekJawaban(1,'b','Penjumlahan: 5 + 3 + 4 = 12 pilihan. Karena pembeli memilih SATU dari tiga kelompok (saling eksklusif), kita gunakan aturan penjumlahan.')">Cek Jawaban</button>
+    <div class="feedback-quiz" id="fb1"></div>
+  </div>
+
+  <!-- Soal 2 -->
+  <div class="quiz-soal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="background:var(--kuning);color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Soal 2</span>
+      <span class="chip chip-kuning">Perkalian</span>
+    </div>
+    <p class="pertanyaan">Sebuah restoran menawarkan 4 pilihan makanan, 3 pilihan minuman, dan 5 pilihan dessert. Berapa banyak kombinasi makanan lengkap (1 makanan + 1 minuman + 1 dessert) yang bisa dipesan?</p>
+    <ul class="pilihan-list">
+      <li><label><input type="radio" name="q2" value="a"> 12</label></li>
+      <li><label><input type="radio" name="q2" value="b"> 60</label></li>
+      <li><label><input type="radio" name="q2" value="c"> 45</label></li>
+      <li><label><input type="radio" name="q2" value="d"> 35</label></li>
+    </ul>
+    <button class="tombol-cek" onclick="cekJawaban(2,'b','Perkalian: 4 × 3 × 5 = 60 kombinasi. Karena memesan SEMUA komponen (makanan DAN minuman DAN dessert), kita gunakan aturan perkalian.')">Cek Jawaban</button>
+    <div class="feedback-quiz" id="fb2"></div>
+  </div>
+
+  <!-- Soal 3 -->
+  <div class="quiz-soal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="background:var(--ungu);color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Soal 3</span>
+      <span class="chip chip-ungu">Permutasi</span>
+    </div>
+    <p class="pertanyaan">Dari 8 pelari, akan dipilih juara 1, 2, dan 3. Berapa banyak kemungkinan susunan pemenang?</p>
+    <ul class="pilihan-list">
+      <li><label><input type="radio" name="q3" value="a"> 56</label></li>
+      <li><label><input type="radio" name="q3" value="b"> 336</label></li>
+      <li><label><input type="radio" name="q3" value="c"> 512</label></li>
+      <li><label><input type="radio" name="q3" value="d"> 24</label></li>
+    </ul>
+    <button class="tombol-cek" onclick="cekJawaban(3,'b','Permutasi: P(8,3) = 8!/(8-3)! = 8!/5! = 8×7×6 = 336 cara. Urutan penting karena Juara 1, 2, 3 memiliki posisi berbeda.')">Cek Jawaban</button>
+    <div class="feedback-quiz" id="fb3"></div>
+  </div>
+
+  <!-- Soal 4 -->
+  <div class="quiz-soal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="background:var(--merah);color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Soal 4</span>
+      <span class="chip chip-merah">Kombinasi</span>
+    </div>
+    <p class="pertanyaan">Dari 9 siswa, akan dibentuk kelompok belajar yang terdiri dari 4 orang. Berapa banyak kelompok yang dapat dibentuk?</p>
+    <ul class="pilihan-list">
+      <li><label><input type="radio" name="q4" value="a"> 3024</label></li>
+      <li><label><input type="radio" name="q4" value="b"> 9</label></li>
+      <li><label><input type="radio" name="q4" value="c"> 126</label></li>
+      <li><label><input type="radio" name="q4" value="d"> 504</label></li>
+    </ul>
+    <button class="tombol-cek" onclick="cekJawaban(4,'c','Kombinasi: C(9,4) = 9!/(4!×5!) = 126 kelompok. Urutan tidak penting karena kelompok {A,B,C,D} sama dengan {D,C,B,A}.')">Cek Jawaban</button>
+    <div class="feedback-quiz" id="fb4"></div>
+  </div>
+
+  <!-- Soal 5 — Gabungan -->
+  <div class="quiz-soal">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="background:var(--teks);color:white;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;">Soal 5</span>
+      <span style="background:#E1F5EE;color:#085041;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;">Gabungan</span>
+    </div>
+    <p class="pertanyaan">Sebuah panitia akan dibentuk dari 5 pria dan 4 wanita. Jika panitia harus terdiri dari 3 pria dan 2 wanita, berapa banyak panitia yang dapat dibentuk?</p>
+    <ul class="pilihan-list">
+      <li><label><input type="radio" name="q5" value="a"> 120</label></li>
+      <li><label><input type="radio" name="q5" value="b"> 60</label></li>
+      <li><label><input type="radio" name="q5" value="c"> 360</label></li>
+      <li><label><input type="radio" name="q5" value="d"> 40</label></li>
+    </ul>
+    <button class="tombol-cek" onclick="cekJawaban(5,'b','Gabungan: C(5,3) × C(4,2) = 10 × 6 = 60 panitia. Pilih 3 pria dari 5 (kombinasi) DAN 2 wanita dari 4 (kombinasi), lalu kalikan.')">Cek Jawaban</button>
+    <div class="feedback-quiz" id="fb5"></div>
+  </div>
+
+</div>
+
+</main>
+
+<footer>
+  <p>Materi Ajar Aturan Pencacahan &nbsp;·&nbsp; <strong>Martin Bernard, M.Pd.</strong><br>
+  Program Studi Pendidikan Matematika &nbsp;·&nbsp; IKIP Siliwangi, Cimahi &nbsp;·&nbsp; 2024</p>
+</footer>
+
+<script>
+function tampilPanel(id, tombol) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('aktif'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('aktif'));
+  document.getElementById('panel-' + id).classList.add('aktif');
+  tombol.classList.add('aktif');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function faktorial(n) {
+  if (n < 0) return NaN;
+  if (n === 0 || n === 1) return 1;
+  let hasil = 1;
+  for (let i = 2; i <= n; i++) hasil *= i;
+  return hasil;
+}
+
+function hitungPenjumlahan() {
+  const val = document.getElementById('input-jumlah').value;
+  const arr = val.split(',').map(s => parseFloat(s.trim())).filter(x => !isNaN(x));
+  if (arr.length === 0) { alert('Masukkan angka yang valid!'); return; }
+  const total = arr.reduce((a, b) => a + b, 0);
+  const langkah = arr.join(' + ') + ' = ' + total;
+  const box = document.getElementById('hasil-jumlah');
+  document.getElementById('angka-jumlah').textContent = 'Total = ' + total.toLocaleString('id-ID');
+  document.getElementById('langkah-jumlah').textContent = langkah;
+  box.style.display = 'block';
+}
+
+function hitungPerkalian() {
+  const val = document.getElementById('input-kali').value;
+  const arr = val.split(',').map(s => parseFloat(s.trim())).filter(x => !isNaN(x));
+  if (arr.length === 0) { alert('Masukkan angka yang valid!'); return; }
+  const total = arr.reduce((a, b) => a * b, 1);
+  const langkah = arr.join(' × ') + ' = ' + total;
+  const box = document.getElementById('hasil-kali');
+  document.getElementById('angka-kali').textContent = 'Total = ' + total.toLocaleString('id-ID');
+  document.getElementById('langkah-kali').textContent = langkah;
+  box.style.display = 'block';
+}
+
+function hitungPermutasi() {
+  const n = parseInt(document.getElementById('input-perm-n').value);
+  const r = parseInt(document.getElementById('input-perm-r').value);
+  if (isNaN(n) || isNaN(r) || r > n || n < 0 || r < 0) {
+    alert('Pastikan n ≥ r ≥ 0 dan keduanya bilangan bulat!'); return;
+  }
+  const fn = faktorial(n);
+  const fnr = faktorial(n - r);
+  const hasil = fn / fnr;
+  const box = document.getElementById('hasil-perm');
+  document.getElementById('angka-perm').textContent = 'P(' + n + ',' + r + ') = ' + hasil.toLocaleString('id-ID');
+  document.getElementById('langkah-perm').textContent =
+    n + '! / (' + n + '-' + r + ')! = ' + fn.toLocaleString('id-ID') + ' / ' + fnr.toLocaleString('id-ID') + ' = ' + hasil.toLocaleString('id-ID');
+  box.style.display = 'block';
+}
+
+function hitungKombinasi() {
+  const n = parseInt(document.getElementById('input-komb-n').value);
+  const r = parseInt(document.getElementById('input-komb-r').value);
+  if (isNaN(n) || isNaN(r) || r > n || n < 0 || r < 0) {
+    alert('Pastikan n ≥ r ≥ 0 dan keduanya bilangan bulat!'); return;
+  }
+  const fn = faktorial(n);
+  const fr = faktorial(r);
+  const fnr = faktorial(n - r);
+  const hasil = fn / (fr * fnr);
+  const box = document.getElementById('hasil-komb');
+  document.getElementById('angka-komb').textContent = 'C(' + n + ',' + r + ') = ' + hasil.toLocaleString('id-ID');
+  document.getElementById('langkah-komb').textContent =
+    n + '! / (' + r + '! × ' + (n - r) + '!) = ' + fn.toLocaleString('id-ID') + ' / (' + fr.toLocaleString('id-ID') + ' × ' + fnr.toLocaleString('id-ID') + ') = ' + hasil.toLocaleString('id-ID');
+  box.style.display = 'block';
+}
+
+function cekJawaban(no, benar, penjelasan) {
+  const pilihan = document.querySelector('input[name="q' + no + '"]:checked');
+  const fb = document.getElementById('fb' + no);
+  if (!pilihan) { alert('Pilih jawaban terlebih dahulu!'); return; }
+  fb.style.display = 'block';
+  if (pilihan.value === benar) {
+    fb.className = 'feedback-quiz feedback-benar';
+    fb.textContent = '✓ Benar! ' + penjelasan;
+  } else {
+    fb.className = 'feedback-quiz feedback-salah';
+    fb.textContent = '✗ Belum tepat. ' + penjelasan;
+  }
+}
+</script>
+</body>
+</html>
