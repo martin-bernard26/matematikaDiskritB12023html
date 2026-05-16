@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TensorFlow.js — Materi & Contoh Koding</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --surface2: #181b22;
+      --border: #252a35;
+      --accent: #ff6b35;
+      --accent2: #00d4ff;
+      --accent3: #a855f7;
+      --text: #e8eaf0;
+      --muted: #6b7280;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --code-bg: #0d1117;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 60vw;
+      height: 60vh;
+      background: radial-gradient(ellipse, rgba(255,107,53,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -10%;
+      right: -10%;
+      width: 50vw;
+      height: 50vh;
+      background: radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 60px 40px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255,107,53,0.15);
+      border: 1px solid rgba(255,107,53,0.3);
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    h1 span.tf {
+      background: linear-gradient(135deg, var(--accent), var(--yellow));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h1 span.js {
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      font-weight: 400;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Nav tabs */
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,12,16,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+    }
+
+    .tabs-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 16px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--text); }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* Main layout */
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 40px 80px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Section */
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 40px;
+    }
+
+    .section-title:first-child { margin-top: 0; }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    /* Cards grid */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: rgba(255,107,53,0.3);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-tag {
+      display: inline-block;
+      margin-top: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: rgba(0,212,255,0.1);
+      color: var(--accent2);
+      border: 1px solid rgba(0,212,255,0.2);
+    }
+
+    /* Code block */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .code-header {
+      background: var(--surface);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .code-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      padding: 24px;
+      overflow-x: auto;
+      color: #abb2bf;
+    }
+
+    /* Syntax highlights */
+    .kw { color: #c678dd; }
+    .fn { color: #61afef; }
+    .str { color: #98c379; }
+    .num { color: #d19a66; }
+    .cm { color: #5c6370; font-style: italic; }
+    .cls { color: #e5c07b; }
+    .var2 { color: #e06c75; }
+    .op { color: #56b6c2; }
+
+    /* Demo area */
+    .demo-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+
+    .demo-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-box h3::before {
+      content: '▶';
+      color: var(--green);
+      font-size: 0.75rem;
+    }
+
+    .demo-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #ff8555;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .input-group input[type="number"],
+    .input-group input[type="range"] {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 10px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      width: 80px;
+    }
+
+    .output-area {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      min-height: 80px;
+      color: var(--accent2);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .output-area .log-info { color: var(--accent2); }
+    .output-area .log-success { color: var(--green); }
+    .output-area .log-warn { color: var(--yellow); }
+    .output-area .log-error { color: var(--var2); }
+
+    /* Canvas */
+    canvas {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    /* Chart */
+    .chart-container {
+      position: relative;
+      height: 200px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Concept list */
+    .concept-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .concept-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      align-items: flex-start;
+    }
+
+    .concept-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(255,107,53,0.1);
+      border: 1px solid rgba(255,107,53,0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .concept-body h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .concept-body p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Drawing area */
+    #drawCanvas {
+      cursor: crosshair;
+      touch-action: none;
+      background: #000;
+    }
+
+    .draw-tools {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .prediction-display {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pred-bar {
+      flex: 1;
+      min-width: 60px;
+    }
+
+    .pred-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .pred-track {
+      background: var(--surface2);
+      border-radius: 2px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .pred-fill {
+      height: 100%;
+      background: var(--accent2);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .pred-fill.top { background: linear-gradient(90deg, var(--accent), var(--yellow)); }
+
+    .stat-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 20px;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-name {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    @media (max-width: 600px) {
+      header { padding: 40px 20px 24px; }
+      main { padding: 24px 20px 60px; }
+      .nav-tabs { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">// Materi Pembelajaran</div>
+  <h1><span class="tf">TensorFlow</span><span class="js">.js</span></h1>
+  <p class="subtitle">Machine learning langsung di browser — tanpa server, tanpa instalasi. Pelajari konsep, lihat kode, dan coba langsung interaktif.</p>
+</header>
+
+<nav class="nav-tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('pengenalan')">01 Pengenalan</button>
+    <button class="tab-btn" onclick="switchTab('tensor')">02 Tensor</button>
+    <button class="tab-btn" onclick="switchTab('model')">03 Model & Training</button>
+    <button class="tab-btn" onclick="switchTab('regresi')">04 Regresi Linear</button>
+    <button class="tab-btn" onclick="switchTab('klasifikasi')">05 Klasifikasi</button>
+    <button class="tab-btn" onclick="switchTab('pretrained')">06 Pretrained Model</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ========================= TAB 1: PENGENALAN ========================= -->
+  <div class="tab-panel active" id="tab-pengenalan">
+    <p class="section-desc" style="margin-top:8px">
+      TensorFlow.js adalah library open-source dari Google untuk machine learning di JavaScript. Berjalan di browser maupun Node.js, memanfaatkan GPU via WebGL.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <h3>Berjalan di Browser</h3>
+        <p>Tidak perlu server Python. Model langsung dijalankan di client menggunakan WebGL untuk akselerasi GPU.</p>
+        <span class="card-tag">WebGL · WASM</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔁</div>
+        <h3>Import Model Existing</h3>
+        <p>Impor model Keras/Python yang sudah dilatih dan gunakan langsung di JavaScript untuk inferensi.</p>
+        <span class="card-tag">Keras · SavedModel</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏋️</div>
+        <h3>Train di Browser</h3>
+        <p>Latih model baru langsung di browser menggunakan data pengguna secara real-time dan privat.</p>
+        <span class="card-tag">Privacy-first</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>Ekosistem Lengkap</h3>
+        <p>Tersedia banyak model siap pakai: deteksi objek, pose, wajah, teks, audio, dll.</p>
+        <span class="card-tag">tfhub · tfjs-models</span>
+      </div>
+    </div>
+
+    <div class="section-title">Cara Instalasi</div>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">index.html — via CDN (paling mudah)</span>
+      </div>
+<pre><span class="cm">&lt;!-- Via CDN - langsung di HTML --&gt;</span>
+<span class="kw">&lt;script</span> <span class="fn">src</span>=<span class="str">"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+
+<span class="cm">&lt;!-- Atau via npm untuk project Node.js / bundler --&gt;</span>
+<span class="fn">npm install</span> @tensorflow/tfjs
+
+<span class="cm">// Import di JS module</span>
+<span class="kw">import</span> * <span class="kw">as</span> tf <span class="kw">from</span> <span class="str">'@tensorflow/tfjs'</span>;</pre>
+    </div>
+
+    <div class="section-title">Konsep Utama</div>
+    <div class="concept-list">
+      <div class="concept-item">
+        <span class="concept-num">01</span>
+        <div class="concept-body">
+          <h4>Tensor</h4>
+          <p>Struktur data dasar di TF.js — array multidimensi. Seperti array JavaScript tapi bisa dijalankan di GPU. Semua data input/output model adalah tensor.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <span class="concept-num">02</span>
+        <div class="concept-body">
+          <h4>Layer & Model</h4>
+          <p>Model adalah kumpulan layer yang terhubung. Tiap layer melakukan transformasi matematis pada input. Mirip fungsi bersarang yang belajar dari data.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <span class="concept-num">03</span>
+        <div class="concept-body">
+          <h4>Training (Optimizer + Loss)</h4>
+          <p>Proses melatih model: model membuat prediksi, loss mengukur kesalahan, optimizer menyesuaikan parameter agar error berkurang di iterasi berikutnya.</p>
+        </div>
+      </div>
+      <div class="concept-item">
+        <span class="concept-num">04</span>
+        <div class="concept-body">
+          <h4>Memory Management</h4>
+          <p>TF.js menggunakan <code>tf.tidy()</code> untuk membersihkan tensor yang tidak dipakai agar tidak terjadi memory leak di WebGL.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= TAB 2: TENSOR ========================= -->
+  <div class="tab-panel" id="tab-tensor">
+
+    <div class="section-title">Apa itu Tensor?</div>
+    <p class="section-desc">Tensor adalah array multidimensi — fondasi semua operasi di TensorFlow.js. Scalar (0D), Vector (1D), Matrix (2D), hingga N-dimensi.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">tensor-basics.js</span>
+      </div>
+<pre><span class="cm">// === MEMBUAT TENSOR ===</span>
+
+<span class="cm">// Scalar (0D) - satu angka</span>
+<span class="kw">const</span> scalar = tf.<span class="fn">scalar</span>(<span class="num">42</span>);
+<span class="fn">console.log</span>(scalar.shape); <span class="cm">// []</span>
+
+<span class="cm">// 1D Tensor (Vector)</span>
+<span class="kw">const</span> tensor1d = tf.<span class="fn">tensor1d</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>]);
+<span class="fn">console.log</span>(tensor1d.shape); <span class="cm">// [4]</span>
+
+<span class="cm">// 2D Tensor (Matrix)</span>
+<span class="kw">const</span> matrix = tf.<span class="fn">tensor2d</span>([[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">3</span>,<span class="num">4</span>],[<span class="num">5</span>,<span class="num">6</span>]]);
+<span class="fn">console.log</span>(matrix.shape); <span class="cm">// [3, 2]</span>
+
+<span class="cm">// Tensor dari shape + nilai khusus</span>
+<span class="kw">const</span> zeros = tf.<span class="fn">zeros</span>([<span class="num">3</span>, <span class="num">3</span>]);   <span class="cm">// matrix 3x3 isi 0</span>
+<span class="kw">const</span> ones  = tf.<span class="fn">ones</span>([<span class="num">2</span>, <span class="num">4</span>]);    <span class="cm">// matrix 2x4 isi 1</span>
+<span class="kw">const</span> rands = tf.<span class="fn">randomNormal</span>([<span class="num">3</span>, <span class="num">3</span>]); <span class="cm">// distribusi normal</span>
+
+<span class="cm">// === OPERASI TENSOR ===</span>
+<span class="kw">const</span> a = tf.<span class="fn">tensor1d</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]);
+<span class="kw">const</span> b = tf.<span class="fn">tensor1d</span>([<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>]);
+
+a.<span class="fn">add</span>(b).<span class="fn">print</span>();       <span class="cm">// [5, 7, 9]</span>
+a.<span class="fn">mul</span>(b).<span class="fn">print</span>();       <span class="cm">// [4, 10, 18]</span>
+a.<span class="fn">dot</span>(b).<span class="fn">print</span>();       <span class="cm">// 32 (dot product)</span>
+tf.<span class="fn">matMul</span>(matrix, tf.<span class="fn">transpose</span>(matrix)).<span class="fn">print</span>();
+
+<span class="cm">// === MEMORY MANAGEMENT ===</span>
+tf.<span class="fn">tidy</span>(() => {
+  <span class="kw">const</span> temp = tf.<span class="fn">tensor1d</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>]).<span class="fn">square</span>();
+  <span class="fn">console.log</span>(temp.<span class="fn">dataSync</span>()); <span class="cm">// [1, 4, 9]</span>
+  <span class="cm">// temp otomatis dihapus saat keluar tf.tidy()</span>
+});
+
+<span class="cm">// Konversi ke JavaScript array</span>
+<span class="kw">const</span> jsArray = <span class="kw">await</span> a.<span class="fn">data</span>(); <span class="cm">// async</span>
+<span class="kw">const</span> jsSync = a.<span class="fn">dataSync</span>();  <span class="cm">// sync (hati-hati blocking)</span></pre>
+    </div>
+
+    <div class="demo-box">
+      <h3>Demo Interaktif — Operasi Tensor</h3>
+      <p class="demo-desc">Coba operasi matematika pada dua tensor 1D secara langsung.</p>
+      <div class="demo-controls">
+        <button class="btn btn-primary" onclick="demoTensorOps()">▶ Jalankan Semua Operasi</button>
+        <button class="btn btn-secondary" onclick="clearOutput('tensorOut')">✕ Clear</button>
+      </div>
+      <div class="output-area" id="tensorOut">// Output akan muncul di sini...</div>
+    </div>
+  </div>
+
+  <!-- ========================= TAB 3: MODEL & TRAINING ========================= -->
+  <div class="tab-panel" id="tab-model">
+
+    <div class="section-title">Membangun Model Sequential</div>
+    <p class="section-desc">Model Sequential adalah tumpukan layer linier — cocok untuk kebanyakan kasus. Setiap layer menerima output layer sebelumnya sebagai input.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">build-model.js</span>
+      </div>
+<pre><span class="cm">// === MEMBANGUN MODEL ===</span>
+<span class="kw">const</span> model = tf.<span class="fn">sequential</span>();
+
+<span class="cm">// Layer pertama - harus tentukan inputShape</span>
+model.<span class="fn">add</span>(tf.layers.<span class="fn">dense</span>({
+  units: <span class="num">64</span>,              <span class="cm">// jumlah neuron</span>
+  activation: <span class="str">'relu'</span>,    <span class="cm">// fungsi aktivasi</span>
+  inputShape: [<span class="num">10</span>]        <span class="cm">// input: 10 fitur</span>
+}));
+
+<span class="cm">// Dropout - mencegah overfitting</span>
+model.<span class="fn">add</span>(tf.layers.<span class="fn">dropout</span>({ rate: <span class="num">0.2</span> }));
+
+<span class="cm">// Layer tersembunyi</span>
+model.<span class="fn">add</span>(tf.layers.<span class="fn">dense</span>({
+  units: <span class="num">32</span>,
+  activation: <span class="str">'relu'</span>
+}));
+
+<span class="cm">// Output layer - 3 kelas (softmax)</span>
+model.<span class="fn">add</span>(tf.layers.<span class="fn">dense</span>({
+  units: <span class="num">3</span>,
+  activation: <span class="str">'softmax'</span>  <span class="cm">// untuk klasifikasi</span>
+}));
+
+<span class="cm">// === COMPILE MODEL ===</span>
+model.<span class="fn">compile</span>({
+  optimizer: tf.train.<span class="fn">adam</span>(<span class="num">0.001</span>), <span class="cm">// learning rate</span>
+  loss: <span class="str">'categoricalCrossentropy'</span>,   <span class="cm">// untuk multi-kelas</span>
+  metrics: [<span class="str">'accuracy'</span>]
+});
+
+model.<span class="fn">summary</span>(); <span class="cm">// tampilkan arsitektur</span>
+
+<span class="cm">// === TRAINING ===</span>
+<span class="kw">const</span> history = <span class="kw">await</span> model.<span class="fn">fit</span>(xTrain, yTrain, {
+  epochs: <span class="num">50</span>,
+  batchSize: <span class="num">32</span>,
+  validationSplit: <span class="num">0.2</span>,   <span class="cm">// 20% untuk validasi</span>
+  callbacks: {
+    <span class="fn">onEpochEnd</span>: (epoch, logs) => {
+      <span class="fn">console.log</span>(<span class="str">`Epoch ${epoch}: loss=${logs.loss.toFixed(4)}, acc=${logs.acc.toFixed(4)}`</span>);
+    }
+  }
+});
+
+<span class="cm">// === PREDIKSI ===</span>
+<span class="kw">const</span> prediction = model.<span class="fn">predict</span>(xTest);
+prediction.<span class="fn">print</span>();
+
+<span class="cm">// Save & Load model</span>
+<span class="kw">await</span> model.<span class="fn">save</span>(<span class="str">'localstorage://my-model'</span>);
+<span class="kw">const</span> loaded = <span class="kw">await</span> tf.<span class="fn">loadLayersModel</span>(<span class="str">'localstorage://my-model'</span>);</pre>
+    </div>
+
+    <div class="section-title">Fungsi Aktivasi</div>
+    <div class="cards">
+      <div class="card">
+        <h3>ReLU</h3>
+        <p>f(x) = max(0, x) — paling umum untuk layer tersembunyi. Cepat, efektif mencegah vanishing gradient.</p>
+        <span class="card-tag">'relu'</span>
+      </div>
+      <div class="card">
+        <h3>Sigmoid</h3>
+        <p>f(x) = 1/(1+e⁻ˣ) — output antara 0-1. Cocok untuk klasifikasi biner di layer output.</p>
+        <span class="card-tag">'sigmoid'</span>
+      </div>
+      <div class="card">
+        <h3>Softmax</h3>
+        <p>Distribusi probabilitas untuk multi-kelas. Total semua output = 1.0. Digunakan di output layer.</p>
+        <span class="card-tag">'softmax'</span>
+      </div>
+      <div class="card">
+        <h3>Tanh</h3>
+        <p>Output antara -1 dan 1. Lebih baik dari sigmoid untuk layer tersembunyi karena centered di 0.</p>
+        <span class="card-tag">'tanh'</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================= TAB 4: REGRESI ========================= -->
+  <div class="tab-panel" id="tab-regresi">
+
+    <div class="section-title">Regresi Linear — Prediksi Nilai Kontinu</div>
+    <p class="section-desc">Contoh nyata: model belajar memprediksi harga rumah berdasarkan luas. Kita generate data, train model, lalu visualisasi hasilnya.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">linear-regression.js</span>
+      </div>
+<pre><span class="cm">// Generate data: harga = 500*luas + noise</span>
+<span class="kw">function</span> <span class="fn">generateData</span>(n) {
+  <span class="kw">const</span> xs = [], ys = [];
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i < n; i++) {
+    <span class="kw">const</span> x = <span class="cls">Math</span>.<span class="fn">random</span>() * <span class="num">100</span>;
+    <span class="kw">const</span> noise = (<span class="cls">Math</span>.<span class="fn">random</span>() - <span class="num">0.5</span>) * <span class="num">10000</span>;
+    xs.<span class="fn">push</span>(x);
+    ys.<span class="fn">push</span>(<span class="num">500</span> * x + <span class="num">50000</span> + noise); <span class="cm">// harga dalam juta</span>
+  }
+  <span class="kw">return</span> { xs: tf.<span class="fn">tensor2d</span>(xs, [n, <span class="num">1</span>]), ys: tf.<span class="fn">tensor2d</span>(ys, [n, <span class="num">1</span>]) };
+}
+
+<span class="cm">// Normalisasi data (penting!)</span>
+<span class="kw">function</span> <span class="fn">normalize</span>(tensor) {
+  <span class="kw">const</span> min = tensor.<span class="fn">min</span>(), max = tensor.<span class="fn">max</span>();
+  <span class="kw">return</span> { data: tensor.<span class="fn">sub</span>(min).<span class="fn">div</span>(max.<span class="fn">sub</span>(min)), min, max };
+}
+
+<span class="cm">// Bangun model regresi</span>
+<span class="kw">const</span> model = tf.<span class="fn">sequential</span>({
+  layers: [
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">16</span>, activation: <span class="str">'relu'</span>, inputShape: [<span class="num">1</span>] }),
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">8</span>,  activation: <span class="str">'relu'</span> }),
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">1</span> })  <span class="cm">// output 1 nilai (harga)</span>
+  ]
+});
+
+model.<span class="fn">compile</span>({
+  optimizer: tf.train.<span class="fn">adam</span>(<span class="num">0.05</span>),
+  loss: <span class="str">'meanSquaredError'</span>
+});
+
+<span class="cm">// Training</span>
+<span class="kw">const</span> { xs, ys } = <span class="fn">generateData</span>(<span class="num">200</span>);
+<span class="kw">const</span> normX = <span class="fn">normalize</span>(xs);
+<span class="kw">const</span> normY = <span class="fn">normalize</span>(ys);
+
+<span class="kw">await</span> model.<span class="fn">fit</span>(normX.data, normY.data, {
+  epochs: <span class="num">100</span>, batchSize: <span class="num">32</span>,
+  callbacks: { <span class="fn">onEpochEnd</span>: (e, logs) => <span class="fn">updateChart</span>(e, logs.loss) }
+});
+
+<span class="cm">// Prediksi untuk luas baru (misal 75 m²)</span>
+<span class="kw">const</span> inputNorm = tf.<span class="fn">scalar</span>(<span class="num">75</span>).<span class="fn">sub</span>(normX.min).<span class="fn">div</span>(normX.max.<span class="fn">sub</span>(normX.min));
+<span class="kw">const</span> predNorm = model.<span class="fn">predict</span>(inputNorm.<span class="fn">reshape</span>([<span class="num">1</span>,<span class="num">1</span>]));
+<span class="kw">const</span> predReal = predNorm.<span class="fn">mul</span>(normY.max.<span class="fn">sub</span>(normY.min)).<span class="fn">add</span>(normY.min);
+<span class="fn">console.log</span>(<span class="str">"Prediksi harga 75m²:"</span>, predReal.<span class="fn">dataSync</span>()[<span class="num">0</span>].<span class="fn">toFixed</span>(<span class="num">0</span>));</pre>
+    </div>
+
+    <div class="demo-box">
+      <h3>Demo Live — Regresi Linear</h3>
+      <p class="demo-desc">Model akan belajar memprediksi "harga rumah" berdasarkan luas. Perhatikan loss menurun selama training.</p>
+
+      <div class="stat-row">
+        <div class="stat"><div class="stat-val" id="reg-epoch">0</div><div class="stat-name">Epoch</div></div>
+        <div class="stat"><div class="stat-val" id="reg-loss">—</div><div class="stat-name">Loss (MSE)</div></div>
+        <div class="stat"><div class="stat-val" id="reg-pred">—</div><div class="stat-name">Prediksi 75m²</div></div>
+      </div>
+
+      <div class="demo-controls">
+        <button class="btn btn-primary" id="regBtn" onclick="runRegression()">▶ Mulai Training</button>
+        <button class="btn btn-secondary" onclick="clearOutput('regOut')">✕ Clear Log</button>
+      </div>
+
+      <div class="chart-container" style="margin-bottom:12px">
+        <canvas id="lossCanvas" width="1060" height="196" style="width:100%;height:100%;border:none;border-radius:8px"></canvas>
+      </div>
+
+      <div class="output-area" id="regOut" style="height:100px">// Klik "Mulai Training" untuk melihat proses...</div>
+    </div>
+  </div>
+
+  <!-- ========================= TAB 5: KLASIFIKASI ========================= -->
+  <div class="tab-panel" id="tab-klasifikasi">
+
+    <div class="section-title">Klasifikasi — XOR Problem</div>
+    <p class="section-desc">Masalah XOR: model belajar membedakan dua kelas yang tidak bisa dipisahkan secara linear. Ini membuktikan neural network bisa belajar pola non-linear.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">classification-xor.js</span>
+      </div>
+<pre><span class="cm">// Data XOR: [0,0]→0, [0,1]→1, [1,0]→1, [1,1]→0</span>
+<span class="kw">const</span> xorX = tf.<span class="fn">tensor2d</span>([[<span class="num">0</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">1</span>,<span class="num">0</span>],[<span class="num">1</span>,<span class="num">1</span>]]);
+<span class="kw">const</span> xorY = tf.<span class="fn">tensor2d</span>([[<span class="num">1</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">1</span>,<span class="num">0</span>]]); <span class="cm">// one-hot</span>
+
+<span class="cm">// Model dengan hidden layer (bisa menyelesaikan XOR)</span>
+<span class="kw">const</span> model = tf.<span class="fn">sequential</span>({
+  layers: [
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">8</span>, activation: <span class="str">'relu'</span>, inputShape: [<span class="num">2</span>] }),
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">8</span>, activation: <span class="str">'relu'</span> }),
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">2</span>, activation: <span class="str">'softmax'</span> })
+  ]
+});
+
+model.<span class="fn">compile</span>({
+  optimizer: <span class="str">'adam'</span>,
+  loss: <span class="str">'categoricalCrossentropy'</span>,
+  metrics: [<span class="str">'accuracy'</span>]
+});
+
+<span class="cm">// Training dengan banyak epoch karena data sedikit</span>
+<span class="kw">await</span> model.<span class="fn">fit</span>(xorX, xorY, {
+  epochs: <span class="num">500</span>,
+  verbose: <span class="num">0</span>
+});
+
+<span class="cm">// Test semua kombinasi</span>
+<span class="kw">const</span> tests = [[<span class="num">0</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">1</span>,<span class="num">0</span>],[<span class="num">1</span>,<span class="num">1</span>]];
+tests.<span class="fn">forEach</span>(t => {
+  <span class="kw">const</span> pred = model.<span class="fn">predict</span>(tf.<span class="fn">tensor2d</span>([t]));
+  <span class="kw">const</span> vals = pred.<span class="fn">dataSync</span>();
+  <span class="kw">const</span> kelas = vals[<span class="num">1</span>] > vals[<span class="num">0</span>] ? <span class="num">1</span> : <span class="num">0</span>;
+  <span class="fn">console.log</span>(<span class="str">`XOR(${t[0]}, ${t[1]}) = ${kelas}`</span>);
+});</pre>
+    </div>
+
+    <div class="demo-box">
+      <h3>Demo Live — XOR Classifier</h3>
+      <p class="demo-desc">Model neural network dilatih untuk memecahkan masalah XOR yang tidak bisa diselesaikan oleh regresi linear biasa.</p>
+      <div class="demo-controls">
+        <button class="btn btn-primary" id="xorBtn" onclick="runXOR()">▶ Train & Test XOR</button>
+        <button class="btn btn-secondary" onclick="clearOutput('xorOut')">✕ Clear</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="xorProgress"></div></div>
+      <div class="output-area" id="xorOut" style="margin-top:12px">// Klik untuk melatih model XOR...</div>
+    </div>
+
+    <div class="demo-box" style="margin-top: 0">
+      <h3>Demo Live — Klasifikasi Titik (2D)</h3>
+      <p class="demo-desc">Model belajar memisahkan dua kelas titik yang tersebar di ruang 2D. Visualisasi decision boundary.</p>
+      <div class="demo-controls">
+        <div class="input-group">
+          <label>Epochs:</label>
+          <input type="number" id="classEpochs" value="100" min="10" max="500" style="width:70px"/>
+        </div>
+        <button class="btn btn-primary" id="classBtn" onclick="runClassification()">▶ Train Classifier</button>
+      </div>
+      <canvas id="classCanvas" width="400" height="300" style="max-width:100%"></canvas>
+      <div class="output-area" id="classOut" style="margin-top:12px;height:60px">// Siap training...</div>
+    </div>
+  </div>
+
+  <!-- ========================= TAB 6: PRETRAINED ========================= -->
+  <div class="tab-panel" id="tab-pretrained">
+
+    <div class="section-title">Model Pretrained — Siap Pakai</div>
+    <p class="section-desc">TensorFlow.js menyediakan banyak model yang sudah dilatih. Cukup load dan langsung pakai — tidak perlu training dari nol.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">👁️</div>
+        <h3>MobileNet</h3>
+        <p>Klasifikasi gambar ke 1000 kategori. Efisien untuk mobile dan browser.</p>
+        <span class="card-tag">@tensorflow-models/mobilenet</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>COCO-SSD</h3>
+        <p>Deteksi objek real-time dengan bounding box. Mengenali 90 jenis objek.</p>
+        <span class="card-tag">@tensorflow-models/coco-ssd</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🤸</div>
+        <h3>PoseNet / MoveNet</h3>
+        <p>Estimasi pose tubuh manusia — 17 keypoint dari kepala hingga kaki.</p>
+        <span class="card-tag">@tensorflow-models/pose-detection</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🖐️</div>
+        <h3>HandPose</h3>
+        <p>Deteksi dan tracking tangan dengan 21 landmark dalam 3D.</p>
+        <span class="card-tag">@tensorflow-models/hand-pose-detection</span>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="code-dot dot-red"></span><span class="code-dot dot-yellow"></span><span class="code-dot dot-green"></span></div>
+        <span class="code-title">pretrained-example.js — MobileNet + COCO-SSD</span>
+      </div>
+<pre><span class="cm">// === MOBILENET: Klasifikasi Gambar ===</span>
+<span class="kw">import</span> * <span class="kw">as</span> mobilenet <span class="kw">from</span> <span class="str">'@tensorflow-models/mobilenet'</span>;
+
+<span class="kw">const</span> model = <span class="kw">await</span> mobilenet.<span class="fn">load</span>();
+<span class="kw">const</span> imgElement = document.<span class="fn">getElementById</span>(<span class="str">'myImage'</span>);
+
+<span class="kw">const</span> predictions = <span class="kw">await</span> model.<span class="fn">classify</span>(imgElement);
+predictions.<span class="fn">forEach</span>(p => {
+  <span class="fn">console.log</span>(<span class="str">`${p.className}: ${(p.probability*100).toFixed(1)}%`</span>);
+});
+<span class="cm">// Output: "tabby cat: 89.3%", "tiger cat: 6.2%", ...</span>
+
+<span class="cm">// === COCO-SSD: Deteksi Objek ===</span>
+<span class="kw">import</span> * <span class="kw">as</span> cocoSsd <span class="kw">from</span> <span class="str">'@tensorflow-models/coco-ssd'</span>;
+
+<span class="kw">const</span> detector = <span class="kw">await</span> cocoSsd.<span class="fn">load</span>();
+<span class="kw">const</span> objects = <span class="kw">await</span> detector.<span class="fn">detect</span>(imgElement);
+
+objects.<span class="fn">forEach</span>(obj => {
+  <span class="kw">const</span> [x, y, w, h] = obj.bbox;
+  <span class="fn">console.log</span>(<span class="str">`${obj.class} (${(obj.score*100).toFixed(0)}%) at [${x.toFixed(0)},${y.toFixed(0)}]`</span>);
+  <span class="cm">// Gambar bounding box di canvas</span>
+  ctx.<span class="fn">strokeRect</span>(x, y, w, h);
+  ctx.<span class="fn">fillText</span>(obj.class, x, y - <span class="num">4</span>);
+});
+
+<span class="cm">// === TRANSFER LEARNING: Fine-tune MobileNet ===</span>
+<span class="kw">const</span> base = <span class="kw">await</span> mobilenet.<span class="fn">load</span>();
+
+<span class="cm">// Ambil feature extraction layer</span>
+<span class="kw">const</span> baseModel = base.infer(input, <span class="kw">true</span>); <span class="cm">// embedding 1024-dim</span>
+
+<span class="cm">// Tambah classifier baru di atas embedding</span>
+<span class="kw">const</span> classifier = tf.<span class="fn">sequential</span>({
+  layers: [
+    tf.layers.<span class="fn">dense</span>({ units: <span class="num">100</span>, activation: <span class="str">'relu'</span>, inputShape: [<span class="num">1024</span>] }),
+    tf.layers.<span class="fn">dense</span>({ units: NUM_CLASSES, activation: <span class="str">'softmax'</span> })
+  ]
+});
+
+<span class="cm">// Latih hanya classifier (base model di-freeze)</span>
+classifier.<span class="fn">compile</span>({ optimizer: <span class="str">'adam'</span>, loss: <span class="str">'categoricalCrossentropy'</span> });
+<span class="kw">await</span> classifier.<span class="fn">fit</span>(embeddings, labels, { epochs: <span class="num">20</span> });</pre>
+    </div>
+
+    <div class="demo-box">
+      <h3>Demo Live — Mini Neural Net dari Nol</h3>
+      <p class="demo-desc">Simulasi klasifikasi sederhana: model belajar mengenali pola angka genap vs ganjil dari representasi biner 4-bit.</p>
+      <div class="demo-controls">
+        <button class="btn btn-primary" id="preBtn" onclick="runParityDemo()">▶ Train Even/Odd Detector</button>
+        <button class="btn btn-secondary" onclick="clearOutput('preOut')">✕ Clear</button>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="preProgress"></div></div>
+      <div class="output-area" id="preOut" style="margin-top:12px">// Model akan belajar mengenali angka genap vs ganjil dari representasi biner...</div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ====================== UTILITIES ======================
+function log(id, msg, type = 'info') {
+  const el = document.getElementById(id);
+  const span = document.createElement('span');
+  span.className = 'log-' + type;
+  span.textContent = msg + '\n';
+  if (el.textContent === '// Output akan muncul di sini...' ||
+      el.textContent.startsWith('//')) {
+    el.textContent = '';
+  }
+  el.appendChild(span);
+  el.scrollTop = el.scrollHeight;
+}
+
+function clearOutput(id) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = '';
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function setProgress(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.style.width = val + '%';
+}
+
+// ====================== TAB 2: TENSOR OPS ======================
+async function demoTensorOps() {
+  const id = 'tensorOut';
+  clearOutput(id);
+  log(id, '=== Membuat Tensor ===', 'info');
+
+  tf.tidy(() => {
+    const s = tf.scalar(42);
+    log(id, `scalar(42) → shape: ${JSON.stringify(s.shape)}`, 'success');
+
+    const v = tf.tensor1d([1, 2, 3, 4, 5]);
+    log(id, `tensor1d([1,2,3,4,5]) → shape: ${JSON.stringify(v.shape)}`, 'success');
+
+    const m = tf.tensor2d([[1,2,3],[4,5,6]]);
+    log(id, `tensor2d([[1,2,3],[4,5,6]]) → shape: ${JSON.stringify(m.shape)}`, 'success');
+
+    log(id, '\n=== Operasi Aritmatika ===', 'info');
+    const a = tf.tensor1d([1, 2, 3]);
+    const b = tf.tensor1d([4, 5, 6]);
+
+    const add = a.add(b).dataSync();
+    log(id, `[1,2,3] + [4,5,6] = [${Array.from(add)}]`, 'success');
+
+    const mul = a.mul(b).dataSync();
+    log(id, `[1,2,3] × [4,5,6] = [${Array.from(mul)}]`, 'success');
+
+    const dot = a.dot(b).dataSync();
+    log(id, `dot([1,2,3], [4,5,6]) = ${dot[0]} (= 4+10+18)`, 'success');
+
+    log(id, '\n=== Statistik ===', 'info');
+    const data = tf.tensor1d([3, 1, 4, 1, 5, 9, 2, 6]);
+    log(id, `data: [3,1,4,1,5,9,2,6]`, 'info');
+    log(id, `mean = ${data.mean().dataSync()[0].toFixed(3)}`, 'success');
+    log(id, `max  = ${data.max().dataSync()[0]}`, 'success');
+    log(id, `min  = ${data.min().dataSync()[0]}`, 'success');
+    log(id, `sum  = ${data.sum().dataSync()[0]}`, 'success');
+
+    log(id, '\n=== Reshape ===', 'info');
+    const flat = tf.tensor1d([1,2,3,4,5,6]);
+    const reshaped = flat.reshape([2, 3]);
+    log(id, `tensor1d([1..6]).reshape([2,3]) → shape: ${JSON.stringify(reshaped.shape)}`, 'success');
+
+    log(id, '\n✅ Memory dibebaskan otomatis oleh tf.tidy()', 'warn');
+  });
+}
+
+// ====================== TAB 4: REGRESSION ======================
+let lossHistory = [];
+let regModel = null;
+
+function drawLossChart(epochs, losses) {
+  const canvas = document.getElementById('lossCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, W, H);
+
+  if (losses.length < 2) return;
+
+  const maxLoss = Math.max(...losses);
+  const minLoss = Math.min(...losses);
+  const pad = { t: 20, r: 20, b: 30, l: 60 };
+  const chartW = W - pad.l - pad.r;
+  const chartH = H - pad.t - pad.b;
+
+  // Grid lines
+  ctx.strokeStyle = '#252a35';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + (chartH / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    const val = maxLoss - ((maxLoss - minLoss) / 4) * i;
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '10px JetBrains Mono';
+    ctx.fillText(val.toFixed(3), 4, y + 4);
+  }
+
+  // Loss line
+  ctx.strokeStyle = '#ff6b35';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  losses.forEach((l, i) => {
+    const x = pad.l + (i / (losses.length - 1)) * chartW;
+    const y = pad.t + chartH - ((l - minLoss) / (maxLoss - minLoss + 1e-10)) * chartH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad.t, 0, H - pad.b);
+  grad.addColorStop(0, 'rgba(255,107,53,0.15)');
+  grad.addColorStop(1, 'rgba(255,107,53,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  losses.forEach((l, i) => {
+    const x = pad.l + (i / (losses.length - 1)) * chartW;
+    const y = pad.t + chartH - ((l - minLoss) / (maxLoss - minLoss + 1e-10)) * chartH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(W - pad.r, H - pad.b);
+  ctx.lineTo(pad.l, H - pad.b);
+  ctx.fill();
+
+  // X labels
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '10px JetBrains Mono';
+  ctx.fillText('0', pad.l, H - 8);
+  ctx.fillText(epochs + '', W - pad.r - 10, H - 8);
+}
+
+async function runRegression() {
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Training...';
+  lossHistory = [];
+  clearOutput('regOut');
+
+  const N = 150;
+  const xs_raw = [], ys_raw = [];
+  for (let i = 0; i < N; i++) {
+    const x = Math.random() * 100;
+    xs_raw.push(x);
+    ys_raw.push(500 * x + 50000 + (Math.random() - 0.5) * 15000);
+  }
+
+  const xTensor = tf.tensor2d(xs_raw, [N, 1]);
+  const yTensor = tf.tensor2d(ys_raw, [N, 1]);
+
+  const xMin = xTensor.min(), xMax = xTensor.max();
+  const yMin = yTensor.min(), yMax = yTensor.max();
+  const xNorm = xTensor.sub(xMin).div(xMax.sub(xMin));
+  const yNorm = yTensor.sub(yMin).div(yMax.sub(yMin));
+
+  regModel = tf.sequential({
+    layers: [
+      tf.layers.dense({ units: 16, activation: 'relu', inputShape: [1] }),
+      tf.layers.dense({ units: 8, activation: 'relu' }),
+      tf.layers.dense({ units: 1 })
+    ]
+  });
+
+  regModel.compile({ optimizer: tf.train.adam(0.05), loss: 'meanSquaredError' });
+
+  const EPOCHS = 120;
+  log('regOut', 'Memulai training regresi linear...', 'info');
+  log('regOut', `Data: ${N} titik | Epochs: ${EPOCHS} | Optimizer: Adam(0.05)`, 'info');
+
+  await regModel.fit(xNorm, yNorm, {
+    epochs: EPOCHS,
+    batchSize: 32,
+    callbacks: {
+      onEpochEnd: (epoch, logs) => {
+        lossHistory.push(logs.loss);
+        document.getElementById('reg-epoch').textContent = epoch + 1;
+        document.getElementById('reg-loss').textContent = logs.loss.toFixed(4);
+        drawLossChart(EPOCHS, lossHistory);
+        if ((epoch + 1) % 20 === 0) {
+          log('regOut', `Epoch ${epoch+1}/${EPOCHS} → loss: ${logs.loss.toFixed(6)}`,
+              logs.loss < 0.01 ? 'success' : 'info');
+        }
+      }
+    }
+  });
+
+  // Predict for 75m²
+  const input75 = tf.scalar(75).sub(xMin).div(xMax.sub(xMin)).reshape([1,1]);
+  const predNorm = regModel.predict(input75);
+  const predReal = predNorm.mul(yMax.sub(yMin)).add(yMin).dataSync()[0];
+  document.getElementById('reg-pred').textContent = 'Rp' + (predReal/1e6).toFixed(0) + 'M';
+
+  log('regOut', '\n✅ Training selesai!', 'success');
+  log('regOut', `Prediksi harga rumah 75m²: Rp${(predReal/1e6).toFixed(1)} juta`, 'success');
+  log('regOut', `(Nilai sebenarnya: Rp${(500*75+50000)/1000} juta)`, 'warn');
+
+  btn.disabled = false;
+  btn.textContent = '▶ Train Ulang';
+}
+
+// ====================== TAB 5: XOR ======================
+async function runXOR() {
+  const btn = document.getElementById('xorBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Training XOR...';
+  clearOutput('xorOut');
+  setProgress('xorProgress', 0);
+
+  log('xorOut', 'Training XOR classifier...', 'info');
+  log('xorOut', 'XOR truth table: [0,0]→0, [0,1]→1, [1,0]→1, [1,1]→0', 'info');
+
+  const xorX = tf.tensor2d([[0,0],[0,1],[1,0],[1,1]]);
+  const xorY = tf.tensor2d([[1,0],[0,1],[0,1],[1,0]]);
+
+  const model = tf.sequential({
+    layers: [
+      tf.layers.dense({ units: 8, activation: 'relu', inputShape: [2] }),
+      tf.layers.dense({ units: 8, activation: 'relu' }),
+      tf.layers.dense({ units: 2, activation: 'softmax' })
+    ]
+  });
+
+  model.compile({ optimizer: 'adam', loss: 'categoricalCrossentropy', metrics: ['accuracy'] });
+
+  const EPOCHS = 400;
+  await model.fit(xorX, xorY, {
+    epochs: EPOCHS,
+    verbose: 0,
+    callbacks: {
+      onEpochEnd: (epoch) => {
+        setProgress('xorProgress', ((epoch + 1) / EPOCHS) * 100);
+      }
+    }
+  });
+
+  log('xorOut', '\nTesting prediksi:', 'info');
+  const tests = [[0,0],[0,1],[1,0],[1,1]];
+  const expected = [0, 1, 1, 0];
+  let correct = 0;
+
+  tests.forEach((t, i) => {
+    const pred = model.predict(tf.tensor2d([t]));
+    const vals = Array.from(pred.dataSync());
+    const kelas = vals[1] > vals[0] ? 1 : 0;
+    const ok = kelas === expected[i];
+    if (ok) correct++;
+    log('xorOut',
+      `XOR(${t[0]}, ${t[1]}) = ${kelas} (expected: ${expected[i]}) ${ok ? '✓' : '✗'}  | conf: ${(Math.max(...vals)*100).toFixed(1)}%`,
+      ok ? 'success' : 'error');
+  });
+
+  log('xorOut', `\nAkurasi: ${correct}/4 = ${(correct/4*100).toFixed(0)}%`,
+    correct === 4 ? 'success' : 'warn');
+
+  setProgress('xorProgress', 100);
+  btn.disabled = false;
+  btn.textContent = '▶ Train Ulang';
+}
+
+// ====================== CLASSIFICATION 2D ======================
+async function runClassification() {
+  const btn = document.getElementById('classBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Training...';
+  clearOutput('classOut');
+
+  const canvas = document.getElementById('classCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  // Generate 2 spiral classes
+  const N = 100;
+  const xs = [], ys = [];
+  for (let cls = 0; cls < 2; cls++) {
+    for (let i = 0; i < N; i++) {
+      const r = (i / N) * 4;
+      const t = (i / N) * 3 * Math.PI + (cls * Math.PI) + (Math.random() - 0.5) * 0.4;
+      xs.push([r * Math.cos(t), r * Math.sin(t)]);
+      ys.push(cls);
+    }
+  }
+
+  // Draw raw data
+  function drawData() {
+    ctx.fillStyle = '#0d1117';
+    ctx.fillRect(0, 0, W, H);
+    xs.forEach(([x, y], i) => {
+      const cx = (x / 4 + 1) / 2 * W;
+      const cy = (y / 4 + 1) / 2 * H;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fillStyle = ys[i] === 0 ? '#ff6b35' : '#00d4ff';
+      ctx.fill();
+    });
+  }
+  drawData();
+
+  const xTensor = tf.tensor2d(xs);
+  const yOneHot = tf.oneHot(tf.tensor1d(ys, 'int32'), 2);
+
+  const model = tf.sequential({
+    layers: [
+      tf.layers.dense({ units: 32, activation: 'relu', inputShape: [2] }),
+      tf.layers.dense({ units: 16, activation: 'relu' }),
+      tf.layers.dense({ units: 2, activation: 'softmax' })
+    ]
+  });
+
+  model.compile({ optimizer: tf.train.adam(0.02), loss: 'categoricalCrossentropy', metrics: ['accuracy'] });
+
+  const epochs = parseInt(document.getElementById('classEpochs').value) || 100;
+  log('classOut', `Training ${N*2} titik spiral | ${epochs} epochs...`, 'info');
+
+  await model.fit(xTensor, yOneHot, {
+    epochs,
+    batchSize: 32,
+    verbose: 0,
+    callbacks: {
+      onEpochEnd: (epoch, logs) => {
+        if ((epoch + 1) === epochs) {
+          log('classOut', `Final → loss: ${logs.loss.toFixed(4)}, acc: ${(logs.acc*100).toFixed(1)}%`, 'success');
+        }
+      }
+    }
+  });
+
+  // Draw decision boundary
+  const res = 40;
+  for (let i = 0; i < res; i++) {
+    for (let j = 0; j < res; j++) {
+      const x = (i / res) * 8 - 4;
+      const y = (j / res) * 6 - 3;
+      const pred = model.predict(tf.tensor2d([[x, y]])).dataSync();
+      const alpha = Math.abs(pred[0] - pred[1]) * 0.3;
+      const color = pred[0] > pred[1] ? `rgba(255,107,53,${alpha})` : `rgba(0,212,255,${alpha})`;
+      const px = (x / 4 + 1) / 2 * W;
+      const py = (y / 4 + 1) / 2 * H;
+      ctx.fillStyle = color;
+      ctx.fillRect(px - W/res/2, py - H/res/2, W/res + 1, H/res + 1);
+    }
+  }
+  drawData();
+
+  btn.disabled = false;
+  btn.textContent = '▶ Train Ulang';
+}
+
+// ====================== TAB 6: PARITY DEMO ======================
+async function runParityDemo() {
+  const btn = document.getElementById('preBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Training...';
+  clearOutput('preOut');
+  setProgress('preProgress', 0);
+
+  log('preOut', 'Training model genap/ganjil dari representasi biner 4-bit...', 'info');
+  log('preOut', 'Input: [b3,b2,b1,b0] → Output: [genap, ganjil]', 'info');
+  log('preOut', 'Contoh: 6 = [0,1,1,0] → genap\n', 'info');
+
+  // Generate all 4-bit numbers (0-15)
+  const inputs = [], labels = [];
+  for (let n = 0; n < 16; n++) {
+    inputs.push([(n>>3)&1, (n>>2)&1, (n>>1)&1, n&1]);
+    labels.push(n % 2 === 0 ? 0 : 1);
+  }
+
+  const xT = tf.tensor2d(inputs);
+  const yT = tf.oneHot(tf.tensor1d(labels, 'int32'), 2);
+
+  const model = tf.sequential({
+    layers: [
+      tf.layers.dense({ units: 16, activation: 'relu', inputShape: [4] }),
+      tf.layers.dense({ units: 8, activation: 'relu' }),
+      tf.layers.dense({ units: 2, activation: 'softmax' })
+    ]
+  });
+
+  model.compile({ optimizer: tf.train.adam(0.01), loss: 'categoricalCrossentropy', metrics: ['accuracy'] });
+
+  const EPOCHS = 300;
+  await model.fit(xT, yT, {
+    epochs: EPOCHS,
+    verbose: 0,
+    callbacks: {
+      onEpochEnd: (epoch) => {
+        setProgress('preProgress', ((epoch+1)/EPOCHS)*100);
+      }
+    }
+  });
+
+  log('preOut', 'Hasil prediksi untuk 0-15:', 'info');
+  let correct = 0;
+  for (let n = 0; n < 16; n++) {
+    const input = [(n>>3)&1, (n>>2)&1, (n>>1)&1, n&1];
+    const pred = model.predict(tf.tensor2d([input])).dataSync();
+    const isOdd = pred[1] > pred[0];
+    const label = isOdd ? 'ganjil' : 'genap';
+    const expected = n % 2 === 0 ? 'genap' : 'ganjil';
+    const ok = label === expected;
+    if (ok) correct++;
+    log('preOut', `${n.toString().padStart(2)} [${input}] → ${label.padEnd(6)} ${ok ? '✓' : '✗'}  (conf: ${(Math.max(...pred)*100).toFixed(0)}%)`, ok ? 'success' : 'error');
+  }
+
+  log('preOut', `\n✅ Akurasi: ${correct}/16 = ${(correct/16*100).toFixed(0)}%`, correct >= 14 ? 'success' : 'warn');
+
+  btn.disabled = false;
+  btn.textContent = '▶ Train Ulang';
+  setProgress('preProgress', 100);
+}
+</script>
+
+</body>
+</html>
