@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Permutasi & Kombinasi</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#080c14;
+  --bg2:#0d1220;
+  --bg3:#111827;
+  --card:#131c2e;
+  --card2:#1a2540;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.14);
+  --cyan:#00e5ff;
+  --cyan2:#00b8d9;
+  --amber:#ffb300;
+  --amber2:#ff8f00;
+  --green:#00e676;
+  --pink:#f06292;
+  --text:#e8eaf0;
+  --muted:#7a8499;
+  --faint:#3a4155;
+  --r:8px;
+  --r2:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ── BG GRID ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,255,0.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  padding:6rem 2rem 4rem;
+  text-align:center;
+  overflow:hidden;
+}
+.hero-glow{
+  position:absolute;
+  top:-80px;left:50%;transform:translateX(-50%);
+  width:600px;height:300px;
+  background:radial-gradient(ellipse,rgba(0,229,255,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-tag{
+  display:inline-block;
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  border:1px solid rgba(0,229,255,0.3);
+  padding:5px 14px;
+  border-radius:100px;
+  margin-bottom:1.5rem;
+}
+.hero h1{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2.8rem,7vw,5rem);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-.02em;
+}
+.hero h1 span.c{color:var(--cyan);}
+.hero h1 span.a{color:var(--amber);}
+.hero p.lead{
+  max-width:560px;
+  margin:1.2rem auto 0;
+  color:var(--muted);
+  font-size:1.05rem;
+  font-weight:300;
+}
+
+/* ── NAV ── */
+.sticky-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(8,12,20,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 1.5rem;
+  display:flex;align-items:center;gap:.5rem;
+  overflow-x:auto;
+}
+.sticky-nav a{
+  font-family:'DM Mono',monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  text-decoration:none;
+  padding:6px 14px;
+  border-radius:100px;
+  white-space:nowrap;
+  transition:all .2s;
+  border:1px solid transparent;
+}
+.sticky-nav a:hover{color:var(--text);border-color:var(--border2);}
+.sticky-nav a.active{color:var(--bg);background:var(--cyan);border-color:var(--cyan);}
+
+/* ── LAYOUT ── */
+main{max-width:960px;margin:0 auto;padding:3rem 1.5rem 6rem;position:relative;z-index:1;}
+section{margin-bottom:5rem;}
+
+/* ── SECTION HEADER ── */
+.sec-head{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:2rem;
+}
+.sec-icon{
+  width:44px;height:44px;
+  border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;
+  flex-shrink:0;
+}
+.ic-cyan{background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.25);}
+.ic-amber{background:rgba(255,179,0,0.12);border:1px solid rgba(255,179,0,0.25);}
+.ic-green{background:rgba(0,230,118,0.12);border:1px solid rgba(0,230,118,0.25);}
+.ic-pink{background:rgba(240,98,146,0.12);border:1px solid rgba(240,98,146,0.25);}
+
+.sec-head-text h2{
+  font-family:'Syne',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  letter-spacing:-.01em;
+  line-height:1.2;
+}
+.sec-head-text .sub{
+  font-size:.8rem;
+  font-family:'DM Mono',monospace;
+  color:var(--muted);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.divider{flex:1;height:1px;background:var(--border);}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r2);
+  padding:1.5rem 1.75rem;
+  margin:1.2rem 0;
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.02),transparent);
+  pointer-events:none;
+}
+.card.cyan-card{border-color:rgba(0,229,255,0.2);background:rgba(0,229,255,0.04);}
+.card.amber-card{border-color:rgba(255,179,0,0.2);background:rgba(255,179,0,0.04);}
+.card.green-card{border-color:rgba(0,230,118,0.2);background:rgba(0,230,118,0.04);}
+
+.card-label{
+  font-family:'DM Mono',monospace;
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-bottom:.7rem;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.card-label.cy{color:var(--cyan);}
+.card-label.am{color:var(--amber);}
+.card-label.gr{color:var(--green);}
+.card-label.pk{color:var(--pink);}
+.card-label::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;display:block;}
+
+.card-title{
+  font-family:'Syne',sans-serif;
+  font-size:1.1rem;
+  font-weight:700;
+  margin-bottom:.6rem;
+}
+.card p{color:var(--muted);font-size:.95rem;margin-bottom:.5rem;}
+.card p:last-child{margin-bottom:0;}
+.card strong{color:var(--text);font-weight:500;}
+
+/* ── FORMULA BOX ── */
+.formula{
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  padding:1rem 1.5rem;
+  margin:1rem 0;
+  text-align:center;
+  font-family:'DM Mono',monospace;
+  font-size:1.1rem;
+  color:var(--text);
+  overflow-x:auto;
+  letter-spacing:.02em;
+}
+.formula .hl-c{color:var(--cyan);}
+.formula .hl-a{color:var(--amber);}
+.formula .hl-g{color:var(--green);}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:.8rem;margin:1rem 0;}
+.step{
+  display:flex;gap:1rem;align-items:flex-start;
+  background:var(--card2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:.9rem 1.1rem;
+}
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  flex-shrink:0;margin-top:1px;
+}
+.step-num.cn{background:rgba(0,229,255,0.15);color:var(--cyan);}
+.step-num.an{background:rgba(255,179,0,0.15);color:var(--amber);}
+.step p{color:var(--muted);font-size:.9rem;margin:0;}
+.step p strong{color:var(--text);}
+
+/* ── VISUAL BOXES ── */
+.slot-row{
+  display:flex;gap:.5rem;align-items:center;
+  flex-wrap:wrap;
+  margin:1rem 0;
+}
+.slot{
+  width:52px;height:52px;
+  border-radius:var(--r);
+  border:2px solid var(--cyan);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;
+  color:var(--cyan);
+  background:rgba(0,229,255,0.07);
+  transition:all .3s;
+  position:relative;
+}
+.slot.filled{border-color:var(--amber);color:var(--amber);background:rgba(255,179,0,0.1);}
+.slot-count{
+  font-family:'DM Mono',monospace;
+  font-size:11px;color:var(--muted);
+  margin-top:4px;text-align:center;
+}
+.x-sign{font-size:1.2rem;color:var(--faint);}
+
+/* ── COMPARISON GRID ── */
+.compare-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+  margin:1.2rem 0;
+}
+@media(max-width:580px){.compare-grid{grid-template-columns:1fr;}}
+.compare-card{
+  border-radius:var(--r2);
+  padding:1.5rem;
+  border:1px solid;
+}
+.compare-card.perm{border-color:rgba(0,229,255,0.3);background:rgba(0,229,255,0.05);}
+.compare-card.komb{border-color:rgba(255,179,0,0.3);background:rgba(255,179,0,0.05);}
+.compare-card h3{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;
+  margin-bottom:.8rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.compare-card.perm h3{color:var(--cyan);}
+.compare-card.komb h3{color:var(--amber);}
+.compare-card ul{list-style:none;padding:0;}
+.compare-card li{
+  font-size:.88rem;color:var(--muted);
+  padding:.3rem 0;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.5rem;
+}
+.compare-card li::before{content:'→';color:var(--faint);font-size:.8rem;}
+.compare-card li:last-child{border-bottom:none;}
+
+/* ── INTERACTIVE CALCULATOR ── */
+.calc-box{
+  background:var(--bg2);
+  border:1px solid var(--border2);
+  border-radius:var(--r2);
+  padding:2rem;
+  margin:1.5rem 0;
+}
+.calc-title{
+  font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;
+  margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.calc-title span.dot{
+  width:8px;height:8px;border-radius:50%;
+  animation:pulse 1.5s ease-in-out infinite;
+}
+.dot-c{background:var(--cyan);}
+.dot-a{background:var(--amber);}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+.input-row{
+  display:flex;align-items:center;gap:1rem;
+  flex-wrap:wrap;
+  margin-bottom:1.2rem;
+}
+.input-group{display:flex;flex-direction:column;gap:.4rem;}
+.input-group label{
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+}
+.input-group input{
+  width:90px;
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:var(--r);
+  color:var(--text);
+  font-family:'DM Mono',monospace;
+  font-size:1.1rem;
+  padding:.5rem .8rem;
+  outline:none;
+  transition:border-color .2s;
+}
+.input-group input:focus{border-color:var(--cyan);}
+.input-group input.amber:focus{border-color:var(--amber);}
+
+.btn-calc{
+  padding:.6rem 1.4rem;
+  border-radius:var(--r);
+  border:none;
+  font-family:'Syne',sans-serif;
+  font-size:.9rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  margin-top:1.4rem;
+}
+.btn-c{background:var(--cyan);color:var(--bg);}
+.btn-c:hover{background:#33ecff;transform:translateY(-2px);}
+.btn-a{background:var(--amber);color:var(--bg);}
+.btn-a:hover{background:#ffd033;transform:translateY(-2px);}
+
+.result-box{
+  margin-top:1.2rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1rem 1.25rem;
+  min-height:60px;
+  transition:all .3s;
+}
+.result-label{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:.4rem;
+}
+.result-value{
+  font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;
+  color:var(--cyan);
+}
+.result-value.am{color:var(--amber);}
+.result-steps{
+  margin-top:.6rem;font-size:.85rem;color:var(--muted);
+  font-family:'DM Mono',monospace;line-height:1.9;
+}
+.error{color:var(--pink)!important;font-size:.9rem!important;}
+
+/* ── VISUAL PERMUTATION DEMO ── */
+.perm-demo{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r2);
+  padding:1.5rem;
+  margin:1.2rem 0;
+}
+.demo-title{
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);
+  margin-bottom:1rem;
+}
+.balls-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem;}
+.ball{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;
+  cursor:pointer;
+  transition:transform .2s,opacity .2s;
+  user-select:none;
+  border:2px solid transparent;
+}
+.ball:hover{transform:scale(1.1);}
+.ball.selected{transform:scale(1.15);border-color:white;opacity:1!important;}
+.ball.dimmed{opacity:.3;}
+.perm-output{
+  min-height:48px;
+  display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;
+}
+.perm-slot{
+  width:44px;height:44px;border-radius:var(--r);
+  border:2px dashed var(--faint);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;
+  transition:all .3s;
+}
+.perm-slot.filled{border-style:solid;border-color:var(--cyan);}
+.perm-result-text{
+  font-family:'DM Mono',monospace;font-size:.85rem;color:var(--muted);
+  margin-top:.8rem;
+}
+.perm-count-badge{
+  display:inline-block;
+  background:rgba(0,229,255,0.12);
+  border:1px solid rgba(0,229,255,0.25);
+  color:var(--cyan);
+  border-radius:100px;
+  padding:3px 12px;
+  font-family:'DM Mono',monospace;font-size:.85rem;
+  margin-top:.6rem;
+}
+.btn-reset{
+  margin-top:.8rem;padding:.4rem 1rem;
+  background:transparent;border:1px solid var(--border2);
+  border-radius:var(--r);color:var(--muted);
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.btn-reset:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── PASCAL'S TRIANGLE ── */
+.pascal-wrap{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r2);
+  padding:1.5rem;
+  margin:1.2rem 0;
+  overflow-x:auto;
+}
+.pascal-row{
+  display:flex;gap:.3rem;
+  justify-content:center;
+  margin-bottom:.3rem;
+}
+.pc{
+  width:40px;height:40px;
+  border-radius:var(--r);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:12px;font-weight:500;
+  background:var(--card2);
+  border:1px solid var(--border);
+  color:var(--muted);
+  transition:all .3s;
+  cursor:default;
+  position:relative;
+}
+.pc:hover{background:var(--card);color:var(--text);transform:scale(1.1);z-index:2;}
+.pc.hl-am{background:rgba(255,179,0,0.15);border-color:rgba(255,179,0,0.4);color:var(--amber);}
+.pc.hl-cy{background:rgba(0,229,255,0.15);border-color:rgba(0,229,255,0.4);color:var(--cyan);}
+
+/* ── TABLE ── */
+.styled-table{width:100%;border-collapse:collapse;font-size:.9rem;}
+.styled-table th{
+  font-family:'DM Mono',monospace;font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  padding:.6rem 1rem;border-bottom:1px solid var(--border2);text-align:left;
+}
+.styled-table td{
+  padding:.65rem 1rem;border-bottom:1px solid var(--border);
+  color:var(--muted);vertical-align:top;
+}
+.styled-table tr:last-child td{border-bottom:none;}
+.styled-table td:first-child{color:var(--text);font-weight:500;}
+.badge{
+  display:inline-block;padding:2px 10px;border-radius:100px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.05em;
+}
+.badge.c{background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.2);}
+.badge.a{background:rgba(255,179,0,0.1);color:var(--amber);border:1px solid rgba(255,179,0,0.2);}
+.badge.g{background:rgba(0,230,118,0.1);color:var(--green);border:1px solid rgba(0,230,118,0.2);}
+
+/* ── LATIHAN SOAL ── */
+.quiz-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--r2);
+  padding:1.5rem;
+  margin:.8rem 0;
+}
+.quiz-q{
+  font-size:.95rem;color:var(--text);margin-bottom:1rem;
+  display:flex;gap:.8rem;align-items:flex-start;
+}
+.q-num{
+  font-family:'DM Mono',monospace;font-size:11px;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:var(--r);padding:3px 8px;color:var(--cyan);
+  flex-shrink:0;margin-top:2px;
+}
+.quiz-opts{display:flex;flex-direction:column;gap:.4rem;}
+.quiz-opt{
+  display:flex;align-items:center;gap:.7rem;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);padding:.6rem 1rem;
+  cursor:pointer;transition:all .2s;font-size:.9rem;color:var(--muted);
+}
+.quiz-opt:hover{border-color:var(--border2);color:var(--text);}
+.quiz-opt.correct{border-color:var(--green);background:rgba(0,230,118,0.07);color:var(--green);}
+.quiz-opt.wrong{border-color:var(--pink);background:rgba(240,98,146,0.07);color:var(--pink);}
+.quiz-opt input{display:none;}
+.opt-letter{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--card2);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Mono',monospace;font-size:11px;flex-shrink:0;
+}
+.quiz-feedback{
+  margin-top:.8rem;font-size:.85rem;padding:.6rem 1rem;
+  border-radius:var(--r);display:none;
+}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:rgba(0,230,118,0.1);border:1px solid rgba(0,230,118,0.2);color:var(--green);}
+.quiz-feedback.no{background:rgba(240,98,146,0.1);border:1px solid rgba(240,98,146,0.2);color:var(--pink);}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.fade-up{animation:fadeUp .5s ease both;}
+.fade-up:nth-child(2){animation-delay:.08s}
+.fade-up:nth-child(3){animation-delay:.16s}
+.fade-up:nth-child(4){animation-delay:.24s}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--faint);border-radius:3px}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:2rem;
+  border-top:1px solid var(--border);
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--faint);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-tag">Matematika Diskrit & Kombinatorika</div>
+  <h1>
+    <span class="c">Permutasi</span><br/>
+    &amp; <span class="a">Kombinasi</span>
+  </h1>
+  <p class="lead">Materi lengkap, interaktif, dan visual — dari konsep dasar hingga soal terapan.</p>
+</div>
+
+<!-- NAV -->
+<nav class="sticky-nav" id="nav">
+  <a href="#konsep" class="active">Konsep</a>
+  <a href="#permutasi">Permutasi</a>
+  <a href="#kombinasi">Kombinasi</a>
+  <a href="#perbedaan">Perbedaan</a>
+  <a href="#kalkulator">Kalkulator</a>
+  <a href="#pascal">Pascal</a>
+  <a href="#terapan">Terapan</a>
+  <a href="#latihan">Latihan</a>
+</nav>
+
+<main>
+
+<!-- ══ 1. KONSEP DASAR ══ -->
+<section id="konsep">
+  <div class="sec-head">
+    <div class="sec-icon ic-cyan">🎲</div>
+    <div class="sec-head-text">
+      <h2>Konsep Dasar</h2>
+      <div class="sub">Kaidah Dasar Pencacahan</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label cy">Definisi</div>
+    <div class="card-title">Apa itu Permutasi & Kombinasi?</div>
+    <p>Permutasi dan kombinasi adalah metode untuk <strong>menghitung banyaknya cara memilih</strong> sejumlah objek dari suatu himpunan. Perbedaan utamanya ada pada <strong>urutan</strong>: permutasi memperhatikan urutan, kombinasi tidak.</p>
+  </div>
+
+  <div class="compare-grid fade-up">
+    <div class="compare-card perm">
+      <h3>⟶ Permutasi</h3>
+      <ul>
+        <li>Urutan <strong style="color:var(--cyan)">diperhatikan</strong></li>
+        <li>AB ≠ BA</li>
+        <li>"Berapa cara menyusun?"</li>
+        <li>Kode PIN, podium lomba</li>
+      </ul>
+    </div>
+    <div class="compare-card komb">
+      <h3>⊂ Kombinasi</h3>
+      <ul>
+        <li>Urutan <strong style="color:var(--amber)">diabaikan</strong></li>
+        <li>AB = BA</li>
+        <li>"Berapa cara memilih?"</li>
+        <li>Tim, komite, lotere</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label cy">Kaidah Perkalian</div>
+    <div class="card-title">Aturan Dasar Pencacahan</div>
+    <p>Jika suatu pekerjaan dapat diselesaikan dalam <strong>k tahap</strong>, di mana tahap 1 bisa dilakukan dengan n₁ cara, tahap 2 dengan n₂ cara, ..., tahap k dengan n_k cara, maka total cara adalah:</p>
+    <div class="formula">
+      <span class="hl-c">n₁</span> × <span class="hl-c">n₂</span> × <span class="hl-c">n₃</span> × ··· × <span class="hl-c">n_k</span>
+    </div>
+    <p><strong>Contoh:</strong> Jika ada 3 kemeja dan 4 celana, banyak pasangan outfit = 3 × 4 = <strong>12 cara</strong>.</p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label cy">Faktorial</div>
+    <div class="card-title">n! (n Faktorial)</div>
+    <p>Faktorial adalah operasi dasar dalam permutasi dan kombinasi:</p>
+    <div class="formula">
+      <span class="hl-c">n!</span> = n × (n−1) × (n−2) × ··· × 2 × 1
+    </div>
+    <div class="formula" style="font-size:.95rem;">
+      0! = 1 &nbsp;|&nbsp; 1! = 1 &nbsp;|&nbsp; 5! = 120 &nbsp;|&nbsp; 10! = 3.628.800
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. PERMUTASI ══ -->
+<section id="permutasi">
+  <div class="sec-head">
+    <div class="sec-icon ic-cyan">🔢</div>
+    <div class="sec-head-text">
+      <h2>Permutasi</h2>
+      <div class="sub">Order Matters</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card cyan-card">
+    <div class="card-label cy">Definisi Permutasi</div>
+    <div class="card-title">Permutasi r Objek dari n Objek</div>
+    <p>Banyaknya susunan <strong>terurut</strong> r objek yang dipilih dari n objek yang tersedia (tanpa pengulangan):</p>
+    <div class="formula">
+      <span class="hl-c">P(n,r)</span> = <span class="hl-c">ⁿP_r</span> = n! / (n−r)!
+    </div>
+    <p>dengan syarat <strong>0 ≤ r ≤ n</strong>.</p>
+  </div>
+
+  <!-- Visual Demo -->
+  <div class="perm-demo">
+    <div class="demo-title">▸ Demo Visual — Pilih 2 dari 5 Bola (Permutasi)</div>
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:.8rem;">Klik 2 bola untuk menyusun. Urutan berbeda = susunan berbeda!</div>
+    <div class="balls-row" id="balls"></div>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:.5rem;font-family:'DM Mono',monospace;">SUSUNAN TERPILIH:</div>
+    <div class="perm-output" id="perm-output">
+      <div class="perm-slot" id="ps0"></div>
+      <div class="perm-slot" id="ps1"></div>
+    </div>
+    <div class="perm-result-text" id="perm-result-text">Pilih bola pertama...</div>
+    <div id="perm-count-badge" style="display:none" class="perm-count-badge">P(5,2) = 20 susunan berbeda</div>
+    <button class="btn-reset" onclick="resetPerm()">↺ Reset</button>
+  </div>
+
+  <div class="card">
+    <div class="card-label cy">Permutasi Semua Objek</div>
+    <div class="card-title">Permutasi n dari n Objek</div>
+    <p>Jika semua n objek disusun (r = n):</p>
+    <div class="formula"><span class="hl-c">P(n,n)</span> = n!</div>
+    <p><strong>Contoh:</strong> 4 orang berbaris = 4! = 24 cara</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label cy">Permutasi dengan Pengulangan</div>
+    <div class="card-title">Objek Boleh Diulang</div>
+    <p>Jika setiap posisi boleh diisi oleh objek yang sama (dengan pengembalian):</p>
+    <div class="formula"><span class="hl-c">P</span>(n, r) = <span class="hl-c">nʳ</span></div>
+    <p><strong>Contoh:</strong> PIN 4 digit dari angka 0–9 = 10⁴ = 10.000 kemungkinan</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label cy">Permutasi Objek Tidak Berbeda</div>
+    <div class="card-title">Ada Objek yang Sama</div>
+    <p>Jika ada n objek terdiri dari n₁ objek jenis 1, n₂ objek jenis 2, ..., n_k objek jenis k:</p>
+    <div class="formula">
+      <span class="hl-c">P</span> = n! / (n₁! × n₂! × ··· × n_k!)
+    </div>
+    <p><strong>Contoh:</strong> Susunan huruf "MATEMATIKA" (10 huruf, M=2, A=3, T=2, E=1, I=1, K=1) = 10! / (2!·3!·2!·1!·1!·1!) = <strong>151.200</strong></p>
+  </div>
+
+  <div class="card">
+    <div class="card-label cy">Permutasi Siklis</div>
+    <div class="card-title">Susunan Melingkar</div>
+    <p>Jika n objek disusun dalam lingkaran, satu penyusunan dianggap sama jika hanya berputar:</p>
+    <div class="formula"><span class="hl-c">P_siklis</span> = (n − 1)!</div>
+    <p><strong>Contoh:</strong> 5 orang duduk melingkar = (5−1)! = 4! = 24 cara</p>
+  </div>
+
+  <!-- Contoh Lengkap Permutasi -->
+  <div class="card">
+    <div class="card-label cy">Contoh Soal</div>
+    <div class="card-title">Dari 8 pelari, berapa cara menentukan juara 1, 2, 3?</div>
+    <div class="steps">
+      <div class="step"><span class="step-num cn">1</span><p><strong>Identifikasi:</strong> n = 8 pelari, r = 3 posisi, urutan penting (juara 1 ≠ juara 2)</p></div>
+      <div class="step"><span class="step-num cn">2</span><p><strong>Gunakan:</strong> P(n,r) = n! / (n−r)! = P(8,3) = 8! / (8−3)! = 8! / 5!</p></div>
+      <div class="step"><span class="step-num cn">3</span><p><strong>Hitung:</strong> = 8 × 7 × 6 = <strong style="color:var(--cyan)">336 cara</strong></p></div>
+    </div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem;">
+      <div class="slot"><div>8</div><div class="slot-count">J.1</div></div>
+      <div class="x-sign">×</div>
+      <div class="slot filled"><div>7</div><div class="slot-count">J.2</div></div>
+      <div class="x-sign">×</div>
+      <div class="slot filled"><div>6</div><div class="slot-count">J.3</div></div>
+      <div class="x-sign">=</div>
+      <div style="display:flex;align-items:center;font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--cyan)">336</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 3. KOMBINASI ══ -->
+<section id="kombinasi">
+  <div class="sec-head">
+    <div class="sec-icon ic-amber">⊂</div>
+    <div class="sec-head-text">
+      <h2>Kombinasi</h2>
+      <div class="sub">Order Does Not Matter</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card amber-card">
+    <div class="card-label am">Definisi Kombinasi</div>
+    <div class="card-title">Kombinasi r Objek dari n Objek</div>
+    <p>Banyaknya cara memilih r objek dari n objek <strong>tanpa memperhatikan urutan</strong> (tanpa pengulangan):</p>
+    <div class="formula">
+      <span class="hl-a">C(n,r)</span> = <span class="hl-a">ⁿC_r</span> = <span class="hl-a">(n r)</span> = n! / (r! × (n−r)!)
+    </div>
+    <p>Notasi <strong>(n r)</strong> dibaca "n pilih r" atau "binomial koefisien n dan r".</p>
+  </div>
+
+  <div class="card">
+    <div class="card-label am">Hubungan dengan Permutasi</div>
+    <div class="card-title">Mengapa dibagi r!?</div>
+    <p>Dalam permutasi, {A,B,C} dihitung sebagai 6 susunan berbeda (ABC, ACB, BAC, BCA, CAB, CBA). Dalam kombinasi, keenamnya adalah <strong>himpunan yang sama</strong>. Maka:</p>
+    <div class="formula">
+      <span class="hl-a">C(n,r)</span> = <span class="hl-c">P(n,r)</span> / r!
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label am">Sifat-Sifat Kombinasi</div>
+    <div class="card-title">Identitas Penting</div>
+    <div class="formula" style="font-size:.95rem;text-align:left;line-height:2.2;">
+      <span class="hl-a">C(n,0)</span> = C(n,n) = 1<br/>
+      <span class="hl-a">C(n,1)</span> = C(n,n−1) = n<br/>
+      <span class="hl-a">C(n,r)</span> = C(n, n−r) &nbsp;<span style="color:var(--muted);font-size:.85rem;">(simetri)</span><br/>
+      <span class="hl-a">C(n,r)</span> = C(n−1,r−1) + C(n−1,r) &nbsp;<span style="color:var(--muted);font-size:.85rem;">(Pascal)</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label am">Kombinasi dengan Pengulangan</div>
+    <div class="card-title">Objek Boleh Dipilih Berulang</div>
+    <p>Jika setiap objek boleh dipilih lebih dari sekali (multiset):</p>
+    <div class="formula">
+      <span class="hl-a">C</span>(n+r−1, r)
+    </div>
+    <p><strong>Contoh:</strong> Memilih 3 es krim dari 5 rasa (boleh sama) = C(5+3−1, 3) = C(7,3) = 35 cara</p>
+  </div>
+
+  <!-- Contoh Lengkap Kombinasi -->
+  <div class="card">
+    <div class="card-label am">Contoh Soal</div>
+    <div class="card-title">Dari 10 siswa, dipilih 3 untuk mewakili sekolah. Berapa caranya?</div>
+    <div class="steps">
+      <div class="step"><span class="step-num an">1</span><p><strong>Identifikasi:</strong> n = 10, r = 3, urutan tidak penting (tim = himpunan)</p></div>
+      <div class="step"><span class="step-num an">2</span><p><strong>Gunakan:</strong> C(10,3) = 10! / (3! × 7!)</p></div>
+      <div class="step"><span class="step-num an">3</span><p><strong>Hitung:</strong> = (10 × 9 × 8) / (3 × 2 × 1) = 720 / 6 = <strong style="color:var(--amber)">120 cara</strong></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 4. PERBEDAAN ══ -->
+<section id="perbedaan">
+  <div class="sec-head">
+    <div class="sec-icon ic-green">⇄</div>
+    <div class="sec-head-text">
+      <h2>Perbandingan Lengkap</h2>
+      <div class="sub">Permutasi vs Kombinasi</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <table class="styled-table">
+    <tr>
+      <th>Aspek</th>
+      <th>Permutasi</th>
+      <th>Kombinasi</th>
+    </tr>
+    <tr>
+      <td>Urutan</td>
+      <td><span class="badge c">Diperhatikan</span></td>
+      <td><span class="badge a">Diabaikan</span></td>
+    </tr>
+    <tr>
+      <td>Formula</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--cyan)">n! / (n−r)!</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--amber)">n! / (r!(n−r)!)</td>
+    </tr>
+    <tr>
+      <td>Nilai relatif</td>
+      <td>P(n,r) ≥ C(n,r)</td>
+      <td>C(n,r) ≤ P(n,r)</td>
+    </tr>
+    <tr>
+      <td>Kata kunci</td>
+      <td>menyusun, merangkai, mengatur, urutan</td>
+      <td>memilih, menentukan, membentuk tim</td>
+    </tr>
+    <tr>
+      <td>Contoh nyata</td>
+      <td>Kode PIN, podium lomba, anagram</td>
+      <td>Tim basket, komite, kartu remi</td>
+    </tr>
+    <tr>
+      <td>P(5,3) vs C(5,3)</td>
+      <td style="color:var(--cyan);font-family:'DM Mono',monospace">P = 60</td>
+      <td style="color:var(--amber);font-family:'DM Mono',monospace">C = 10</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ══ 5. KALKULATOR ══ -->
+<section id="kalkulator">
+  <div class="sec-head">
+    <div class="sec-icon ic-cyan">⚙</div>
+    <div class="sec-head-text">
+      <h2>Kalkulator Interaktif</h2>
+      <div class="sub">Hitung Otomatis</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- Kalkulator Permutasi -->
+  <div class="calc-box">
+    <div class="calc-title">
+      <span class="dot dot-c"></span>
+      Kalkulator Permutasi P(n, r)
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>n (total objek)</label>
+        <input type="number" id="pn" value="8" min="0" max="20"/>
+      </div>
+      <div class="input-group">
+        <label>r (objek dipilih)</label>
+        <input type="number" id="pr" value="3" min="0" max="20"/>
+      </div>
+      <button class="btn-calc btn-c" onclick="calcPerm()">Hitung P(n,r)</button>
+    </div>
+    <div class="result-box" id="perm-result-box">
+      <div class="result-label">Hasil P(n,r)</div>
+      <div class="result-value" id="perm-res">—</div>
+      <div class="result-steps" id="perm-steps"></div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Kombinasi -->
+  <div class="calc-box">
+    <div class="calc-title">
+      <span class="dot dot-a"></span>
+      Kalkulator Kombinasi C(n, r)
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>n (total objek)</label>
+        <input type="number" id="cn" value="10" min="0" max="20" class="amber"/>
+      </div>
+      <div class="input-group">
+        <label>r (objek dipilih)</label>
+        <input type="number" id="cr" value="3" min="0" max="20" class="amber"/>
+      </div>
+      <button class="btn-calc btn-a" onclick="calcComb()">Hitung C(n,r)</button>
+    </div>
+    <div class="result-box" id="comb-result-box">
+      <div class="result-label">Hasil C(n,r)</div>
+      <div class="result-value am" id="comb-res">—</div>
+      <div class="result-steps" id="comb-steps"></div>
+    </div>
+  </div>
+
+  <!-- Kalkulator Faktorial -->
+  <div class="calc-box">
+    <div class="calc-title">
+      <span class="dot" style="background:var(--green);animation:pulse 1.5s ease-in-out infinite"></span>
+      Kalkulator Faktorial n!
+    </div>
+    <div class="input-row">
+      <div class="input-group">
+        <label>n</label>
+        <input type="number" id="fn" value="5" min="0" max="20"/>
+      </div>
+      <button class="btn-calc btn-c" style="background:var(--green)" onclick="calcFact()">Hitung n!</button>
+    </div>
+    <div class="result-box" id="fact-result-box">
+      <div class="result-label">Hasil n!</div>
+      <div class="result-value" id="fact-res" style="color:var(--green)">—</div>
+      <div class="result-steps" id="fact-steps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 6. SEGITIGA PASCAL ══ -->
+<section id="pascal">
+  <div class="sec-head">
+    <div class="sec-icon ic-amber">△</div>
+    <div class="sec-head-text">
+      <h2>Segitiga Pascal</h2>
+      <div class="sub">Visualisasi Koefisien Binomial</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label am">Definisi</div>
+    <div class="card-title">Segitiga Pascal dan Kombinasi</div>
+    <p>Setiap entri pada baris ke-n dan kolom ke-r dari Segitiga Pascal adalah nilai <strong>C(n,r)</strong>. Baris ke-0 dimulai dari atas.</p>
+    <div class="formula">C(n,r) = C(n−1,r−1) + C(n−1,r)</div>
+    <p>Setiap bilangan adalah <strong>jumlah dua bilangan di atasnya</strong>.</p>
+  </div>
+
+  <div class="pascal-wrap">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:1rem;">▸ Segitiga Pascal (Baris 0–8) — Hover untuk detail</div>
+    <div id="pascal-tri"></div>
+    <div style="display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted);">
+        <div style="width:14px;height:14px;border-radius:3px;background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.4)"></div> Nilai tinggi
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--muted);">
+        <div style="width:14px;height:14px;border-radius:3px;background:rgba(255,179,0,0.15);border:1px solid rgba(255,179,0,0.4)"></div> Tepi / nilai 1
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-label am">Sifat Penting Segitiga Pascal</div>
+    <table class="styled-table" style="margin-top:.5rem;">
+      <tr><th>Pola</th><th>Penjelasan</th></tr>
+      <tr><td>Jumlah baris ke-n</td><td style="color:var(--muted)">= 2ⁿ (jumlah semua C(n,r) untuk r=0..n)</td></tr>
+      <tr><td>Koefisien binomial</td><td style="color:var(--muted)">(a+b)ⁿ = Σ C(n,r) aⁿ⁻ʳ bʳ</td></tr>
+      <tr><td>Diagonal 1</td><td style="color:var(--muted)">Bilangan asli: 1, 2, 3, 4, ...</td></tr>
+      <tr><td>Diagonal 2</td><td style="color:var(--muted)">Bilangan segitiga: 1, 3, 6, 10, ...</td></tr>
+      <tr><td>Simetri</td><td style="color:var(--muted)">C(n,r) = C(n, n−r)</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ══ 7. TERAPAN ══ -->
+<section id="terapan">
+  <div class="sec-head">
+    <div class="sec-icon ic-pink">🌍</div>
+    <div class="sec-head-text">
+      <h2>Aplikasi & Soal Terapan</h2>
+      <div class="sub">Real World Problems</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label pk">Aplikasi 1 — Kartu Remi</div>
+    <div class="card-title">Berapa cara mendapatkan 5 kartu dari 52 kartu?</div>
+    <p>Memilih 5 kartu — <strong>urutan tidak penting</strong> → Kombinasi</p>
+    <div class="formula">C(52, 5) = 52! / (5! × 47!) = <span class="hl-g">2.598.960</span></div>
+    <div class="steps" style="margin-top:1rem;">
+      <div class="step"><span class="step-num cn">1</span><p>n = 52, r = 5, C(52,5)</p></div>
+      <div class="step"><span class="step-num cn">2</span><p>(52×51×50×49×48) / (5×4×3×2×1) = 311.875.200 / 120</p></div>
+      <div class="step"><span class="step-num cn">3</span><p>= <strong style="color:var(--cyan)">2.598.960 kombinasi</strong></p></div>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label pk">Aplikasi 2 — Pembentukan Tim</div>
+    <div class="card-title">Dari 7 pria dan 5 wanita, dibentuk tim 5 orang terdiri dari 3 pria dan 2 wanita</div>
+    <div class="steps">
+      <div class="step"><span class="step-num an">1</span><p><strong>Pilih 3 pria dari 7:</strong> C(7,3) = 35 cara</p></div>
+      <div class="step"><span class="step-num an">2</span><p><strong>Pilih 2 wanita dari 5:</strong> C(5,2) = 10 cara</p></div>
+      <div class="step"><span class="step-num an">3</span><p><strong>Total</strong> (kaidah perkalian): 35 × 10 = <strong style="color:var(--amber)">350 cara</strong></p></div>
+    </div>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label pk">Aplikasi 3 — Kode & Kata Sandi</div>
+    <div class="card-title">Berapa banyak password 4 huruf dari alfabet (urutan penting, tanpa ulang)?</div>
+    <div class="formula">P(26, 4) = 26! / 22! = 26×25×24×23 = <span class="hl-c">358.800</span></div>
+    <p style="margin-top:.5rem;">Jika boleh ulang: 26⁴ = <strong>456.976</strong></p>
+  </div>
+
+  <div class="card fade-up">
+    <div class="card-label pk">Aplikasi 4 — Rute & Jalur</div>
+    <div class="card-title">Berapa cara berjalan dari (0,0) ke (4,3) hanya ke kanan atau ke atas?</div>
+    <p>Total langkah = 4+3 = 7 langkah. Pilih 4 di antara 7 langkah untuk ke <strong>kanan</strong> (sisanya otomatis ke atas):</p>
+    <div class="formula">C(7, 4) = C(7, 3) = <span class="hl-a">35 rute</span></div>
+  </div>
+</section>
+
+<!-- ══ 8. LATIHAN ══ -->
+<section id="latihan">
+  <div class="sec-head">
+    <div class="sec-icon ic-green">✏</div>
+    <div class="sec-head-text">
+      <h2>Latihan Soal Interaktif</h2>
+      <div class="sub">Uji Pemahaman</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <div id="quiz-container"></div>
+
+  <div style="margin-top:1.5rem;padding:1rem 1.25rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div style="flex:1;">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;margin-bottom:.3rem;">Skor Anda</div>
+      <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;" id="score-display">0 / 0</div>
+    </div>
+    <button class="btn-calc btn-c" onclick="resetQuiz()" style="margin-top:0;">↺ Ulangi Kuis</button>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Permutasi &amp; Kombinasi &nbsp;·&nbsp; Matematika Diskrit &nbsp;·&nbsp; Interactive Learning
+</footer>
+
+<script>
+// ── UTILS ──
+function factorial(n){
+  if(n<0) return null;
+  if(n===0||n===1) return 1;
+  let r=1; for(let i=2;i<=n;i++) r*=i; return r;
+}
+function perm(n,r){
+  if(r>n||r<0||n<0) return null;
+  return factorial(n)/factorial(n-r);
+}
+function comb(n,r){
+  if(r>n||r<0||n<0) return null;
+  return factorial(n)/(factorial(r)*factorial(n-r));
+}
+function fmt(n){return n.toLocaleString('id-ID');}
+
+// ── NAV ACTIVE ──
+const navLinks=document.querySelectorAll('#nav a');
+const sections=document.querySelectorAll('section');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-130)cur=s.id;});
+  navLinks.forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
+  });
+});
+navLinks.forEach(a=>a.addEventListener('click',e=>{
+  e.preventDefault();
+  document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+}));
+
+// ── CALC PERMUTASI ──
+function calcPerm(){
+  const n=parseInt(document.getElementById('pn').value);
+  const r=parseInt(document.getElementById('pr').value);
+  const res=document.getElementById('perm-res');
+  const steps=document.getElementById('perm-steps');
+  if(isNaN(n)||isNaN(r)||n<0||r<0){
+    res.textContent='Error'; res.className='result-value error';
+    steps.textContent='Masukkan nilai n dan r yang valid.'; return;
+  }
+  if(r>n){
+    res.textContent='—'; res.className='result-value';
+    steps.textContent='r tidak boleh lebih besar dari n.'; return;
+  }
+  const v=perm(n,r);
+  res.textContent=fmt(v); res.className='result-value';
+  const fn=factorial(n),fnr=factorial(n-r);
+  steps.innerHTML=`P(${n},${r}) = ${n}! / (${n}−${r})!\n= ${fmt(fn)} / ${fmt(fnr)}\n= ${fmt(v)}`;
+}
+
+// ── CALC KOMBINASI ──
+function calcComb(){
+  const n=parseInt(document.getElementById('cn').value);
+  const r=parseInt(document.getElementById('cr').value);
+  const res=document.getElementById('comb-res');
+  const steps=document.getElementById('comb-steps');
+  if(isNaN(n)||isNaN(r)||n<0||r<0){
+    res.textContent='Error'; res.className='result-value am error';
+    steps.textContent='Masukkan nilai n dan r yang valid.'; return;
+  }
+  if(r>n){
+    res.textContent='—'; res.className='result-value am';
+    steps.textContent='r tidak boleh lebih besar dari n.'; return;
+  }
+  const v=comb(n,r);
+  res.textContent=fmt(v); res.className='result-value am';
+  const fn=factorial(n),fr=factorial(r),fnr=factorial(n-r);
+  steps.innerHTML=`C(${n},${r}) = ${n}! / (${r}! × ${n-r}!)\n= ${fmt(fn)} / (${fmt(fr)} × ${fmt(fnr)})\n= ${fmt(fn)} / ${fmt(fr*fnr)}\n= ${fmt(v)}`;
+}
+
+// ── CALC FAKTORIAL ──
+function calcFact(){
+  const n=parseInt(document.getElementById('fn').value);
+  const res=document.getElementById('fact-res');
+  const steps=document.getElementById('fact-steps');
+  if(isNaN(n)||n<0){
+    res.textContent='Error'; steps.textContent='Masukkan nilai n ≥ 0.'; return;
+  }
+  if(n>20){
+    res.textContent='Terlalu besar'; steps.textContent='Masukkan n ≤ 20 untuk perhitungan akurat.'; return;
+  }
+  const v=factorial(n);
+  res.textContent=fmt(v);
+  let str=[];
+  for(let i=n;i>=1;i--) str.push(i);
+  steps.innerHTML=`${n}! = ${str.join(' × ')}\n= ${fmt(v)}`;
+}
+
+// ── VISUAL DEMO PERMUTASI ──
+const colors=['#00e5ff','#ffb300','#00e676','#f06292','#bb86fc'];
+const labels=['A','B','C','D','E'];
+let selected=[];
+const ballsEl=document.getElementById('balls');
+const slots=[document.getElementById('ps0'),document.getElementById('ps1')];
+const resultText=document.getElementById('perm-result-text');
+const countBadge=document.getElementById('perm-count-badge');
+
+labels.forEach((l,i)=>{
+  const b=document.createElement('div');
+  b.className='ball';
+  b.textContent=l;
+  b.style.background=colors[i]+'22';
+  b.style.borderColor=colors[i];
+  b.style.color=colors[i];
+  b.dataset.idx=i;
+  b.onclick=()=>selectBall(i,b);
+  ballsEl.appendChild(b);
+});
+
+function selectBall(i,el){
+  if(selected.length>=2) return;
+  if(selected.find(s=>s.idx===i)) return;
+  selected.push({idx:i,label:labels[i],color:colors[i]});
+  el.classList.add('selected');
+  document.querySelectorAll('.ball').forEach(b=>{
+    if(parseInt(b.dataset.idx)!==i&&!selected.find(s=>s.idx===parseInt(b.dataset.idx)))
+      b.classList.add('dimmed');
+  });
+  updateSlots();
+}
+
+function updateSlots(){
+  selected.forEach((s,i)=>{
+    slots[i].textContent=s.label;
+    slots[i].classList.add('filled');
+    slots[i].style.borderColor=s.color;
+    slots[i].style.color=s.color;
+    slots[i].style.background=s.color+'18';
+  });
+  if(selected.length===1) resultText.textContent='Pilih bola kedua...';
+  if(selected.length===2){
+    resultText.textContent=`Susunan: ${selected[0].label}${selected[1].label} (berbeda dengan ${selected[1].label}${selected[0].label})`;
+    countBadge.style.display='inline-block';
+  }
+}
+
+function resetPerm(){
+  selected=[];
+  slots.forEach(s=>{
+    s.textContent=''; s.classList.remove('filled');
+    s.style.borderColor=''; s.style.color=''; s.style.background='';
+  });
+  document.querySelectorAll('.ball').forEach(b=>b.classList.remove('selected','dimmed'));
+  resultText.textContent='Pilih bola pertama...';
+  countBadge.style.display='none';
+}
+
+// ── PASCAL'S TRIANGLE ──
+function buildPascal(){
+  const rows=9;
+  const tri=[[1]];
+  for(let i=1;i<rows;i++){
+    const row=[1];
+    for(let j=1;j<i;j++) row.push(tri[i-1][j-1]+tri[i-1][j]);
+    row.push(1);
+    tri.push(row);
+  }
+  const wrap=document.getElementById('pascal-tri');
+  const max=tri[rows-1][Math.floor((rows-1)/2)];
+  tri.forEach((row,n)=>{
+    const rowEl=document.createElement('div');
+    rowEl.className='pascal-row';
+    row.forEach((v,r)=>{
+      const cell=document.createElement('div');
+      cell.className='pc';
+      const isEdge=r===0||r===n;
+      const isHigh=v>20&&!isEdge;
+      if(isEdge) cell.classList.add('hl-am');
+      else if(isHigh) cell.classList.add('hl-cy');
+      cell.textContent=v;
+      cell.title=`C(${n},${r}) = ${v}`;
+      rowEl.appendChild(cell);
+    });
+    wrap.appendChild(rowEl);
+  });
+}
+buildPascal();
+
+// ── QUIZ ──
+const quizData=[
+  {
+    q:'Dari 6 siswa, dipilih ketua, sekretaris, dan bendahara. Berapa cara pemilihan?',
+    opts:['20 cara','120 cara','720 cara','30 cara'],
+    ans:1,
+    explain:'Urutan penting (ketua ≠ sekretaris), gunakan P(6,3) = 6!/(6-3)! = 6×5×4 = 120 cara.'
+  },
+  {
+    q:'Dari 8 buah, dipilih 3 untuk dijadikan salad. Berapa cara pemilihan?',
+    opts:['336 cara','56 cara','24 cara','168 cara'],
+    ans:1,
+    explain:'Urutan tidak penting (salad = himpunan), gunakan C(8,3) = 8!/(3!×5!) = 56 cara.'
+  },
+  {
+    q:'Berapa banyak susunan huruf dari kata "ADA"?',
+    opts:['6 susunan','3 susunan','2 susunan','4 susunan'],
+    ans:1,
+    explain:'Ada 3 huruf (A=2, D=1), gunakan P = 3!/(2!×1!) = 6/2 = 3 susunan (ADA, AAD, DAA).'
+  },
+  {
+    q:'5 orang duduk melingkari meja. Berapa cara pengaturan tempat duduk?',
+    opts:['120 cara','24 cara','60 cara','5 cara'],
+    ans:1,
+    explain:'Permutasi siklis = (n-1)! = (5-1)! = 4! = 24 cara.'
+  },
+  {
+    q:'Nilai C(n,r) = C(n, n-r). Berapakah C(10,7)?',
+    opts:['120','210','5040','720'],
+    ans:0,
+    explain:'C(10,7) = C(10,3) = 10!/(3!×7!) = (10×9×8)/(3×2×1) = 720/6 = 120.'
+  },
+  {
+    q:'Dari 5 warna berbeda, dipilih 2 untuk bendera (warna atas dan bawah). Berapa cara?',
+    opts:['10 cara','20 cara','5 cara','25 cara'],
+    ans:1,
+    explain:'Urutan penting (warna atas ≠ warna bawah), P(5,2) = 5!/(5-2)! = 5×4 = 20 cara.'
+  },
+];
+
+let answered=new Array(quizData.length).fill(null);
+
+function renderQuiz(){
+  const c=document.getElementById('quiz-container');
+  c.innerHTML='';
+  quizData.forEach((q,qi)=>{
+    const box=document.createElement('div');
+    box.className='quiz-box';
+    box.innerHTML=`
+      <div class="quiz-q">
+        <span class="q-num">Q${qi+1}</span>
+        <span>${q.q}</span>
+      </div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,oi)=>`
+          <div class="quiz-opt" id="opt-${qi}-${oi}" onclick="pickOpt(${qi},${oi})">
+            <div class="opt-letter">${String.fromCharCode(65+oi)}</div>
+            ${o}
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb-${qi}"></div>
+    `;
+    c.appendChild(box);
+    if(answered[qi]!==null) restoreOpt(qi);
+  });
+  updateScore();
+}
+
+function pickOpt(qi,oi){
+  if(answered[qi]!==null) return;
+  answered[qi]=oi;
+  const q=quizData[qi];
+  const correct=oi===q.ans;
+  for(let i=0;i<q.opts.length;i++){
+    const el=document.getElementById(`opt-${qi}-${i}`);
+    if(i===q.ans) el.classList.add('correct');
+    else if(i===oi&&!correct) el.classList.add('wrong');
+  }
+  const fb=document.getElementById(`fb-${qi}`);
+  fb.className='quiz-feedback show '+(correct?'ok':'no');
+  fb.textContent=(correct?'✓ Benar! ':'✗ Salah. ')+q.explain;
+  updateScore();
+}
+
+function restoreOpt(qi){
+  const q=quizData[qi];
+  const oi=answered[qi];
+  const correct=oi===q.ans;
+  for(let i=0;i<q.opts.length;i++){
+    const el=document.getElementById(`opt-${qi}-${i}`);
+    if(i===q.ans) el.classList.add('correct');
+    else if(i===oi&&!correct) el.classList.add('wrong');
+  }
+  const fb=document.getElementById(`fb-${qi}`);
+  fb.className='quiz-feedback show '+(correct?'ok':'no');
+  fb.textContent=(correct?'✓ Benar! ':'✗ Salah. ')+q.explain;
+}
+
+function updateScore(){
+  const done=answered.filter(a=>a!==null).length;
+  const correct=answered.filter((a,i)=>a===quizData[i].ans).length;
+  const d=document.getElementById('score-display');
+  d.textContent=`${correct} / ${done}`;
+  d.style.color=correct===done&&done>0?'var(--green)':done===0?'var(--muted)':'var(--text)';
+}
+
+function resetQuiz(){
+  answered=new Array(quizData.length).fill(null);
+  renderQuiz();
+}
+
+renderQuiz();
+
+// auto-run calculators on load
+calcPerm(); calcComb(); calcFact();
+</script>
+</body>
+</html>
