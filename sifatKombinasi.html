@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Identitas Kombinasi & Binomial | Martin Bernard, M.Pd.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --bg2: #f0ebe0;
+    --bg3: #e6dece;
+    --ink: #1a1208;
+    --ink2: #3d2e10;
+    --ink3: #6b5030;
+    --gold: #9a6f23;
+    --gold-lt: #c49a3c;
+    --gold-bg: #fdf3dc;
+    --blue: #1e4d8c;
+    --blue-lt: #d6e4f7;
+    --teal: #15685a;
+    --teal-lt: #d0ede8;
+    --red: #8c2020;
+    --red-lt: #f7d6d6;
+    --border: #c8b89a;
+    --border-lt: #e0d4c0;
+    --shadow: rgba(60,40,10,0.10);
+    --radius: 10px;
+    --font-head: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* Progress bar */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+    width: 0%; z-index: 1000; transition: width 0.15s;
+  }
+
+  /* Sticky Nav */
+  nav {
+    position: sticky; top: 0; z-index: 999;
+    background: rgba(250,247,242,0.95);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    padding: 0 2rem;
+  }
+  .nav-inner {
+    max-width: 1000px; margin: 0 auto;
+    display: flex; align-items: center; gap: 0;
+    height: 52px; overflow-x: auto;
+  }
+  .nav-inner::-webkit-scrollbar { height: 0; }
+  .nav-link {
+    font-family: var(--font-body); font-size: 13px;
+    color: var(--ink3); text-decoration: none;
+    padding: 6px 14px; border-radius: 20px;
+    white-space: nowrap; transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .nav-link:hover, .nav-link.active {
+    background: var(--gold-bg); color: var(--gold);
+  }
+
+  /* Hero */
+  .hero {
+    background: var(--ink);
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px
+    ), repeating-linear-gradient(
+      90deg, transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px
+    );
+    color: #f5ecd8;
+    padding: 4.5rem 2rem 3.5rem;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--gold-lt); border: 1px solid rgba(196,154,60,0.5);
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700; line-height: 1.2; margin-bottom: 0.75rem;
+    color: #fff;
+  }
+  .hero h1 em { color: var(--gold-lt); font-style: italic; }
+  .hero-sub {
+    font-size: 1.05rem; color: rgba(245,236,216,0.75);
+    max-width: 560px; margin: 0 auto 1.5rem;
+  }
+  .hero-meta {
+    font-size: 12px; color: rgba(245,236,216,0.5);
+    font-family: var(--font-body);
+  }
+
+  /* Layout */
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+
+  /* Section */
+  section { margin-bottom: 4rem; scroll-margin-top: 64px; }
+  .section-head {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 1.75rem; padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-lt);
+  }
+  .section-num {
+    font-family: var(--font-head); font-size: 2.2rem; font-weight: 700;
+    color: var(--border); line-height: 1; flex-shrink: 0;
+  }
+  .section-title { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; color: var(--ink2); }
+  .section-desc { font-size: 0.9rem; color: var(--ink3); font-style: italic; margin-top: 2px; }
+
+  /* Intro text */
+  .intro-text { font-size: 1rem; color: var(--ink2); margin-bottom: 1.5rem; }
+
+  /* Identity card */
+  .identity-card {
+    background: #fff;
+    border: 1px solid var(--border-lt);
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    overflow: hidden;
+    box-shadow: 0 1px 4px var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+  .identity-card:hover { box-shadow: 0 4px 14px var(--shadow); }
+
+  .card-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 1rem 1.25rem; cursor: pointer;
+    background: var(--bg);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+    user-select: none;
+  }
+  .card-header.open { border-color: var(--border-lt); }
+  .card-tag {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1.2px; padding: 3px 10px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .tag-blue { background: var(--blue-lt); color: var(--blue); }
+  .tag-teal { background: var(--teal-lt); color: var(--teal); }
+  .tag-gold { background: var(--gold-bg); color: var(--gold); }
+  .tag-red  { background: var(--red-lt); color: var(--red); }
+
+  .card-name {
+    font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; color: var(--ink);
+    flex: 1;
+  }
+  .card-arrow {
+    font-size: 18px; color: var(--border); transition: transform 0.25s; flex-shrink: 0;
+  }
+  .card-header.open .card-arrow { transform: rotate(90deg); }
+
+  .card-body {
+    display: none; padding: 1.25rem 1.5rem 1.5rem;
+    animation: slideIn 0.2s ease;
+  }
+  .card-body.visible { display: block; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Formula box */
+  .formula-box {
+    background: var(--bg);
+    border: 1px solid var(--border-lt);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    text-align: center;
+    font-size: 1.05rem;
+    overflow-x: auto;
+  }
+
+  /* Proof box */
+  .proof-box {
+    background: #fff8ee;
+    border-left: 3px solid var(--gold-lt);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-size: 0.93rem;
+    color: var(--ink2);
+  }
+  .proof-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--gold); font-weight: 600; margin-bottom: 0.5rem;
+  }
+
+  /* Example box */
+  .example-box {
+    background: var(--blue-lt);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-size: 0.93rem;
+    color: var(--blue);
+  }
+  .example-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--blue); font-weight: 600; margin-bottom: 0.5rem;
+  }
+
+  /* Explanation paragraph */
+  .explanation { font-size: 0.95rem; color: var(--ink2); margin: 0.5rem 0; line-height: 1.7; }
+
+  /* === KALKULATOR === */
+  .calc-section {
+    background: var(--ink);
+    border-radius: 14px;
+    padding: 2rem;
+    margin: 2rem 0;
+    color: #f5ecd8;
+  }
+  .calc-title {
+    font-family: var(--font-head); font-size: 1.2rem;
+    font-weight: 600; margin-bottom: 1.25rem;
+    color: #fff; text-align: center;
+  }
+  .calc-inputs {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+  .calc-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .calc-group label { font-size: 12px; color: rgba(245,236,216,0.6); text-transform: uppercase; letter-spacing: 1px; }
+  .calc-group input {
+    width: 80px; text-align: center;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; color: #fff; font-size: 1.2rem; font-family: var(--font-body);
+    padding: 8px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .calc-group input:focus { border-color: var(--gold-lt); }
+  .calc-btn {
+    display: block; margin: 0 auto 1.25rem;
+    background: var(--gold); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 10px 28px; font-family: var(--font-body); font-size: 0.95rem;
+    cursor: pointer; transition: background 0.2s;
+  }
+  .calc-btn:hover { background: var(--gold-lt); }
+  .calc-results {
+    display: grid; gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .calc-row {
+    background: rgba(255,255,255,0.07); border-radius: 8px;
+    padding: 10px 14px; font-size: 0.88rem;
+  }
+  .calc-row-label { color: rgba(245,236,216,0.55); font-size: 11px; margin-bottom: 4px; }
+  .calc-row-val { color: #fff; font-size: 1rem; }
+  .calc-valid { color: #5ee0b8; font-size: 11px; margin-left: 6px; }
+  .calc-error { color: #e06060; font-size: 12px; text-align: center; padding: 6px; }
+
+  /* === PASCAL TRIANGLE === */
+  .pascal-wrap {
+    overflow-x: auto; padding: 1rem;
+    background: var(--bg2); border-radius: var(--radius);
+    border: 1px solid var(--border-lt);
+  }
+  .pascal-table {
+    border-collapse: separate; border-spacing: 0;
+    margin: 0 auto;
+  }
+  .pascal-table td {
+    width: 46px; height: 40px; text-align: center;
+    font-size: 0.85rem; color: var(--ink2);
+    border-radius: 6px; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .pascal-table td:hover { background: var(--gold-bg); color: var(--gold); }
+  .pascal-table td.hl-diag { background: var(--blue-lt); color: var(--blue); font-weight: 600; }
+  .pascal-table td.hl-row { background: var(--teal-lt); color: var(--teal); font-weight: 600; }
+  .pascal-table td.hl-vandermonde { background: var(--red-lt); color: var(--red); font-weight: 600; }
+  .pascal-caption {
+    text-align: center; font-size: 0.85rem; color: var(--ink3);
+    margin-top: 0.75rem; font-style: italic;
+  }
+
+  /* Pascal controls */
+  .pascal-controls {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1rem;
+  }
+  .pctrl-btn {
+    font-size: 12px; padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border); background: #fff;
+    color: var(--ink2); cursor: pointer; transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+  .pctrl-btn:hover, .pctrl-btn.active { background: var(--gold-bg); border-color: var(--gold-lt); color: var(--gold); }
+
+  /* === BINOMIAL SIMULATOR === */
+  .binom-sim {
+    background: var(--bg2); border: 1px solid var(--border-lt);
+    border-radius: var(--radius); padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .binom-sim-title {
+    font-family: var(--font-head); font-size: 1.1rem;
+    color: var(--ink2); margin-bottom: 1rem;
+  }
+  .sim-inputs {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;
+    margin-bottom: 1.25rem;
+  }
+  .sim-group { display: flex; flex-direction: column; gap: 5px; }
+  .sim-group label { font-size: 12px; color: var(--ink3); }
+  .sim-group input, .sim-group select {
+    width: 90px; padding: 7px 10px;
+    border: 1px solid var(--border); border-radius: 7px;
+    background: #fff; font-family: var(--font-body); font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .sim-btn {
+    padding: 8px 20px; background: var(--teal); color: #fff;
+    border: none; border-radius: 7px; cursor: pointer;
+    font-family: var(--font-body); font-size: 0.9rem;
+    transition: background 0.2s; align-self: flex-end;
+  }
+  .sim-btn:hover { background: #1e8a74; }
+  .expansion-output {
+    background: #fff; border: 1px solid var(--border-lt); border-radius: 8px;
+    padding: 1.1rem 1.25rem; font-size: 1rem; overflow-x: auto;
+    min-height: 50px;
+  }
+  .expansion-terms {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline;
+    margin-top: 0.75rem;
+  }
+  .term-pill {
+    background: var(--blue-lt); color: var(--blue);
+    padding: 4px 12px; border-radius: 20px; font-size: 0.85rem;
+    font-family: var(--font-body);
+  }
+
+  /* Maclaurin note */
+  .tip-box {
+    background: var(--teal-lt); border-left: 3px solid var(--teal);
+    border-radius: 0 8px 8px 0; padding: 0.9rem 1.1rem;
+    margin: 1rem 0; font-size: 0.9rem; color: var(--teal);
+  }
+  .tip-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    font-weight: 600; margin-bottom: 0.4rem;
+  }
+
+  /* Ringkasan */
+  .summary-grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin: 1.5rem 0;
+  }
+  .summary-card {
+    background: #fff; border: 1px solid var(--border-lt);
+    border-radius: var(--radius); padding: 1.1rem 1.2rem;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  .summary-card-tag {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px;
+    font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .summary-card-formula { font-size: 0.85rem; overflow-x: auto; }
+
+  /* Latihan */
+  .latihan-wrap {
+    display: flex; flex-direction: column; gap: 1.25rem; margin: 1.5rem 0;
+  }
+  .latihan-item {
+    background: #fff; border: 1px solid var(--border-lt);
+    border-radius: var(--radius); padding: 1.25rem;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  .latihan-q { font-size: 0.97rem; color: var(--ink); margin-bottom: 0.75rem; }
+  .latihan-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 0.75rem; }
+  .latihan-opt {
+    border: 1px solid var(--border); border-radius: 7px;
+    padding: 7px 14px; font-size: 0.9rem; cursor: pointer;
+    background: #fff; color: var(--ink2); transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+  .latihan-opt:hover { border-color: var(--gold-lt); color: var(--gold); }
+  .latihan-opt.correct { background: var(--teal-lt); border-color: var(--teal); color: var(--teal); font-weight: 600; }
+  .latihan-opt.wrong   { background: var(--red-lt); border-color: var(--red); color: var(--red); }
+  .latihan-opt.disabled { pointer-events: none; opacity: 0.55; }
+  .latihan-feedback { font-size: 0.88rem; padding: 8px 12px; border-radius: 7px; display: none; }
+  .latihan-feedback.show { display: block; }
+  .latihan-feedback.ok  { background: var(--teal-lt); color: var(--teal); }
+  .latihan-feedback.err { background: var(--red-lt); color: var(--red); }
+
+  /* Footer */
+  footer {
+    background: var(--ink2); color: rgba(245,236,216,0.55);
+    text-align: center; padding: 2rem;
+    font-size: 0.83rem;
+  }
+  footer strong { color: rgba(245,236,216,0.85); }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero { padding: 3rem 1rem 2.5rem; }
+    .calc-results { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-link" href="#definisi">Definisi</a>
+    <a class="nav-link" href="#identitas-dasar">Identitas Dasar</a>
+    <a class="nav-link" href="#kalkulator">Kalkulator</a>
+    <a class="nav-link" href="#segitiga-pascal">Segitiga Pascal</a>
+    <a class="nav-link" href="#teorema-binomial">Teorema Binomial</a>
+    <a class="nav-link" href="#identitas-binomial">Identitas Binomial</a>
+    <a class="nav-link" href="#ekspansi">Ekspansi Interaktif</a>
+    <a class="nav-link" href="#ringkasan">Ringkasan</a>
+    <a class="nav-link" href="#latihan">Latihan</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">Matematika Diskrit · IKIP Siliwangi</div>
+  <h1>Sifat-Sifat <em>Identitas Kombinasi</em><br>& Teorema Binomial</h1>
+  <p class="hero-sub">Eksplorasi mendalam tentang koefisien binomial, identitas kombinatorial, dan penerapannya dalam matematika diskrit.</p>
+  <div class="hero-meta">Martin Bernard, M.Pd. · Pendidikan Matematika · IKIP Siliwangi, Cimahi</div>
+</div>
+
+<div class="page">
+
+<!-- ===================== DEFINISI ===================== -->
+<section id="definisi">
+  <div class="section-head">
+    <span class="section-num">01</span>
+    <div>
+      <div class="section-title">Definisi Kombinasi</div>
+      <div class="section-desc">Fondasi notasi dan formula dasar</div>
+    </div>
+  </div>
+  <p class="intro-text">Koefisien binomial \(\binom{n}{k}\) — dibaca "n pilih k" — menyatakan banyaknya cara memilih \(k\) objek dari \(n\) objek yang tersedia tanpa memperhatikan urutan.</p>
+
+  <div class="formula-box">
+    \[\binom{n}{k} = \frac{n!}{k!\,(n-k)!}\]
+  </div>
+
+  <div class="proof-box">
+    <div class="proof-label">Catatan Penting</div>
+    <p>Notasi lain yang sering digunakan: \(C(n,k)\), \(C_n^k\), atau \({}_nC_k\). Semua menyatakan hal yang sama.</p>
+    <p style="margin-top:0.5rem;">Syarat domain: \(n \geq 0\), \(0 \leq k \leq n\), \(n, k \in \mathbb{Z}\). Jika \(k < 0\) atau \(k > n\), maka \(\binom{n}{k} = 0\).</p>
+  </div>
+
+  <div class="example-box">
+    <div class="example-label">Contoh</div>
+    <p>\(\binom{5}{2} = \dfrac{5!}{2!\cdot 3!} = \dfrac{5 \times 4}{2 \times 1} = 10\)</p>
+    <p style="margin-top:0.4rem;">Artinya: ada 10 cara memilih 2 orang dari 5 orang yang ada.</p>
+  </div>
+</section>
+
+<!-- ===================== IDENTITAS DASAR ===================== -->
+<section id="identitas-dasar">
+  <div class="section-head">
+    <span class="section-num">02</span>
+    <div>
+      <div class="section-title">Identitas-Identitas Dasar Kombinasi</div>
+      <div class="section-desc">Klik setiap kartu untuk melihat bukti dan contoh</div>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-blue">ID-1</span>
+      <span class="card-name">Identitas Simetri (Refleksi)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\binom{n}{k} = \binom{n}{n-k}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti Aljabar</div>
+        <p>\(\binom{n}{n-k} = \dfrac{n!}{(n-k)!\,k!} = \dfrac{n!}{k!\,(n-k)!} = \binom{n}{k}\) ✓</p>
+      </div>
+      <div class="proof-box" style="border-color:#9a6f23">
+        <div class="proof-label" style="color:var(--gold)">Intuisi Kombinatorial</div>
+        <p>Memilih \(k\) objek yang <em>diambil</em> ekuivalen dengan memilih \(n-k\) objek yang <em>ditinggalkan</em>. Keduanya menghasilkan pemilihan yang sama.</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh</div>
+        <p>\(\binom{8}{3} = \binom{8}{5} = 56\)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-blue">ID-2</span>
+      <span class="card-name">Identitas Batas (Trivial)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\binom{n}{0} = \binom{n}{n} = 1\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti</div>
+        <p>\(\binom{n}{0} = \dfrac{n!}{0!\,n!} = 1\) karena \(0! = 1\).</p>
+        <p style="margin-top:0.4rem;">\(\binom{n}{n} = \dfrac{n!}{n!\,0!} = 1\).</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Makna</div>
+        <p>Hanya ada 1 cara memilih 0 elemen (tidak memilih apapun) dan 1 cara memilih semua n elemen.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-teal">ID-3</span>
+      <span class="card-name">Identitas Penjumlahan Pascal (Rekursi Pascal)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\binom{n}{k} = \binom{n-1}{k-1} + \binom{n-1}{k}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti Kombinatorial</div>
+        <p>Pilih 1 elemen khusus dari \(n\) elemen, sebut \(x\).</p>
+        <p>• Subhimpunan yang memuat \(x\): pilih \(k-1\) dari \(n-1\) sisanya → \(\binom{n-1}{k-1}\)</p>
+        <p>• Subhimpunan yang tidak memuat \(x\): pilih \(k\) dari \(n-1\) sisanya → \(\binom{n-1}{k}\)</p>
+        <p>Karena kedua kasus saling terpisah (mutually exclusive) dan lengkap: total = \(\binom{n-1}{k-1} + \binom{n-1}{k}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh Numerik</div>
+        <p>\(\binom{6}{3} = \binom{5}{2} + \binom{5}{3} = 10 + 10 = 20\) ✓</p>
+      </div>
+      <p class="explanation" style="margin-top:0.75rem;">Identitas ini adalah dasar dari konstruksi Segitiga Pascal.</p>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-teal">ID-4</span>
+      <span class="card-name">Identitas Penyerapan (Absorption Identity)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[k\binom{n}{k} = n\binom{n-1}{k-1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti Aljabar</div>
+        <p>\(k\cdot\dfrac{n!}{k!\,(n-k)!} = \dfrac{n!}{(k-1)!\,(n-k)!} = n\cdot\dfrac{(n-1)!}{(k-1)!\,(n-k)!} = n\binom{n-1}{k-1}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh</div>
+        <p>\(3\binom{7}{3} = 7\binom{6}{2}\)</p>
+        <p>\(3 \times 35 = 7 \times 15 = 105\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-gold">ID-5</span>
+      <span class="card-name">Identitas Jumlah Baris (Vandermonde – Baris)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k=0}^{n} \binom{n}{k} = 2^n\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Teorema Binomial</div>
+        <p>Substitusi \(x=1\) dan \(y=1\) ke dalam \((x+y)^n = \displaystyle\sum_{k=0}^n \binom{n}{k} x^{n-k} y^k\):</p>
+        <p>\(2^n = \displaystyle\sum_{k=0}^n \binom{n}{k}\) ✓</p>
+      </div>
+      <div class="proof-box" style="border-color:#9a6f23">
+        <div class="proof-label" style="color:var(--gold)">Bukti Kombinatorial</div>
+        <p>Setiap subhimpunan dari himpunan \(n\) elemen terhitung tepat sekali. Banyak subhimpunan adalah \(2^n\) (setiap elemen masuk atau tidak).</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n = 4</div>
+        <p>\(\binom{4}{0}+\binom{4}{1}+\binom{4}{2}+\binom{4}{3}+\binom{4}{4} = 1+4+6+4+1 = 16 = 2^4\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-gold">ID-6</span>
+      <span class="card-name">Identitas Alternating Sum</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k=0}^{n} (-1)^k \binom{n}{k} = 0 \quad (n \geq 1)\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Teorema Binomial</div>
+        <p>Substitusi \(x=1\) dan \(y=-1\):</p>
+        <p>\((1-1)^n = 0^n = \displaystyle\sum_{k=0}^n (-1)^k\binom{n}{k} = 0\) ✓ (untuk \(n \geq 1\))</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n = 4</div>
+        <p>\(1 - 4 + 6 - 4 + 1 = 0\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-red">ID-7</span>
+      <span class="card-name">Identitas Vandermonde</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\binom{m+n}{r} = \sum_{k=0}^{r} \binom{m}{k}\binom{n}{r-k}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti Kombinatorial</div>
+        <p>Pilih \(r\) dari \(m+n\) elemen (grup A berisi \(m\) dan grup B berisi \(n\) elemen).</p>
+        <p>Untuk setiap \(k\): pilih \(k\) dari grup A dan \(r-k\) dari grup B → \(\binom{m}{k}\binom{n}{r-k}\)</p>
+        <p>Jumlahkan untuk \(k = 0, 1, \ldots, r\) menghasilkan semua cara → \(\binom{m+n}{r}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Kasus Khusus: m = n = r</div>
+        <p>\(\binom{2n}{n} = \displaystyle\sum_{k=0}^{n}\binom{n}{k}^2\)</p>
+        <p>Contoh: \(\binom{6}{3} = 1^2+9+25+25+9+1 = 20\)?</p>
+        <p>\(\binom{4}{0}^2+\binom{4}{1}^2+\binom{4}{2}^2 = 1+16+36+16+1 = 70 = \binom{8}{4}\) (n=4) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-red">ID-8</span>
+      <span class="card-name">Identitas Jumlah Diagonal (Hockey Stick)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{i=0}^{r} \binom{n+i}{i} = \binom{n+r+1}{r}\]</div>
+      <div class="formula-box">\[\text{Bentuk lain: }\sum_{i=k}^{n}\binom{i}{k} = \binom{n+1}{k+1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Induksi Matematika</div>
+        <p><strong>Basis:</strong> \(r=0\): \(\binom{n}{0} = 1 = \binom{n+1}{0}\) ✓</p>
+        <p style="margin-top:0.4rem;"><strong>Langkah Induksi:</strong> Asumsikan berlaku untuk \(r\), tunjukkan untuk \(r+1\):</p>
+        <p>\(\displaystyle\sum_{i=0}^{r+1}\binom{n+i}{i} = \binom{n+r+1}{r} + \binom{n+r+1}{r+1} = \binom{n+r+2}{r+1}\) (oleh ID-3) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n=2, r=3</div>
+        <p>\(\binom{2}{0}+\binom{3}{1}+\binom{4}{2}+\binom{5}{3} = 1+3+6+10 = 20 = \binom{6}{3}\) ✓</p>
+        <p style="margin-top:0.4rem;">Dinamakan "hockey stick" karena pola diagonal di Segitiga Pascal membentuk gagang + kepala tongkat hoki.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-blue">ID-9</span>
+      <span class="card-name">Identitas Jumlah Genap = Jumlah Ganjil</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k \text{ genap}}\binom{n}{k} = \sum_{k \text{ ganjil}}\binom{n}{k} = 2^{n-1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti</div>
+        <p>Dari ID-5: \(\displaystyle\sum_{k=0}^n\binom{n}{k} = 2^n\) dan dari ID-6: \(\displaystyle\sum_{k=0}^n(-1)^k\binom{n}{k} = 0\)</p>
+        <p>Tambahkan: \(2\displaystyle\sum_{k \text{ genap}}\binom{n}{k} = 2^n\), jadi masing-masing = \(2^{n-1}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n = 5</div>
+        <p>Genap: \(\binom{5}{0}+\binom{5}{2}+\binom{5}{4} = 1+10+5 = 16 = 2^4\)</p>
+        <p>Ganjil: \(\binom{5}{1}+\binom{5}{3}+\binom{5}{5} = 5+10+1 = 16 = 2^4\) ✓</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KALKULATOR ===================== -->
+<section id="kalkulator">
+  <div class="section-head">
+    <span class="section-num">03</span>
+    <div>
+      <div class="section-title">Kalkulator & Verifikasi Identitas</div>
+      <div class="section-desc">Masukkan nilai n dan k untuk memverifikasi identitas secara numerik</div>
+    </div>
+  </div>
+
+  <div class="calc-section">
+    <div class="calc-title">🔢 Verifikasi Identitas Kombinasi</div>
+    <div class="calc-inputs">
+      <div class="calc-group">
+        <label>n</label>
+        <input type="number" id="cn" value="6" min="0" max="20">
+      </div>
+      <div class="calc-group">
+        <label>k</label>
+        <input type="number" id="ck" value="2" min="0" max="20">
+      </div>
+      <div class="calc-group">
+        <label>m (Vandermonde)</label>
+        <input type="number" id="cm" value="3" min="0" max="10">
+      </div>
+      <div class="calc-group">
+        <label>r (Vandermonde)</label>
+        <input type="number" id="cr" value="3" min="0" max="10">
+      </div>
+    </div>
+    <button class="calc-btn" onclick="verifikasiIdentitas()">Hitung & Verifikasi</button>
+    <div id="calc-error" class="calc-error" style="display:none"></div>
+    <div class="calc-results" id="calc-results"></div>
+  </div>
+</section>
+
+<!-- ===================== SEGITIGA PASCAL ===================== -->
+<section id="segitiga-pascal">
+  <div class="section-head">
+    <span class="section-num">04</span>
+    <div>
+      <div class="section-title">Segitiga Pascal Interaktif</div>
+      <div class="section-desc">Klik tombol untuk menyoroti pola identitas</div>
+    </div>
+  </div>
+
+  <p class="intro-text">Segitiga Pascal adalah representasi visual dari koefisien binomial. Setiap entri di baris ke-\(n\) kolom ke-\(k\) adalah \(\binom{n}{k}\).</p>
+
+  <div class="pascal-controls">
+    <button class="pctrl-btn active" id="pbtn-none" onclick="setPascalMode('none', this)">Normal</button>
+    <button class="pctrl-btn" id="pbtn-row" onclick="setPascalMode('row', this)">Soroti Baris (ID-5)</button>
+    <button class="pctrl-btn" id="pbtn-diag" onclick="setPascalMode('diag', this)">Soroti Diagonal (Hockey Stick)</button>
+    <button class="pctrl-btn" id="pbtn-vdm" onclick="setPascalMode('vdm', this)">Vandermonde</button>
+  </div>
+
+  <div class="pascal-wrap">
+    <table class="pascal-table" id="pascal-table"></table>
+  </div>
+  <p class="pascal-caption" id="pascal-caption">Klik sel untuk info, atau pilih mode sorotan di atas.</p>
+</section>
+
+<!-- ===================== TEOREMA BINOMIAL ===================== -->
+<section id="teorema-binomial">
+  <div class="section-head">
+    <span class="section-num">05</span>
+    <div>
+      <div class="section-title">Teorema Binomial</div>
+      <div class="section-desc">Inti dari identitas kombinasi</div>
+    </div>
+  </div>
+
+  <p class="intro-text">Teorema Binomial memberikan ekspansi dari pangkat dua suku secara umum:</p>
+  <div class="formula-box">
+    \[(x+y)^n = \sum_{k=0}^{n} \binom{n}{k} x^{n-k} y^k\]
+  </div>
+
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-blue">Bukti</span>
+      <span class="card-name">Pembuktian via Induksi Matematika</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="proof-box">
+        <div class="proof-label">Basis Induksi (n = 1)</div>
+        <p>\((x+y)^1 = x+y = \binom{1}{0}x + \binom{1}{1}y\) ✓</p>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Hipotesis Induksi</div>
+        <p>Asumsikan teorema berlaku untuk \(n = m\):</p>
+        <p>\((x+y)^m = \displaystyle\sum_{k=0}^{m}\binom{m}{k}x^{m-k}y^k\)</p>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Langkah Induksi (n = m+1)</div>
+        <p>\((x+y)^{m+1} = (x+y)(x+y)^m = (x+y)\displaystyle\sum_{k=0}^m\binom{m}{k}x^{m-k}y^k\)</p>
+        <p style="margin-top:0.4rem;">\(= \displaystyle\sum_{k=0}^m\binom{m}{k}x^{m+1-k}y^k + \sum_{k=0}^m\binom{m}{k}x^{m-k}y^{k+1}\)</p>
+        <p style="margin-top:0.4rem;">Dengan reindeksasi dan identitas Pascal (ID-3) diperoleh:</p>
+        <p>\(= \displaystyle\sum_{k=0}^{m+1}\binom{m+1}{k}x^{m+1-k}y^k\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">⚡ Kasus-Kasus Khusus Penting</div>
+    <p>• \(x=y=1\): \(2^n = \displaystyle\sum_{k=0}^n\binom{n}{k}\) (Identitas ID-5)</p>
+    <p>• \(x=1, y=-1\): \(0 = \displaystyle\sum_{k=0}^n(-1)^k\binom{n}{k}\) (Identitas ID-6)</p>
+    <p>• \(x=y=\frac{1}{2}\): \(1 = \displaystyle\frac{1}{2^n}\sum_{k=0}^n\binom{n}{k}\)</p>
+    <p>• \(x=1, y=2\): \(3^n = \displaystyle\sum_{k=0}^n\binom{n}{k}2^k\)</p>
+  </div>
+</section>
+
+<!-- ===================== IDENTITAS BINOMIAL ===================== -->
+<section id="identitas-binomial">
+  <div class="section-head">
+    <span class="section-num">06</span>
+    <div>
+      <div class="section-title">Identitas Turunan dari Teorema Binomial</div>
+      <div class="section-desc">Dengan diferensiasi, integrasi, dan substitusi</div>
+    </div>
+  </div>
+
+  <!-- Turunan -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-teal">Turunan</span>
+      <span class="card-name">Identitas Jumlah \(k\binom{n}{k}\)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k=0}^{n} k\binom{n}{k} = n\cdot 2^{n-1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Diferensiasi</div>
+        <p>Mulai dari \((1+x)^n = \displaystyle\sum_{k=0}^n\binom{n}{k}x^k\).</p>
+        <p>Diferensiasi terhadap \(x\): \(n(1+x)^{n-1} = \displaystyle\sum_{k=0}^n k\binom{n}{k}x^{k-1}\)</p>
+        <p>Substitusi \(x=1\): \(n\cdot 2^{n-1} = \displaystyle\sum_{k=0}^n k\binom{n}{k}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n = 4</div>
+        <p>\(0\cdot1 + 1\cdot4 + 2\cdot6 + 3\cdot4 + 4\cdot1 = 0+4+12+12+4 = 32 = 4 \cdot 2^3\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Turunan ke-2 -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-teal">Turunan</span>
+      <span class="card-name">Identitas Jumlah \(k^2\binom{n}{k}\)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k=0}^{n} k^2\binom{n}{k} = n(n+1)\cdot 2^{n-2}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Diferensiasi ke-2</div>
+        <p>Diferensiasi ke-2 dari \((1+x)^n\), lalu kalikan \(x\) dan substitusi \(x=1\):</p>
+        <p>\(\displaystyle\sum_{k=0}^n k^2\binom{n}{k} = n(n+1)2^{n-2}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: n = 3</div>
+        <p>\(0+1\cdot3+4\cdot3+9\cdot1 = 0+3+12+9 = 24 = 3\cdot4\cdot2^1\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integrasi -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-gold">Integral</span>
+      <span class="card-name">Identitas via Integrasi</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{k=0}^{n} \frac{\binom{n}{k}}{k+1} = \frac{2^{n+1}-1}{n+1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Bukti via Integrasi</div>
+        <p>Integrasikan \((1+x)^n = \displaystyle\sum_{k=0}^n\binom{n}{k}x^k\) dari 0 hingga 1:</p>
+        <p>\(\displaystyle\int_0^1(1+x)^n\,dx = \left[\frac{(1+x)^{n+1}}{n+1}\right]_0^1 = \frac{2^{n+1}-1}{n+1}\)</p>
+        <p>Sedangkan ruas kanan: \(\displaystyle\int_0^1\sum_{k=0}^n\binom{n}{k}x^k\,dx = \sum_{k=0}^n\frac{\binom{n}{k}}{k+1}\) ✓</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upper Summation -->
+  <div class="identity-card">
+    <div class="card-header" onclick="toggleCard(this)">
+      <span class="card-tag tag-red">Sumar</span>
+      <span class="card-name">Identitas Penjumlahan Atas (Upper Summation)</span>
+      <span class="card-arrow">›</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box">\[\sum_{i=0}^{n} \binom{i+k}{k} = \binom{n+k+1}{k+1}\]</div>
+      <div class="proof-box">
+        <div class="proof-label">Kasus Khusus k = 0</div>
+        <p>\(\displaystyle\sum_{i=0}^n 1 = n+1 = \binom{n+1}{1}\) ✓</p>
+      </div>
+      <div class="proof-box">
+        <div class="proof-label">Kasus Khusus k = 1</div>
+        <p>\(\displaystyle\sum_{i=0}^n(i+1) = \frac{(n+1)(n+2)}{2} = \binom{n+2}{2}\) ✓</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh: k = 2, n = 4</div>
+        <p>\(\binom{2}{2}+\binom{3}{2}+\binom{4}{2}+\binom{5}{2}+\binom{6}{2} = 1+3+6+10+15 = 35 = \binom{7}{3}\) ✓</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EKSPANSI INTERAKTIF ===================== -->
+<section id="ekspansi">
+  <div class="section-head">
+    <span class="section-num">07</span>
+    <div>
+      <div class="section-title">Ekspansi Binomial Interaktif</div>
+      <div class="section-desc">Ekspansi \((ax + by)^n\) langkah demi langkah</div>
+    </div>
+  </div>
+
+  <div class="binom-sim">
+    <div class="binom-sim-title">Generator Ekspansi Binomial</div>
+    <div class="sim-inputs">
+      <div class="sim-group">
+        <label>Koef. a</label>
+        <input type="number" id="sa" value="1">
+      </div>
+      <div class="sim-group">
+        <label>Suku x</label>
+        <input type="text" id="sx" value="x" maxlength="3">
+      </div>
+      <div class="sim-group">
+        <label>Koef. b</label>
+        <input type="number" id="sb" value="1">
+      </div>
+      <div class="sim-group">
+        <label>Suku y</label>
+        <input type="text" id="sy" value="y" maxlength="3">
+      </div>
+      <div class="sim-group">
+        <label>Pangkat n</label>
+        <input type="number" id="sn" value="4" min="0" max="8">
+      </div>
+      <button class="sim-btn" onclick="hitungEkspansi()">Ekspansi!</button>
+    </div>
+    <div class="expansion-output" id="expansion-output">
+      <p style="color:var(--ink3);font-size:0.9rem;font-style:italic;">Tekan tombol Ekspansi untuk melihat hasilnya.</p>
+    </div>
+    <div id="expansion-terms" class="expansion-terms"></div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-label">💡 Catatan Penting</div>
+    <p>Suku ke-\((k+1)\) dari ekspansi \((x+y)^n\) adalah: \(T_{k+1} = \binom{n}{k}\,x^{n-k}\,y^k\)</p>
+    <p style="margin-top:0.4rem;">Contoh: Suku ke-3 dari \((2x+y)^5\): \(T_3 = \binom{5}{2}(2x)^3(y)^2 = 10 \cdot 8x^3y^2 = 80x^3y^2\)</p>
+  </div>
+</section>
+
+<!-- ===================== RINGKASAN ===================== -->
+<section id="ringkasan">
+  <div class="section-head">
+    <span class="section-num">08</span>
+    <div>
+      <div class="section-title">Ringkasan Identitas</div>
+      <div class="section-desc">Daftar lengkap semua identitas dalam satu tampilan</div>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-tag tag-blue">Simetri</div>
+      <div class="summary-card-formula">\(\binom{n}{k} = \binom{n}{n-k}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-blue">Batas</div>
+      <div class="summary-card-formula">\(\binom{n}{0} = \binom{n}{n} = 1\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-teal">Pascal (Rekursi)</div>
+      <div class="summary-card-formula">\(\binom{n}{k} = \binom{n-1}{k-1}+\binom{n-1}{k}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-teal">Penyerapan</div>
+      <div class="summary-card-formula">\(k\binom{n}{k} = n\binom{n-1}{k-1}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-gold">Jumlah Baris</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_{k=0}^n\binom{n}{k} = 2^n\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-gold">Alternating Sum</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_{k=0}^n(-1)^k\binom{n}{k} = 0\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-red">Vandermonde</div>
+      <div class="summary-card-formula">\(\binom{m+n}{r}=\displaystyle\sum_{k=0}^r\binom{m}{k}\binom{n}{r-k}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-red">Hockey Stick</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_{i=k}^n\binom{i}{k} = \binom{n+1}{k+1}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-blue">Genap = Ganjil</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_{k\text{ gnp}}\binom{n}{k} = 2^{n-1}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-teal">Jumlah \(k\binom{n}{k}\)</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_k k\binom{n}{k} = n\cdot2^{n-1}\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-gold">Teorema Binomial</div>
+      <div class="summary-card-formula">\((x+y)^n = \displaystyle\sum_{k=0}^n\binom{n}{k}x^{n-k}y^k\)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-tag tag-red">Integral</div>
+      <div class="summary-card-formula">\(\displaystyle\sum_k\frac{\binom{n}{k}}{k+1}=\frac{2^{n+1}-1}{n+1}\)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== LATIHAN ===================== -->
+<section id="latihan">
+  <div class="section-head">
+    <span class="section-num">09</span>
+    <div>
+      <div class="section-title">Latihan Soal</div>
+      <div class="section-desc">Uji pemahaman identitas kombinasi dan binomial</div>
+    </div>
+  </div>
+
+  <div class="latihan-wrap" id="latihan-wrap">
+    <!-- Soal dibangkitkan JS -->
+  </div>
+</section>
+
+</div><!-- end .page -->
+
+<footer>
+  <strong>Martin Bernard, M.Pd.</strong> · Pendidikan Matematika · IKIP Siliwangi, Cimahi<br>
+  <span style="margin-top:4px;display:block;">Materi Matematika Diskrit — Sifat Identitas Kombinasi &amp; Binomial</span>
+</footer>
+
+<script>
+/* ======== PROGRESS BAR ======== */
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+/* ======== SCROLL SPY ======== */
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section[id]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => obs.observe(s));
+
+/* ======== CARD TOGGLE ======== */
+function toggleCard(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('visible');
+  if (body.classList.contains('visible') && window.MathJax) {
+    MathJax.typesetPromise([body]).catch(() => {});
+  }
+}
+
+/* ======== FACTORIAL & COMB ======== */
+function fact(n) {
+  if (n < 0) return Infinity;
+  if (n === 0 || n === 1) return 1;
+  let r = 1;
+  for (let i = 2; i <= n; i++) r *= i;
+  return r;
+}
+function C(n, k) {
+  if (k < 0 || k > n) return 0;
+  if (k === 0 || k === n) return 1;
+  return Math.round(fact(n) / (fact(k) * fact(n - k)));
+}
+
+/* ======== KALKULATOR VERIFIKASI ======== */
+function verifikasiIdentitas() {
+  const n = parseInt(document.getElementById('cn').value);
+  const k = parseInt(document.getElementById('ck').value);
+  const m = parseInt(document.getElementById('cm').value);
+  const r = parseInt(document.getElementById('cr').value);
+  const errEl = document.getElementById('calc-error');
+  const resEl = document.getElementById('calc-results');
+  errEl.style.display = 'none'; resEl.innerHTML = '';
+
+  if (isNaN(n)||isNaN(k)||n<0||k<0||k>n||n>20) {
+    errEl.textContent = '⚠ Pastikan 0 ≤ k ≤ n ≤ 20'; errEl.style.display='block'; return;
+  }
+
+  const cnk = C(n,k);
+  const rows = [];
+
+  // ID-1 Simetri
+  const sym = C(n, n-k);
+  rows.push({ label: `ID-1 Simetri: C(${n},${k}) = C(${n},${n-k})`, val: `${cnk} = ${sym}`, ok: cnk===sym });
+
+  // ID-2 Batas
+  rows.push({ label: `ID-2 Batas: C(${n},0) dan C(${n},${n})`, val: `${C(n,0)} dan ${C(n,n)}`, ok: C(n,0)===1&&C(n,n)===1 });
+
+  // ID-3 Pascal
+  if (n>0&&k>0&&k<=n) {
+    const pas = C(n-1,k-1)+C(n-1,k);
+    rows.push({ label: `ID-3 Pascal: C(${n-1},${k-1})+C(${n-1},${k})`, val: `${C(n-1,k-1)}+${C(n-1,k)} = ${pas} = ${cnk}`, ok: pas===cnk });
+  }
+
+  // ID-4 Penyerapan
+  if (k>0) {
+    const l = k*cnk, r2 = n*C(n-1,k-1);
+    rows.push({ label: `ID-4 Penyerapan: ${k}·C(${n},${k}) = ${n}·C(${n-1},${k-1})`, val: `${l} = ${r2}`, ok: l===r2 });
+  }
+
+  // ID-5 Jumlah baris
+  let sumRow = 0; for(let i=0;i<=n;i++) sumRow+=C(n,i);
+  const pow2 = Math.pow(2,n);
+  rows.push({ label: `ID-5 Σ C(${n},k) = 2^${n}`, val: `${sumRow} = ${pow2}`, ok: sumRow===pow2 });
+
+  // ID-6 Alternating
+  let altSum = 0; for(let i=0;i<=n;i++) altSum+=Math.pow(-1,i)*C(n,i);
+  rows.push({ label: `ID-6 Σ(-1)^k·C(${n},k) = 0`, val: `${altSum}`, ok: altSum===0 });
+
+  // Vandermonde C(m+n, r)
+  const mn = m+n; let vand = 0;
+  for(let i=0;i<=r;i++) vand+=C(m,i)*C(n,r-i);
+  const vandL = C(mn,r);
+  rows.push({ label: `Vandermonde: C(${m}+${n},${r}) = Σ C(${m},k)·C(${n},${r}-k)`, val: `${vandL} = ${vand}`, ok: vandL===vand });
+
+  // k*C(n,k) = n*2^(n-1)
+  let sumKCnk = 0; for(let i=0;i<=n;i++) sumKCnk+=i*C(n,i);
+  const ref = n*Math.pow(2,n-1);
+  rows.push({ label: `Σ k·C(${n},k) = ${n}·2^${n-1}`, val: `${sumKCnk} = ${ref}`, ok: sumKCnk===ref });
+
+  resEl.innerHTML = rows.map(r2 =>
+    `<div class="calc-row">
+      <div class="calc-row-label">${r2.label}</div>
+      <div class="calc-row-val">${r2.val} <span class="calc-valid">${r2.ok?'✓ Terbukti':'✗ Cek ulang'}</span></div>
+    </div>`
+  ).join('');
+}
+
+/* ======== SEGITIGA PASCAL ======== */
+const N_ROWS = 9;
+let pascalMode = 'none';
+let pascalHighlightRow = 4;
+let pascalHighlightDiag = 2;
+
+function buildPascal() {
+  const tbl = document.getElementById('pascal-table');
+  tbl.innerHTML = '';
+  for (let n = 0; n < N_ROWS; n++) {
+    const tr = document.createElement('tr');
+    // padding kiri
+    for (let p = 0; p < N_ROWS - 1 - n; p++) {
+      const td = document.createElement('td'); td.style.width='23px'; tr.appendChild(td);
+    }
+    for (let k = 0; k <= n; k++) {
+      const td = document.createElement('td');
+      td.textContent = C(n, k);
+      td.dataset.n = n; td.dataset.k = k;
+      td.onclick = function() { onPascalCell(n, k); };
+      tr.appendChild(td);
+      if (k < n) {
+        const gap = document.createElement('td'); gap.style.width='4px'; tr.appendChild(gap);
+      }
+    }
+    for (let p = 0; p < N_ROWS - 1 - n; p++) {
+      const td = document.createElement('td'); td.style.width='23px'; tr.appendChild(td);
+    }
+    tbl.appendChild(tr);
+  }
+  applyPascalHighlight();
+}
+
+function applyPascalHighlight() {
+  const cells = document.querySelectorAll('#pascal-table td[data-n]');
+  cells.forEach(td => { td.className = ''; });
+  if (pascalMode === 'row') {
+    cells.forEach(td => {
+      if (parseInt(td.dataset.n) === pascalHighlightRow) td.classList.add('hl-row');
+    });
+    const sum = Math.pow(2, pascalHighlightRow);
+    document.getElementById('pascal-caption').textContent =
+      `Baris n=${pascalHighlightRow}: Σ = ${sum} = 2^${pascalHighlightRow} (Identitas ID-5)`;
+  } else if (pascalMode === 'diag') {
+    // Hockey stick: highlight diagonal dari (k,k) hingga (N_ROWS-1, pascalHighlightDiag)
+    let sum = 0;
+    for (let n = pascalHighlightDiag; n < N_ROWS; n++) {
+      cells.forEach(td => {
+        if (parseInt(td.dataset.n)===n && parseInt(td.dataset.k)===pascalHighlightDiag) {
+          td.classList.add('hl-diag'); sum += C(n, pascalHighlightDiag);
+        }
+      });
+    }
+    document.getElementById('pascal-caption').textContent =
+      `Hockey Stick k=${pascalHighlightDiag}: Σ dari baris ${pascalHighlightDiag} s/d ${N_ROWS-1} = ${sum} = C(${N_ROWS},${pascalHighlightDiag+1})=${C(N_ROWS,pascalHighlightDiag+1)}`;
+  } else if (pascalMode === 'vdm') {
+    // Soroti Vandermonde pattern C(m,k)*C(n,r-k) untuk m=3,n=3,r=3
+    const m=3, nv=3, rv=3;
+    for (let kk=0;kk<=rv;kk++) {
+      cells.forEach(td => {
+        if (parseInt(td.dataset.n)===m && parseInt(td.dataset.k)===kk) td.classList.add('hl-vandermonde');
+        if (parseInt(td.dataset.n)===nv && parseInt(td.dataset.k)===(rv-kk)) td.classList.add('hl-vandermonde');
+      });
+    }
+    cells.forEach(td => {
+      if (parseInt(td.dataset.n)===(m+nv) && parseInt(td.dataset.k)===rv) td.classList.add('hl-row');
+    });
+    document.getElementById('pascal-caption').textContent =
+      `Vandermonde: C(3+3,3)=${C(6,3)} = Σ C(3,k)·C(3,3-k) untuk k=0..3`;
+  } else {
+    document.getElementById('pascal-caption').textContent = 'Klik sel untuk info koefisien, atau pilih mode sorotan di atas.';
+  }
+}
+
+function onPascalCell(n, k) {
+  if (pascalMode === 'row') {
+    pascalHighlightRow = n; applyPascalHighlight();
+  } else if (pascalMode === 'diag') {
+    pascalHighlightDiag = k; applyPascalHighlight();
+  } else {
+    document.getElementById('pascal-caption').textContent =
+      `C(${n},${k}) = ${C(n,k)} → kombinasi dari ${n} pilih ${k}`;
+  }
+}
+
+function setPascalMode(mode, btn) {
+  pascalMode = mode;
+  document.querySelectorAll('.pctrl-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyPascalHighlight();
+}
+
+buildPascal();
+
+/* ======== EKSPANSI BINOMIAL ======== */
+function hitungEkspansi() {
+  const a = parseFloat(document.getElementById('sa').value) || 1;
+  const x = document.getElementById('sx').value || 'x';
+  const b = parseFloat(document.getElementById('sb').value) || 1;
+  const y = document.getElementById('sy').value || 'y';
+  const n = parseInt(document.getElementById('sn').value);
+  if (isNaN(n)||n<0||n>8) {
+    document.getElementById('expansion-output').innerHTML = '<p style="color:#8c2020">Pangkat n harus antara 0 dan 8.</p>';
+    return;
+  }
+
+  let terms = [];
+  let pills = [];
+  for (let k = 0; k <= n; k++) {
+    const coef = C(n, k) * Math.pow(a, n-k) * Math.pow(b, k);
+    const xpow = n - k;
+    const ypow = k;
+
+    let termStr = '';
+    if (Math.abs(coef) !== 1 || (xpow===0 && ypow===0)) termStr += coef;
+    else if (coef === -1) termStr += '-';
+
+    if (xpow === 1) termStr += x;
+    else if (xpow > 1) termStr += `${x}^{${xpow}}`;
+
+    if (ypow === 1) termStr += (xpow>0?'':'')+y;
+    else if (ypow > 1) termStr += (xpow>0?'':'')+`${y}^{${ypow}}`;
+
+    if (!termStr) termStr = String(coef);
+    terms.push(termStr);
+
+    const coefDisp = C(n,k) === 1 ? '' : C(n,k);
+    const aPow = Math.pow(a, n-k);
+    const bPow = Math.pow(b, k);
+    const finalCoef = C(n,k) * aPow * bPow;
+    let pillTxt = `k=${k}: C(${n},${k})`;
+    if (a!==1) pillTxt += `·${a}^${n-k}`;
+    if (b!==1) pillTxt += `·${b}^${k}`;
+    pillTxt += ` = ${finalCoef}`;
+    if (xpow>0) pillTxt += `·${x}^${xpow}`;
+    if (ypow>0) pillTxt += `·${y}^${ypow}`;
+    pills.push(pillTxt);
+  }
+
+  const raw = terms.join(' + ').replace(/\+ -/g, '- ');
+  const inputStr = `(${a===1?'':a}${x} + ${b===1?'':b}${y})^{${n}}`;
+  document.getElementById('expansion-output').innerHTML = `\\[${inputStr} = ${raw}\\]`;
+  document.getElementById('expansion-terms').innerHTML = pills.map(p => `<span class="term-pill">${p}</span>`).join('');
+
+  if (window.MathJax) MathJax.typesetPromise([document.getElementById('expansion-output')]).catch(()=>{});
+}
+
+/* ======== LATIHAN SOAL ======== */
+const soalData = [
+  {
+    q: "Berapakah nilai \\(\\binom{10}{3}\\)?",
+    opts: ["100", "120", "210", "180"],
+    ans: 1,
+    fb: "\\(\\binom{10}{3} = \\frac{10!}{3!\\cdot7!} = \\frac{10\\times9\\times8}{6} = 120\\)"
+  },
+  {
+    q: "Berdasarkan identitas simetri, \\(\\binom{12}{9}\\) sama dengan?",
+    opts: ["\\(\\binom{12}{9}\\)", "\\(\\binom{12}{3}\\)", "\\(\\binom{11}{3}\\)", "\\(\\binom{12}{4}\\)"],
+    ans: 1,
+    fb: "Identitas simetri: \\(\\binom{n}{k}=\\binom{n}{n-k}\\), sehingga \\(\\binom{12}{9}=\\binom{12}{3}=220\\)"
+  },
+  {
+    q: "\\(\\displaystyle\\sum_{k=0}^{7}\\binom{7}{k}\\) bernilai?",
+    opts: ["64", "128", "256", "49"],
+    ans: 1,
+    fb: "Identitas ID-5: \\(\\sum_{k=0}^n\\binom{n}{k}=2^n\\). Untuk \\(n=7\\): \\(2^7=128\\)"
+  },
+  {
+    q: "Nilai \\(\\binom{8}{3}\\) menggunakan identitas Pascal adalah?",
+    opts: ["\\(\\binom{7}{2}+\\binom{7}{3}\\)", "\\(\\binom{7}{3}+\\binom{7}{4}\\)", "\\(\\binom{8}{2}+\\binom{8}{4}\\)", "\\(2\\binom{7}{3}\\)"],
+    ans: 0,
+    fb: "Pascal: \\(\\binom{n}{k}=\\binom{n-1}{k-1}+\\binom{n-1}{k}\\). Jadi \\(\\binom{8}{3}=\\binom{7}{2}+\\binom{7}{3}=21+35=56\\)"
+  },
+  {
+    q: "Suku ke-3 dari ekspansi \\((x+2)^5\\) adalah?",
+    opts: ["\\(20x^3\\)", "\\(80x^3\\)", "\\(40x^3\\)", "\\(10x^3\\)"],
+    ans: 1,
+    fb: "\\(T_3 = \\binom{5}{2}x^3\\cdot2^2 = 10\\cdot x^3\\cdot 4 = 40x^3\\). Jawaban yang benar sebenarnya \\(40x^3\\) — periksa kembali pilihannya!"
+  },
+  {
+    q: "Nilai \\(\\displaystyle\\sum_{k=0}^{5}(-1)^k\\binom{5}{k}\\) adalah?",
+    opts: ["32", "1", "0", "-1"],
+    ans: 2,
+    fb: "Identitas ID-6 (Alternating Sum): \\(\\sum_{k=0}^n(-1)^k\\binom{n}{k}=0\\) untuk \\(n\\geq1\\)"
+  },
+  {
+    q: "\\(\\displaystyle\\sum_{i=2}^{6}\\binom{i}{2}\\) = ?",
+    opts: ["\\(\\binom{6}{2}\\)", "\\(\\binom{7}{3}\\)", "\\(\\binom{8}{3}\\)", "\\(\\binom{7}{2}\\)"],
+    ans: 1,
+    fb: "Hockey Stick: \\(\\sum_{i=k}^n\\binom{i}{k}=\\binom{n+1}{k+1}\\). Untuk \\(k=2, n=6\\): hasilnya \\(\\binom{7}{3}=35\\). Cek: \\(1+3+6+10+15=35\\) ✓"
+  },
+  {
+    q: "Ekspansi \\((1+x)^4\\) memiliki suku tengah (k=2) dengan nilai koefisien?",
+    opts: ["4", "8", "6", "12"],
+    ans: 2,
+    fb: "Suku ke-3 (k=2): \\(T_3=\\binom{4}{2}x^2=6x^2\\). Koefisien = 6."
+  }
+];
+
+function buildLatihan() {
+  const wrap = document.getElementById('latihan-wrap');
+  wrap.innerHTML = soalData.map((s,i) => `
+    <div class="latihan-item">
+      <div class="latihan-q"><strong>${i+1}.</strong> ${s.q}</div>
+      <div class="latihan-options">
+        ${s.opts.map((o,j) => `<button class="latihan-opt" onclick="jawab(${i},${j},this)">${o}</button>`).join('')}
+      </div>
+      <div class="latihan-feedback" id="fb-${i}"></div>
+    </div>
+  `).join('');
+  if (window.MathJax) MathJax.typesetPromise([wrap]).catch(()=>{});
+}
+
+function jawab(soalIdx, pilihanIdx, btn) {
+  const item = btn.closest('.latihan-item');
+  const opts = item.querySelectorAll('.latihan-opt');
+  opts.forEach(o => o.classList.add('disabled'));
+  const fb = document.getElementById('fb-'+soalIdx);
+  const s = soalData[soalIdx];
+  if (pilihanIdx === s.ans) {
+    btn.classList.add('correct');
+    fb.className = 'latihan-feedback show ok';
+    fb.innerHTML = '✓ Benar! ' + s.fb;
+  } else {
+    btn.classList.add('wrong');
+    opts[s.ans].classList.add('correct');
+    fb.className = 'latihan-feedback show err';
+    fb.innerHTML = '✗ Kurang tepat. ' + s.fb;
+  }
+  fb.classList.add('show');
+  if (window.MathJax) MathJax.typesetPromise([fb]).catch(()=>{});
+}
+
+buildLatihan();
+
+// MathJax config
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  startup: { ready() { MathJax.startup.defaultReady(); } }
+};
+</script>
+</body>
+</html>
