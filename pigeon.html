@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kombinatorik: Pigeonhole & Inklusi-Ekslusi | Martin Bernard, M.Pd.</title>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --cream: #f5edd8;
+    --parchment: #ede0c0;
+    --gold: #c9941a;
+    --gold-light: #e8c060;
+    --rust: #8b3a1a;
+    --teal: #1a5c5c;
+    --teal-light: #2a8080;
+    --shadow: rgba(26,18,8,0.18);
+    --border: #c4a96a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ink);
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse at 20% 10%, #2a1a04 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, #0a2020 0%, transparent 50%),
+      linear-gradient(135deg, #1a1208 0%, #0d1a0d 50%, #1a1208 100%);
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(180deg, #0d0a04 0%, #1a1208 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(201,148,26,0.03) 40px, rgba(201,148,26,0.03) 80px
+    );
+  }
+  .header-ornament {
+    color: var(--gold); font-size: 1.5rem; letter-spacing: 1rem; opacity: 0.7;
+    display: block; margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    color: var(--gold-light);
+    line-height: 1.2;
+    text-shadow: 0 2px 20px rgba(201,148,26,0.4);
+  }
+  header .subtitle {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: #c4b080;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+  .meta-info {
+    margin-top: 1rem;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;
+  }
+  .meta-badge {
+    background: rgba(201,148,26,0.15);
+    border: 1px solid rgba(201,148,26,0.35);
+    color: var(--gold-light);
+    padding: 0.3rem 1rem;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    background: #120e05;
+    border-bottom: 1px solid rgba(201,148,26,0.3);
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-btn {
+    background: transparent;
+    border: none; border-right: 1px solid rgba(201,148,26,0.2);
+    color: #a09060;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.4rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    color: var(--gold-light);
+    background: rgba(201,148,26,0.12);
+  }
+  .nav-btn.active::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+  }
+
+  /* ─── MAIN ─── */
+  main {
+    max-width: 950px;
+    margin: 2rem auto;
+    padding: 0 1rem 4rem;
+  }
+
+  /* ─── SECTION ─── */
+  .section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ─── CARD ─── */
+  .card {
+    background: linear-gradient(135deg, var(--cream) 0%, var(--parchment) 100%);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 4px 24px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.4);
+    position: relative;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .card-teal {
+    background: linear-gradient(135deg, #e0f0f0 0%, #c8e8e8 100%);
+    border-color: #5a9090;
+  }
+  .card-teal::before { background: linear-gradient(90deg, transparent, var(--teal), transparent); }
+  .card-rust {
+    background: linear-gradient(135deg, #f5e8e0 0%, #edd8c8 100%);
+    border-color: #b06040;
+  }
+  .card-rust::before { background: linear-gradient(90deg, transparent, var(--rust), transparent); }
+
+  /* ─── TYPOGRAPHY ─── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .section-title .icon { font-size: 1.3em; }
+  .section-label {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 0.8rem;
+  }
+  h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin: 1.4rem 0 0.6rem;
+  }
+  p { line-height: 1.75; margin-bottom: 0.9rem; font-size: 1.05rem; }
+
+  /* ─── THEOREM BOX ─── */
+  .theorem-box {
+    border-left: 4px solid var(--gold);
+    background: rgba(201,148,26,0.08);
+    border-radius: 0 4px 4px 0;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+    position: relative;
+  }
+  .theorem-box .thm-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .theorem-teal { border-color: var(--teal); background: rgba(26,92,92,0.07); }
+  .theorem-teal .thm-label { color: var(--teal); }
+  .theorem-rust { border-color: var(--rust); background: rgba(139,58,26,0.07); }
+  .theorem-rust .thm-label { color: var(--rust); }
+
+  /* ─── PROOF BOX ─── */
+  .proof-box {
+    border: 1px dashed var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.4rem;
+    margin: 1rem 0;
+    background: rgba(255,255,255,0.3);
+  }
+  .proof-box .proof-label {
+    font-style: italic; font-size: 0.9rem; color: #7a6040; margin-bottom: 0.4rem;
+  }
+  .qed { float: right; font-size: 1.2rem; }
+
+  /* ─── EXAMPLE ─── */
+  .example-box {
+    background: linear-gradient(135deg, rgba(26,92,92,0.1) 0%, rgba(26,92,92,0.05) 100%);
+    border: 1px solid rgba(26,92,92,0.3);
+    border-radius: 4px;
+    padding: 1.2rem 1.5rem;
+    margin: 1.2rem 0;
+  }
+  .example-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.1em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+
+  /* ─── PIGEONHOLE VISUAL ─── */
+  .pigeon-container {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    justify-content: center; margin: 1.5rem 0;
+  }
+  .pigeon-hole {
+    width: 80px; min-height: 90px;
+    background: linear-gradient(180deg, #d4a060 0%, #b07030 100%);
+    border: 2px solid #8b5010;
+    border-radius: 0 0 40px 40px / 0 0 20px 20px;
+    border-top: 3px solid #7a4010;
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: flex-end; padding-bottom: 8px;
+    position: relative;
+    box-shadow: 2px 4px 12px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+  }
+  .pigeon-hole:hover { transform: translateY(-3px); }
+  .pigeon-hole .hole-label {
+    position: absolute; top: -24px;
+    font-size: 0.75rem; color: var(--parchment);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+  .pigeon-emoji { font-size: 1.4rem; margin: 1px 0; }
+  .hole-count {
+    font-size: 0.65rem; color: rgba(255,255,255,0.8);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ─── SLIDER SIMULATOR ─── */
+  .simulator {
+    background: rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .sim-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; margin-bottom: 1rem; color: var(--ink);
+  }
+  .slider-row {
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; flex-wrap: wrap;
+  }
+  .slider-row label {
+    min-width: 130px; font-size: 0.9rem; color: #4a3820;
+  }
+  input[type=range] {
+    flex: 1; min-width: 120px;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+  .val-badge {
+    background: var(--gold); color: white;
+    padding: 0.2rem 0.6rem; border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    min-width: 40px; text-align: center;
+  }
+  .sim-result {
+    background: rgba(26,18,8,0.08);
+    border-radius: 4px; padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem; margin-top: 0.8rem;
+    border-left: 3px solid var(--gold);
+    line-height: 1.6;
+  }
+  .sim-result.teal { border-color: var(--teal); }
+  .result-highlight { color: var(--rust); font-weight: 600; }
+
+  /* ─── VENN DIAGRAM ─── */
+  .venn-wrap {
+    text-align: center; margin: 1.5rem 0;
+    overflow: hidden;
+  }
+  svg text { font-family: 'Crimson Pro', serif; }
+
+  /* ─── FORMULA TABLE ─── */
+  table {
+    width: 100%; border-collapse: collapse; margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+  th {
+    background: linear-gradient(135deg, var(--gold) 0%, #a07010 100%);
+    color: white; padding: 0.7rem 1rem; text-align: left;
+    font-family: 'Crimson Pro', serif; font-weight: 600;
+  }
+  td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid rgba(196,169,106,0.3);
+  }
+  tr:nth-child(even) td { background: rgba(201,148,26,0.06); }
+  tr:hover td { background: rgba(201,148,26,0.12); }
+
+  /* ─── ACCORDION ─── */
+  .accordion-item {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+  }
+  .accordion-header {
+    background: linear-gradient(135deg, rgba(201,148,26,0.12) 0%, rgba(201,148,26,0.04) 100%);
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+  .accordion-header:hover { background: rgba(201,148,26,0.2); }
+  .accordion-header .chevron {
+    transition: transform 0.3s;
+    color: var(--gold);
+    font-size: 1.1rem;
+  }
+  .accordion-item.open .chevron { transform: rotate(180deg); }
+  .accordion-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    padding: 0 1.2rem;
+    background: rgba(255,255,255,0.25);
+    font-size: 0.98rem; line-height: 1.75;
+  }
+  .accordion-item.open .accordion-body {
+    max-height: 600px;
+    padding: 1rem 1.2rem 1.2rem;
+  }
+
+  /* ─── QUIZ ─── */
+  .quiz-card {
+    background: linear-gradient(135deg, var(--cream), var(--parchment));
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  .quiz-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; color: var(--gold); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .quiz-q { font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.5);
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    font-size: 0.98rem;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  .quiz-opt:hover { background: rgba(201,148,26,0.15); border-color: var(--gold); }
+  .quiz-opt.correct { background: rgba(26,120,60,0.15); border-color: #1a7840; color: #0a4020; }
+  .quiz-opt.wrong { background: rgba(180,30,30,0.12); border-color: #c03030; color: #6a0a0a; }
+  .quiz-feedback {
+    margin-top: 0.8rem; padding: 0.8rem 1rem;
+    border-radius: 3px; font-size: 0.93rem; line-height: 1.6;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct-fb { background: rgba(26,120,60,0.1); border: 1px solid #1a7840; color: #0a4020; }
+  .quiz-feedback.wrong-fb { background: rgba(180,30,30,0.1); border: 1px solid #c03030; color: #6a0a0a; }
+  .quiz-score {
+    text-align: center; padding: 1.5rem;
+    background: rgba(201,148,26,0.1); border: 1px solid var(--gold);
+    border-radius: 4px; margin-top: 1.5rem;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem;
+  }
+  .btn-quiz {
+    background: linear-gradient(135deg, var(--gold) 0%, #a07010 100%);
+    color: white; border: none; border-radius: 3px;
+    padding: 0.65rem 1.6rem; cursor: pointer;
+    font-family: 'Crimson Pro', serif; font-size: 1rem;
+    margin-top: 0.8rem;
+    transition: opacity 0.2s;
+  }
+  .btn-quiz:hover { opacity: 0.85; }
+
+  /* ─── PROGRESS ─── */
+  .progress-bar {
+    height: 4px;
+    background: rgba(201,148,26,0.2);
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:600px) {
+    .card { padding: 1.2rem 1rem; }
+    .nav-btn { padding: 0.7rem 0.9rem; font-size: 0.85rem; }
+    .pigeon-hole { width: 65px; }
+  }
+
+  /* ─── DIVIDER ─── */
+  .ornament-divider {
+    text-align: center; color: var(--border); font-size: 1rem;
+    letter-spacing: 1rem; margin: 1.5rem 0; opacity: 0.7;
+  }
+
+  .step-list { counter-reset: step-count; list-style: none; padding: 0; }
+  .step-list li {
+    counter-increment: step-count;
+    padding: 0.6rem 0 0.6rem 2.8rem;
+    position: relative;
+    border-bottom: 1px dashed rgba(196,169,106,0.3);
+    font-size: 1.02rem; line-height: 1.7;
+  }
+  .step-list li::before {
+    content: counter(step-count);
+    position: absolute; left: 0; top: 0.5rem;
+    background: var(--gold); color: white;
+    width: 1.7rem; height: 1.7rem; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-ornament">✦ ✦ ✦</span>
+  <h1>Prinsip Pigeonhole &amp; Inklusi-Ekslusi</h1>
+  <p class="subtitle">Matematika Diskrit — Kombinatorik Lanjutan</p>
+  <div class="meta-info">
+    <span class="meta-badge">Martin Bernard, M.Pd.</span>
+    <span class="meta-badge">IKIP Siliwangi</span>
+    <span class="meta-badge">Pendidikan Matematika</span>
+  </div>
+</header>
+
+<nav id="mainNav">
+  <button class="nav-btn active" onclick="showSection('pigeonhole')">🐦 Pigeonhole</button>
+  <button class="nav-btn" onclick="showSection('generalized')">📦 Pigeonhole Umum</button>
+  <button class="nav-btn" onclick="showSection('inkeks')">∩ Inklusi-Ekslusi</button>
+  <button class="nav-btn" onclick="showSection('aplikasi')">🧩 Aplikasi</button>
+  <button class="nav-btn" onclick="showSection('latihan')">✏️ Latihan</button>
+</nav>
+
+<main>
+  <!-- ══════════════ PIGEONHOLE ══════════════ -->
+  <div class="section active" id="pigeonhole">
+    <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+
+    <div class="card">
+      <div class="section-label">§ 1 — Prinsip Dasar</div>
+      <div class="section-title"><span class="icon">🐦</span> Prinsip Pigeonhole (Sarang Merpati)</div>
+      <p>Prinsip Pigeonhole adalah salah satu hasil yang paling elegan dan kuat dalam matematika kombinatorik. Meskipun tampak sederhana dan intuitif, prinsip ini menghasilkan bukti-bukti yang mengejutkan untuk berbagai permasalahan yang tampaknya sulit.</p>
+
+      <div class="theorem-box">
+        <div class="thm-label">Teorema 1.1 — Prinsip Pigeonhole (Dirichlet, 1834)</div>
+        <p>Jika \(n + 1\) objek (merpati) ditempatkan ke dalam \(n\) wadah (sarang), maka <strong>paling sedikit satu wadah berisi dua objek atau lebih</strong>.</p>
+        <p style="margin-bottom:0;">\[ \text{Jika } |A| > |B|, \text{ maka tidak ada fungsi injektif } f: A \to B \]</p>
+      </div>
+
+      <div class="proof-box">
+        <div class="proof-label">Bukti (Kontradiksi)</div>
+        <p>Misalkan ada \(n+1\) merpati dalam \(n\) sarang. Asumsikan setiap sarang berisi <em>paling banyak 1</em> merpati. Maka jumlah total merpati \(\leq 1 \cdot n = n\). Namun kita memiliki \(n+1 > n\) merpati. Kontradiksi. Jadi pasti ada sarang yang berisi \(\geq 2\) merpati. <span class="qed">∎</span></p>
+      </div>
+    </div>
+
+    <!-- VISUALISASI PIGEONHOLE -->
+    <div class="card">
+      <div class="section-label">Visualisasi Interaktif</div>
+      <h3>Simulator Pigeonhole</h3>
+      <div class="simulator">
+        <div class="sim-title">🎛️ Atur parameter dan amati prinsip pigeonhole bekerja:</div>
+        <div class="slider-row">
+          <label>🐦 Jumlah Merpati (n+k):</label>
+          <input type="range" id="slMerpati" min="2" max="20" value="8" oninput="updatePigeon()">
+          <span class="val-badge" id="valMerpati">8</span>
+        </div>
+        <div class="slider-row">
+          <label>🏠 Jumlah Sarang (n):</label>
+          <input type="range" id="slSarang" min="1" max="15" value="5" oninput="updatePigeon()">
+          <span class="val-badge" id="valSarang">5</span>
+        </div>
+        <div class="pigeon-container" id="pigeonViz"></div>
+        <div class="sim-result" id="pigeonResult"></div>
+      </div>
+    </div>
+
+    <!-- CONTOH CONTOH -->
+    <div class="card">
+      <div class="section-label">Contoh-Contoh</div>
+      <h3>Contoh Klasik Prinsip Pigeonhole</h3>
+
+      <div class="accordion-item" id="acc1">
+        <div class="accordion-header" onclick="toggleAcc('acc1')">
+          <span>Contoh 1: Hari Lahir</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Masalah:</strong> Dalam sebuah kelompok yang terdiri dari <strong>367 orang</strong>, tunjukkan bahwa pasti ada <strong>dua orang yang memiliki hari lahir yang sama</strong>.</p>
+          <p><strong>Penyelesaian:</strong> Identifikasikan:</p>
+          <ul style="margin-left:1.5rem;line-height:1.8">
+            <li>🐦 Merpati: 367 orang</li>
+            <li>🏠 Sarang: 366 hari dalam setahun (termasuk 29 Februari)</li>
+          </ul>
+          <p>Karena \(367 > 366\), maka oleh Prinsip Pigeonhole, <strong>pasti ada sarang (hari) yang menampung minimal 2 merpati (orang)</strong>. ∎</p>
+          <p><em>Catatan:</em> Prinsip ini hanya menjamin keberadaan, bukan menentukan siapa yang berbagi hari lahir.</p>
+        </div>
+      </div>
+
+      <div class="accordion-item" id="acc2">
+        <div class="accordion-header" onclick="toggleAcc('acc2')">
+          <span>Contoh 2: Kaus Kaki dalam Laci</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Masalah:</strong> Sebuah laci berisi <strong>10 kaus kaki merah</strong> dan <strong>10 kaus kaki biru</strong>. Berapa minimal kaus kaki yang harus diambil (tanpa melihat) agar dijamin mendapat <strong>sepasang sewarna</strong>?</p>
+          <p><strong>Penyelesaian:</strong></p>
+          <ul style="margin-left:1.5rem;line-height:1.8">
+            <li>🐦 Merpati: kaus kaki yang diambil</li>
+            <li>🏠 Sarang: 2 warna (merah, biru)</li>
+          </ul>
+          <p>Dengan \(n = 2\) sarang, maka mengambil \(n + 1 = \mathbf{3}\) kaus kaki menjamin ada 2 kaus kaki sewarna. ∎</p>
+        </div>
+      </div>
+
+      <div class="accordion-item" id="acc3">
+        <div class="accordion-header" onclick="toggleAcc('acc3')">
+          <span>Contoh 3: Nilai Ujian</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Masalah:</strong> Dalam sebuah kelas terdapat <strong>27 mahasiswa</strong>. Nilai huruf yang mungkin adalah A, B, C, D, dan E. Buktikan bahwa paling sedikit <strong>6 mahasiswa mendapat nilai huruf yang sama</strong>.</p>
+          <p><strong>Penyelesaian:</strong> Ini adalah bentuk pigeonhole umum (lihat bagian berikutnya):</p>
+          <p>\[ \left\lceil \frac{27}{5} \right\rceil = \left\lceil 5{,}4 \right\rceil = 6 \]</p>
+          <p>Karena \(\lceil 27/5 \rceil = 6\), maka paling sedikit satu nilai huruf diberikan kepada <strong>minimal 6 mahasiswa</strong>. ∎</p>
+        </div>
+      </div>
+
+      <div class="accordion-item" id="acc4">
+        <div class="accordion-header" onclick="toggleAcc('acc4')">
+          <span>Contoh 4: Titik-titik dalam Segitiga</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="accordion-body">
+          <p><strong>Masalah:</strong> Diberikan 5 titik di dalam (atau pada sisi) segitiga sama sisi dengan panjang sisi 2. Buktikan bahwa setidaknya dua titik berjarak \(\leq 1\).</p>
+          <p><strong>Penyelesaian:</strong> Bagi segitiga menjadi 4 segitiga kecil sama sisi dengan panjang sisi 1 (dengan membagi setiap sisi menjadi 2).</p>
+          <ul style="margin-left:1.5rem;line-height:1.8">
+            <li>🐦 Merpati: 5 titik</li>
+            <li>🏠 Sarang: 4 segitiga kecil</li>
+          </ul>
+          <p>Oleh Pigeonhole, setidaknya satu segitiga kecil memuat 2 titik. Diameter segitiga sama sisi bersisi 1 adalah 1, sehingga kedua titik tersebut berjarak \(\leq 1\). ∎</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PIGEONHOLE UMUM ══════════════ -->
+  <div class="section" id="generalized">
+    <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+
+    <div class="card">
+      <div class="section-label">§ 2 — Bentuk Umum</div>
+      <div class="section-title"><span class="icon">📦</span> Prinsip Pigeonhole Umum</div>
+      <p>Prinsip pigeonhole dapat digeneralisasi untuk memberikan pernyataan yang lebih kuat tentang berapa banyak objek yang <em>pasti</em> ada dalam setidaknya satu wadah.</p>
+
+      <div class="theorem-box">
+        <div class="thm-label">Teorema 2.1 — Prinsip Pigeonhole Umum</div>
+        <p>Jika \(N\) objek ditempatkan ke dalam \(k\) wadah, maka <strong>paling sedikit satu wadah berisi setidaknya</strong>:
+        \[ \left\lceil \frac{N}{k} \right\rceil \text{ objek} \]</p>
+        <p style="margin-bottom:0;">di mana \(\lceil x \rceil\) adalah fungsi ceiling (langit-langit) dari \(x\).</p>
+      </div>
+
+      <div class="proof-box">
+        <div class="proof-label">Bukti</div>
+        <p>Misalkan tidak ada wadah yang berisi \(\geq \lceil N/k \rceil\) objek. Maka setiap wadah berisi <em>paling banyak</em> \(\lceil N/k \rceil - 1\) objek. Total objek:</p>
+        <p>\[ \text{Total} \leq k \cdot \left( \left\lceil \frac{N}{k} \right\rceil - 1 \right) < k \cdot \frac{N}{k} = N \]</p>
+        <p>Ini kontradiksi dengan fakta ada \(N\) objek. ∎ <span class="qed">∎</span></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Simulator</div>
+      <h3>Kalkulator Pigeonhole Umum</h3>
+      <div class="simulator">
+        <div class="slider-row">
+          <label>📦 Total Objek (N):</label>
+          <input type="range" id="slN" min="1" max="100" value="25" oninput="updateGen()">
+          <span class="val-badge" id="valN">25</span>
+        </div>
+        <div class="slider-row">
+          <label>🏠 Jumlah Wadah (k):</label>
+          <input type="range" id="slK" min="1" max="20" value="7" oninput="updateGen()">
+          <span class="val-badge" id="valK">7</span>
+        </div>
+        <div class="sim-result teal" id="genResult"></div>
+      </div>
+    </div>
+
+    <div class="card card-teal">
+      <div class="section-label">Tabel Referensi — Fungsi Ceiling</div>
+      <h3>Contoh Nilai \(\lceil N/k \rceil\)</h3>
+      <table>
+        <thead><tr><th>N (Objek)</th><th>k (Wadah)</th><th>N/k</th><th>⌈N/k⌉</th><th>Jaminan</th></tr></thead>
+        <tbody id="ceilTable"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Contoh Lanjutan</div>
+      <div class="example-box">
+        <div class="example-label">Contoh 2.1 — Kartu Bridge</div>
+        <p><strong>Masalah:</strong> Berapa minimal kartu yang harus diambil dari setumpuk kartu bridge (52 kartu, 4 jenis) untuk menjamin mendapat <strong>5 kartu dengan jenis yang sama</strong>?</p>
+        <p><strong>Penyelesaian:</strong> Kita ingin \(\lceil N/4 \rceil \geq 5\), sehingga:</p>
+        <p>\[ N \geq 4 \cdot (5-1) + 1 = 17 \]</p>
+        <p><strong>Jawab: Minimal 17 kartu</strong>. (Dengan 16 kartu, mungkin setiap jenis hanya 4 kartu).</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh 2.2 — Barisan Bilangan Bulat</div>
+        <p><strong>Teorema Erdős–Szekeres:</strong> Setiap barisan dari \(mn+1\) bilangan real yang berbeda-beda memuat subbarisan naik berukuran \(m+1\) <em>atau</em> subbarisan turun berukuran \(n+1\).</p>
+        <p><strong>Ide Bukti:</strong> Untuk setiap elemen \(a_i\), beri label \((u_i, d_i)\) di mana \(u_i\) = panjang subbarisan naik terpanjang yang berakhir di \(a_i\), dan \(d_i\) = panjang subbarisan turun terpanjang. Gunakan Pigeonhole pada pasangan-pasangan ini. ∎</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ INKLUSI-EKSLUSI ══════════════ -->
+  <div class="section" id="inkeks">
+    <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+
+    <div class="card">
+      <div class="section-label">§ 3 — Prinsip Inklusi-Ekslusi</div>
+      <div class="section-title"><span class="icon">∩</span> Prinsip Inklusi-Ekslusi</div>
+      <p>Prinsip inklusi-ekslusi (PIE) menyediakan cara sistematis untuk menghitung ukuran gabungan himpunan-himpunan yang tidak selalu saling lepas, dengan cara bergantian menjumlahkan dan mengurangkan ukuran irisan-irisannya.</p>
+
+      <!-- VENN 2 HIMPUNAN -->
+      <div class="venn-wrap">
+        <svg viewBox="0 0 400 220" width="100%" style="max-width:400px;">
+          <defs>
+            <clipPath id="clipA"><circle cx="155" cy="110" r="85"/></clipPath>
+            <clipPath id="clipB"><circle cx="245" cy="110" r="85"/></clipPath>
+          </defs>
+          <rect width="400" height="220" fill="rgba(245,237,216,0.3)" rx="8"/>
+          <text x="20" y="20" fill="#4a3820" font-size="13" font-style="italic">S (Semesta)</text>
+          <!-- A only -->
+          <circle cx="155" cy="110" r="85" fill="rgba(201,148,26,0.25)" stroke="#c9941a" stroke-width="2"/>
+          <!-- B only -->
+          <circle cx="245" cy="110" r="85" fill="rgba(26,92,92,0.25)" stroke="#1a5c5c" stroke-width="2"/>
+          <!-- Intersection shaded -->
+          <circle cx="245" cy="110" r="85" fill="rgba(139,58,26,0.3)" clip-path="url(#clipA)"/>
+          <text x="105" y="115" fill="#7a5010" font-size="15" text-anchor="middle">A saja</text>
+          <text x="295" y="115" fill="#0a4040" font-size="15" text-anchor="middle">B saja</text>
+          <text x="200" y="115" fill="#5a1a0a" font-size="14" text-anchor="middle" font-weight="bold">A∩B</text>
+          <text x="70" y="40" fill="#c9941a" font-size="16" font-weight="bold">A</text>
+          <text x="320" y="40" fill="#1a5c5c" font-size="16" font-weight="bold">B</text>
+        </svg>
+      </div>
+
+      <div class="theorem-box">
+        <div class="thm-label">Teorema 3.1 — PIE untuk 2 Himpunan</div>
+        <p>\[ |A \cup B| = |A| + |B| - |A \cap B| \]</p>
+      </div>
+      <div class="theorem-box">
+        <div class="thm-label">Teorema 3.2 — PIE untuk 3 Himpunan</div>
+        <p>\[ |A \cup B \cup C| = |A| + |B| + |C| - |A \cap B| - |A \cap C| - |B \cap C| + |A \cap B \cap C| \]</p>
+      </div>
+      <div class="theorem-box theorem-rust">
+        <div class="thm-label">Teorema 3.3 — PIE Umum (n Himpunan)</div>
+        <p>\[ \left| \bigcup_{i=1}^{n} A_i \right| = \sum_{i}|A_i| - \sum_{i<j}|A_i \cap A_j| + \sum_{i<j<k}|A_i \cap A_j \cap A_k| - \cdots + (-1)^{n+1}|A_1 \cap A_2 \cap \cdots \cap A_n| \]</p>
+        <p style="margin-bottom:0;">\[ = \sum_{\emptyset \neq J \subseteq \{1,\ldots,n\}} (-1)^{|J|+1} \left| \bigcap_{j \in J} A_j \right| \]</p>
+      </div>
+    </div>
+
+    <!-- VENN 3 HIMPUNAN INTERAKTIF -->
+    <div class="card card-teal">
+      <div class="section-label">Kalkulator Interaktif</div>
+      <h3>Kalkulator PIE — 3 Himpunan</h3>
+      <div class="simulator">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem;">
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|A|</label><input type="number" id="iA" value="30" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|B|</label><input type="number" id="iB" value="25" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|C|</label><input type="number" id="iC" value="20" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|A∩B|</label><input type="number" id="iAB" value="10" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|A∩C|</label><input type="number" id="iAC" value="8" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|B∩C|</label><input type="number" id="iBC" value="6" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+          <div style="grid-column:1/-1;"><label style="font-size:0.85rem;display:block;margin-bottom:3px;">|A∩B∩C|</label><input type="number" id="iABC" value="3" min="0" oninput="calcPIE()" style="width:100%;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)"></div>
+        </div>
+        <div class="sim-result teal" id="pieResult"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Contoh Penerapan</div>
+      <div class="example-box">
+        <div class="example-label">Contoh 3.1 — Mahasiswa Bahasa</div>
+        <p>Dari 100 mahasiswa: 65 belajar Bahasa Inggris (E), 45 belajar Bahasa Jerman (G), 42 belajar Bahasa Prancis (F). Diketahui: \(|E \cap G| = 20\), \(|E \cap F| = 25\), \(|G \cap F| = 15\), \(|E \cap G \cap F| = 8\).</p>
+        <p><strong>Ditanya:</strong> Berapa mahasiswa yang belajar setidaknya satu bahasa?</p>
+        <p><strong>Jawab:</strong></p>
+        <p>\[ |E \cup G \cup F| = 65 + 45 + 42 - 20 - 25 - 15 + 8 = \mathbf{100} \]</p>
+        <p>Jadi semua 100 mahasiswa belajar setidaknya satu bahasa. Yang tidak belajar bahasa apapun: \(100 - 100 = 0\).</p>
+      </div>
+      <div class="example-box">
+        <div class="example-label">Contoh 3.2 — Komplemen (Tidak ada satu pun)</div>
+        <p>Sering kita ingin menghitung elemen yang <strong>tidak ada di satu pun</strong> himpunan:</p>
+        <p>\[ |\overline{A_1} \cap \overline{A_2} \cap \cdots \cap \overline{A_n}| = |S| - |A_1 \cup A_2 \cup \cdots \cup A_n| \]</p>
+        <p>Dengan hukum De Morgan, ini sama dengan menghitung elemen di luar semua himpunan.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ APLIKASI ══════════════ -->
+  <div class="section" id="aplikasi">
+    <div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div>
+
+    <div class="card">
+      <div class="section-label">§ 4 — Aplikasi Lanjutan</div>
+      <div class="section-title"><span class="icon">🧩</span> Aplikasi & Koneksi</div>
+      <p>Kedua prinsip ini memiliki penerapan yang sangat luas dalam matematika diskrit, ilmu komputer, dan berbagai bidang lainnya.</p>
+    </div>
+
+    <div class="card card-rust">
+      <div class="section-label">Fungsi Euler (Totient) — Aplikasi PIE</div>
+      <h3>Fungsi \(\phi(n)\) — Euler's Totient Function</h3>
+      <p>Fungsi \(\phi(n)\) menghitung banyaknya bilangan bulat positif \(\leq n\) yang relatif prima dengan \(n\).</p>
+
+      <div class="theorem-box theorem-rust">
+        <div class="thm-label">Rumus Euler Totient</div>
+        <p>Jika \(n = p_1^{a_1} p_2^{a_2} \cdots p_k^{a_k}\), maka:</p>
+        <p>\[ \phi(n) = n \prod_{p \mid n} \left(1 - \frac{1}{p}\right) = n \cdot \frac{p_1-1}{p_1} \cdot \frac{p_2-1}{p_2} \cdots \frac{p_k-1}{p_k} \]</p>
+      </div>
+
+      <div class="example-box">
+        <div class="example-label">Contoh: φ(360)</div>
+        <p>\(360 = 2^3 \cdot 3^2 \cdot 5\)</p>
+        <p>\[ \phi(360) = 360 \cdot \left(1 - \frac{1}{2}\right)\left(1 - \frac{1}{3}\right)\left(1 - \frac{1}{5}\right) = 360 \cdot \frac{1}{2} \cdot \frac{2}{3} \cdot \frac{4}{5} = 96 \]</p>
+      </div>
+
+      <div class="simulator">
+        <div class="sim-title">🔢 Kalkulator φ(n)</div>
+        <div class="slider-row">
+          <label>Masukkan n:</label>
+          <input type="number" id="totientN" value="60" min="1" max="1000" oninput="calcTotient()" style="flex:1;padding:6px;border:1px solid var(--border);border-radius:3px;font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,0.6)">
+        </div>
+        <div class="sim-result" id="totientResult"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Desarangemen (Permutasi Gila)</div>
+      <h3>Derangement \(D_n\)</h3>
+      <p>Sebuah <em>derangement</em> adalah permutasi dimana <strong>tidak ada elemen yang berada di posisi aslinya</strong>. Ini adalah aplikasi klasik PIE.</p>
+
+      <div class="theorem-box">
+        <div class="thm-label">Rumus Derangement</div>
+        <p>\[ D_n = n! \sum_{k=0}^{n} \frac{(-1)^k}{k!} = n! \left(1 - 1 + \frac{1}{2!} - \frac{1}{3!} + \cdots + \frac{(-1)^n}{n!}\right) \]</p>
+        <p style="margin-bottom:0;">Untuk \(n\) besar: \(D_n \approx \frac{n!}{e} \approx 0.3679 \cdot n!\)</p>
+      </div>
+
+      <div class="example-box">
+        <div class="example-label">Contoh: Kartu Natal</div>
+        <p>5 orang bertukar kartu Natal secara acak. Berapa cara sehingga <strong>tidak ada yang menerima kartunya sendiri</strong>?</p>
+        <p>\[ D_5 = 5!\left(1 - 1 + \frac{1}{2} - \frac{1}{6} + \frac{1}{24} - \frac{1}{120}\right) = 120 \cdot \frac{44}{120} = \mathbf{44} \]</p>
+      </div>
+
+      <div class="simulator">
+        <div class="sim-title">🎴 Kalkulator Derangement</div>
+        <div class="slider-row">
+          <label>Nilai n:</label>
+          <input type="range" id="slDer" min="1" max="12" value="5" oninput="calcDerang()">
+          <span class="val-badge" id="valDer">5</span>
+        </div>
+        <div class="sim-result" id="derangResult"></div>
+      </div>
+    </div>
+
+    <div class="card card-teal">
+      <div class="section-label">Ringkasan Perbandingan</div>
+      <table>
+        <thead>
+          <tr><th>Aspek</th><th>Prinsip Pigeonhole</th><th>Inklusi-Ekslusi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Tujuan</td><td>Membuktikan eksistensi</td><td>Menghitung dengan tepat</td></tr>
+          <tr><td>Teknik</td><td>Kontradiksi</td><td>Penjumlahan alternatif</td></tr>
+          <tr><td>Output</td><td>Jaminan kualitatif</td><td>Nilai numerik eksak</td></tr>
+          <tr><td>Aplikasi kunci</td><td>Kombinatorik, geometri, teori bilangan</td><td>Teori bilangan, probabilitas, kriptografi</td></tr>
+          <tr><td>Formula utama</td><td>\(\lceil N/k \rceil\)</td><td>\(|\bigcup A_i|\) via irisan</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ LATIHAN ══════════════ -->
+  <div class="section" id="latihan">
+    <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+
+    <div class="card">
+      <div class="section-label">§ 5 — Soal Latihan</div>
+      <div class="section-title"><span class="icon">✏️</span> Uji Pemahaman</div>
+      <p>Kerjakan soal-soal berikut untuk menguji pemahaman Anda tentang Prinsip Pigeonhole dan Inklusi-Ekslusi.</p>
+    </div>
+
+    <div id="quizContainer"></div>
+    <div id="quizScore" class="quiz-score" style="display:none"></div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn-quiz" onclick="resetQuiz()">🔄 Ulangi Kuis</button>
+    </div>
+  </div>
+
+</main>
+
+<footer style="text-align:center;padding:2rem;color:#6a5a30;font-size:0.85rem;border-top:1px solid rgba(201,148,26,0.2)">
+  <div style="color:var(--gold-light);font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:0.3rem">Martin Bernard, M.Pd.</div>
+  IKIP Siliwangi, Cimahi — Matematika Diskrit — Kombinatorik
+</footer>
+
+<script>
+// ─── NAV ───
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  MathJax.typesetPromise && MathJax.typesetPromise();
+}
+
+// ─── ACCORDION ───
+function toggleAcc(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ─── PIGEONHOLE SIMULATOR ───
+function updatePigeon() {
+  const m = +document.getElementById('slMerpati').value;
+  const s = +document.getElementById('slSarang').value;
+  document.getElementById('valMerpati').textContent = m;
+  document.getElementById('valSarang').textContent = s;
+
+  // distribute pigeons
+  const holes = Array(s).fill(0);
+  for (let i = 0; i < m; i++) holes[i % s]++;
+
+  const viz = document.getElementById('pigeonViz');
+  viz.innerHTML = '';
+  for (let h = 0; h < s; h++) {
+    const div = document.createElement('div');
+    div.className = 'pigeon-hole';
+    let inner = `<div class="hole-label">Sarang ${h+1}</div>`;
+    for (let p = 0; p < holes[h]; p++) inner += `<div class="pigeon-emoji">🐦</div>`;
+    inner += `<div class="hole-count">${holes[h]} merpati</div>`;
+    div.innerHTML = inner;
+    viz.appendChild(div);
+  }
+
+  const maxH = Math.max(...holes);
+  const minNeeded = Math.floor(m / s) + 1;
+  const res = document.getElementById('pigeonResult');
+
+  if (m > s) {
+    res.innerHTML = `🔴 <span class="result-highlight">Prinsip Pigeonhole berlaku!</span><br>
+    ${m} merpati → ${s} sarang<br>
+    ⌈${m}/${s}⌉ = ${Math.ceil(m/s)} → Paling sedikit satu sarang memuat <strong>${Math.ceil(m/s)} merpati</strong><br>
+    Distribusi aktual: maksimum <strong>${maxH} merpati</strong> dalam satu sarang.`;
+  } else {
+    res.innerHTML = `🟢 Tidak ada jaminan pigeonhole (${m} ≤ ${s}).<br>
+    Setiap sarang mungkin hanya berisi 0 atau 1 merpati.`;
+  }
+}
+
+// ─── GENERALIZED ───
+function updateGen() {
+  const N = +document.getElementById('slN').value;
+  const k = +document.getElementById('slK').value;
+  document.getElementById('valN').textContent = N;
+  document.getElementById('valK').textContent = k;
+  const ceil = Math.ceil(N / k);
+  document.getElementById('genResult').innerHTML =
+    `N = ${N}, k = ${k}<br>N/k = ${(N/k).toFixed(3)}<br>⌈N/k⌉ = <span class="result-highlight">${ceil}</span><br>
+    → Paling sedikit satu wadah memuat <strong>minimal ${ceil} objek</strong>.`;
+}
+
+// Ceiling table
+const tData = [[10,3],[15,4],[20,6],[27,5],[50,7],[100,12],[365,12]];
+const tbody = document.getElementById('ceilTable');
+tData.forEach(([N,k]) => {
+  const r = document.createElement('tr');
+  r.innerHTML = `<td>${N}</td><td>${k}</td><td>${(N/k).toFixed(2)}</td><td><strong>${Math.ceil(N/k)}</strong></td><td>≥${Math.ceil(N/k)} objek per wadah</td>`;
+  tbody.appendChild(r);
+});
+
+// ─── PIE CALCULATOR ───
+function calcPIE() {
+  const A=+document.getElementById('iA').value, B=+document.getElementById('iB').value,
+        C=+document.getElementById('iC').value, AB=+document.getElementById('iAB').value,
+        AC=+document.getElementById('iAC').value, BC=+document.getElementById('iBC').value,
+        ABC=+document.getElementById('iABC').value;
+  const res = A + B + C - AB - AC - BC + ABC;
+  document.getElementById('pieResult').innerHTML =
+    `|A∪B∪C| = |A|+|B|+|C| − |A∩B| − |A∩C| − |B∩C| + |A∩B∩C|<br>
+     = ${A} + ${B} + ${C} − ${AB} − ${AC} − ${BC} + ${ABC}<br>
+     = <span class="result-highlight">${res}</span>`;
+}
+
+// ─── TOTIENT ───
+function calcTotient() {
+  let n = +document.getElementById('totientN').value;
+  if (!n || n < 1) return;
+  let result = n, temp = n;
+  const primes = [];
+  for (let p = 2; p * p <= temp; p++) {
+    if (temp % p === 0) {
+      primes.push(p);
+      while (temp % p === 0) temp = Math.floor(temp / p);
+    }
+  }
+  if (temp > 1) primes.push(temp);
+  let formula = `${n}`;
+  primes.forEach(p => {
+    result = Math.round(result * (p - 1) / p);
+    formula += ` × (${p}-1)/${p}`;
+  });
+  const factStr = primes.length ? `Faktor prima: {${primes.join(', ')}}` : `${n} adalah prima`;
+  document.getElementById('totientResult').innerHTML =
+    `n = ${n}<br>${factStr}<br>φ(${n}) = ${formula} = <span class="result-highlight">${result}</span>`;
+}
+
+// ─── DERANGEMENT ───
+function calcDerang() {
+  const n = +document.getElementById('slDer').value;
+  document.getElementById('valDer').textContent = n;
+  let fact = 1; for (let i=2;i<=n;i++) fact *= i;
+  let sum = 0;
+  for (let k=0;k<=n;k++) {
+    let kfact = 1; for (let i=2;i<=k;i++) kfact *= i;
+    sum += (k%2===0?1:-1) / kfact;
+  }
+  const Dn = Math.round(fact * sum);
+  const ratio = (Dn/fact*100).toFixed(1);
+  document.getElementById('derangResult').innerHTML =
+    `n = ${n}, n! = ${fact}<br>D${n} = <span class="result-highlight">${Dn}</span><br>
+    Rasio: D${n}/n! ≈ ${ratio}% ≈ 1/e × 100%`;
+}
+
+// ─── QUIZ ───
+const questions = [
+  {
+    q: "Berapa minimal orang yang diperlukan dalam sebuah kelompok untuk menjamin ada dua orang yang lahir pada bulan yang sama?",
+    opts: ["12", "13", "24", "25"],
+    ans: 1,
+    fb: "Dengan 12 bulan sebagai 'sarang' dan 13 orang sebagai 'merpati', Prinsip Pigeonhole menjamin ⌈13/12⌉ = 2, artinya minimal dua orang lahir di bulan yang sama."
+  },
+  {
+    q: "Jika |A| = 40, |B| = 35, dan |A∪B| = 60, maka |A∩B| = ?",
+    opts: ["5", "10", "15", "20"],
+    ans: 2,
+    fb: "|A∩B| = |A| + |B| - |A∪B| = 40 + 35 - 60 = 15."
+  },
+  {
+    q: "Berapa minimal kartu yang harus diambil dari setumpuk 52 kartu (4 jenis: ♠♥♦♣) untuk menjamin mendapat 3 kartu dengan jenis yang sama?",
+    opts: ["3", "7", "9", "13"],
+    ans: 2,
+    fb: "Kita ingin ⌈N/4⌉ ≥ 3, sehingga N ≥ 4×(3-1)+1 = 9. Dengan 9 kartu, pasti ada 3 kartu dengan jenis yang sama."
+  },
+  {
+    q: "Nilai D₃ (derangement dari 3 elemen) adalah:",
+    opts: ["1", "2", "3", "4"],
+    ans: 1,
+    fb: "D₃ = 3!(1 - 1 + 1/2 - 1/6) = 6 × (1/3) = 2. Permutasi {2,3,1} dan {3,1,2} adalah dua derangement dari {1,2,3}."
+  },
+  {
+    q: "Dari 200 mahasiswa: 120 suka Matematika (M), 90 suka Fisika (F), 40 suka keduanya. Berapa yang tidak suka keduanya?",
+    opts: ["10", "30", "50", "70"],
+    ans: 1,
+    fb: "|M∪F| = 120 + 90 - 40 = 170. Yang tidak suka keduanya = 200 - 170 = 30."
+  },
+  {
+    q: "Pernyataan mana yang BENAR tentang Prinsip Pigeonhole?",
+    opts: [
+      "Ia menentukan objek mana yang berbagi wadah",
+      "Ia hanya berlaku untuk wadah berjumlah genap",
+      "Ia menjamin eksistensi, bukan mengidentifikasi",
+      "Ia memerlukan objek lebih banyak dari 2n"
+    ],
+    ans: 2,
+    fb: "Prinsip Pigeonhole hanya menjamin KEBERADAAN suatu konfigurasi (setidaknya satu wadah dengan ≥2 objek), tanpa menentukan wadah atau objek mana secara spesifik."
+  },
+  {
+    q: "φ(12) = ? (Fungsi Euler Totient)",
+    opts: ["2", "4", "6", "8"],
+    ans: 1,
+    fb: "12 = 2² × 3. φ(12) = 12 × (1-1/2) × (1-1/3) = 12 × 1/2 × 2/3 = 4."
+  },
+  {
+    q: "Pada Prinsip Pigeonhole Umum: 50 bola ditempatkan ke 8 kotak. Paling sedikit satu kotak memuat minimal berapa bola?",
+    opts: ["5", "6", "7", "8"],
+    ans: 2,
+    fb: "⌈50/8⌉ = ⌈6.25⌉ = 7. Jadi paling sedikit satu kotak memuat minimal 7 bola."
+  }
+];
+
+let answered = {};
+function buildQuiz() {
+  const c = document.getElementById('quizContainer');
+  c.innerHTML = '';
+  questions.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-card';
+    div.innerHTML = `
+      <div class="quiz-num">SOAL ${qi+1} / ${questions.length}</div>
+      <div class="quiz-q">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((o,oi) => `<button class="quiz-opt" id="opt_${qi}_${oi}" onclick="answerQ(${qi},${oi})">${String.fromCharCode(65+oi)}. ${o}</button>`).join('')}
+      </div>
+      <div class="quiz-feedback" id="fb_${qi}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function answerQ(qi, oi) {
+  if (answered[qi] !== undefined) return;
+  answered[qi] = oi;
+  const q = questions[qi];
+  const fb = document.getElementById(`fb_${qi}`);
+  for (let i=0;i<q.opts.length;i++) {
+    const btn = document.getElementById(`opt_${qi}_${i}`);
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === oi && oi !== q.ans) btn.classList.add('wrong');
+  }
+  fb.textContent = (oi === q.ans ? '✅ Benar! ' : '❌ Kurang tepat. ') + q.fb;
+  fb.className = `quiz-feedback show ${oi===q.ans?'correct-fb':'wrong-fb'}`;
+
+  if (Object.keys(answered).length === questions.length) {
+    const score = Object.entries(answered).filter(([qi,oi]) => questions[+qi].ans === oi).length;
+    const s = document.getElementById('quizScore');
+    s.style.display = 'block';
+    s.innerHTML = `🎯 Skor Akhir: <strong>${score}/${questions.length}</strong><br>${score===questions.length?'Sempurna! 🏆':score>=6?'Sangat baik! 👏':score>=4?'Cukup baik. Pelajari kembali materi yang belum tepat. 📖':'Terus semangat belajar! 💪'}`;
+    MathJax.typesetPromise && MathJax.typesetPromise();
+  }
+}
+
+function resetQuiz() {
+  answered = {};
+  document.getElementById('quizScore').style.display = 'none';
+  buildQuiz();
+}
+
+// ─── INIT ───
+buildQuiz();
+updatePigeon();
+updateGen();
+calcPIE();
+calcTotient();
+calcDerang();
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => MathJax.typesetPromise && MathJax.typesetPromise(), 800);
+});
+</script>
+</body>
+</html>
