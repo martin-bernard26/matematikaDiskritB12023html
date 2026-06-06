@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soal Esai Analisis dan Pembuktian Kombinatorik</title>
+    
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --background-color: #f8f9fa;
+            --paper-color: #ffffff;
+            --text-color: #333333;
+            --accent-color: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--paper-color);
+            padding: 40px 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .instructions {
+            background-color: #e8f4f8;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        ol.question-list {
+            padding-left: 20px;
+        }
+
+        li.question-item {
+            margin-bottom: 25px;
+            padding-left: 10px;
+            text-align: justify;
+        }
+
+        .question-item::marker {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Evaluasi Matematika Diskrit</h1>
+            <p class="subtitle">Materi: Analisis dan Pembuktian Aplikasi Kombinatorik</p>
+        </header>
+
+        <div class="instructions">
+            <strong>Petunjuk Pengerjaan:</strong><br>
+            Jawablah pertanyaan-pertanyaan berikut dengan memberikan argumen matematika, analisis logis, atau pembuktian kombinatorik yang tepat. Dilarang sekadar menggunakan pembuktian aljabar murni tanpa memberikan interpretasi kombinatorik (kecuali jika diminta sebaliknya).
+        </div>
+
+        <ol class="question-list">
+            <li class="question-item">
+                <strong>Prinsip Sarang Merpati (Pigeonhole Principle):</strong> Buktikan bahwa jika kita memilih 51 bilangan bulat positif secara sembarang dari himpunan $S=\{1,2,\dots,100\}$, pasti terdapat setidaknya dua bilangan yang salah satunya membagi habis bilangan yang lain. Berikan analisis bagaimana sarang merpati didefinisikan dalam kasus ini.
+            </li>
+            
+            <li class="question-item">
+                <strong>Geometri dan Kombinatorik:</strong> Diberikan 5 buah titik yang diletakkan secara sembarang di dalam sebuah persegi dengan panjang sisi 2 cm. Buktikan secara analitis bahwa setidaknya ada dua titik yang jaraknya tidak lebih dari $\sqrt{2}$ cm.
+            </li>
+
+            <li class="question-item">
+                <strong>Pembuktian Kombinatorik Identitas Pascal:</strong> Berikan pembuktian kombinatorik (bukan penjabaran aljabar faktorial) untuk membuktikan Identitas Pascal:
+                $$\binom{n}{k}=\binom{n-1}{k-1}+\binom{n-1}{k}$$
+                Jelaskan skenario pemilihan objek yang merepresentasikan sisi kiri dan sisi kanan persamaan tersebut.
+            </li>
+
+            <li class="question-item">
+                <strong>Jumlah Kombinasi:</strong> Dengan menggunakan argumen kombinatorik murni mengenai himpunan bagian, buktikan bahwa jumlah seluruh kemungkinan kombinasi dari himpunan beranggotakan $n$ elemen adalah $2^n$, yang dapat dituliskan sebagai:
+                $$\sum_{k=0}^{n}\binom{n}{k}=2^n$$
+            </li>
+
+            <li class="question-item">
+                <strong>Prinsip Inklusi-Eksklusi:</strong> Analisis dan buktikan kebenaran formula Prinsip Inklusi-Eksklusi untuk gabungan 3 himpunan ($|A\cup{B}\cup{C}|$). Kemudian, tunjukkan aplikasi dari prinsip tersebut dengan menghitung (beserta analisisnya) jumlah bilangan bulat dari 1 hingga 1.000 yang tidak habis dibagi 2, 3, atau 5.
+            </li>
+
+            <li class="question-item">
+                <strong>Derangement (Kekacauan):</strong> Sebuah restoran memiliki $n$ pelanggan yang menitipkan topi mereka. Saat mereka pulang, lampu padam dan petugas membagikan topi secara acak. Buktikan probabilitas tidak ada satu pun orang yang menerima topi miliknya sendiri (derangement) menggunakan prinsip inklusi-eksklusi, dan buktikan bahwa nilai limit probabilitasnya menuju $1/e$ saat $n\to\infty$.
+            </li>
+
+            <li class="question-item">
+                <strong>Identitas Vandermonde:</strong> Berikan konstruksi pembuktian kombinatorik untuk Identitas Vandermonde:
+                $$\binom{m+n}{r}=\sum_{k=0}^{r}\binom{m}{k}\binom{n}{r-k}$$
+                Susun skenario pemilihan komite dari dua kelompok berbeda untuk mendemonstrasikan rumus tersebut.
+            </li>
+
+            <li class="question-item">
+                <strong>Stars and Bars (Bintang dan Batang):</strong> Buktikan secara logis bahwa banyaknya cara mendistribusikan $n$ objek identik ke dalam $k$ kotak yang saling berbeda adalah $\binom{n+k-1}{k-1}$. Berikan contoh aplikasinya dalam menentukan solusi persamaan linear dengan variabel bilangan bulat non-negatif.
+            </li>
+
+            <li class="question-item">
+                <strong>Lema Jabat Tangan (Handshaking Lemma):</strong> Dalam Teori Graf, menggunakan prinsip penghitungan ganda (double counting) dalam kombinatorik, buktikan Lema Jabat Tangan yang menyatakan bahwa jumlah dari derajat semua simpul dalam sebuah graf tak berarah adalah tepat dua kali jumlah sisi graf tersebut.
+            </li>
+
+            <li class="question-item">
+                <strong>Teorema Binomial:</strong> Tanpa menggunakan induksi matematika, gunakan argumen kombinatorik untuk membuktikan Teorema Binomial:
+                $$(x+y)^n=\sum_{k=0}^{n}\binom{n}{k}x^{n-k}y^k$$
+                Analisis bagaimana proses perkalian berulang dari faktor-faktor $(x+y)$ menghasilkan koefisien tersebut.
+            </li>
+
+            <li class="question-item">
+                <strong>Kombinatorik pada Teori Graf (Teorema Ramsey Dasar):</strong> Buktikan bahwa dalam sebuah pesta yang terdiri dari 6 orang, pasti terdapat setidaknya 3 orang yang saling mengenal satu sama lain, atau 3 orang yang saling tidak mengenal sama sekali.
+            </li>
+
+            <li class="question-item">
+                <strong>Pembuktian Kombinatorik Lanjutan:</strong> Berikan pembuktian kombinatorik untuk memvalidasi identitas:
+                $$k\binom{n}{k}=n\binom{n-1}{k-1}$$
+                (Petunjuk: Rancang masalah menghitung jumlah cara memilih sebuah komite beranggotakan $k$ orang beserta satu ketuanya dari total $n$ kandidat).
+            </li>
+
+            <li class="question-item">
+                <strong>Lintasan Grid (Lattice Paths):</strong> Buktikan bahwa jumlah lintasan terpendek pada sebuah bidang grid dari koordinat $(0,0)$ menuju koordinat $(m,n)$ dengan aturan hanya boleh bergerak ke kanan atau ke atas adalah $\binom{m+n}{m}$. Analisis lebih lanjut bagaimana jika lintasan tersebut tidak diizinkan melewati titik $(x,y)$ yang berada di antara awal dan tujuan.
+            </li>
+
+            <li class="question-item">
+                <strong>Bilangan Catalan:</strong> Analisis masalah penempatan tanda kurung yang seimbang. Tunjukkan langkah-langkah pembuktian mengapa banyaknya cara menyusun $n$ pasang tanda kurung secara seimbang direpresentasikan oleh formula Bilangan Catalan:
+                $$C_n=\frac{1}{n+1}\binom{2n}{n}$$
+            </li>
+
+            <li class="question-item">
+                <strong>Permutasi Melingkar (Circular Permutation):</strong> Secara analitik, buktikan bahwa banyaknya permutasi melingkar dari $n$ objek yang saling berbeda adalah $(n-1)!$. Berikan analisis komparatif yang mendalam mengapa hasilnya berbeda dengan permutasi linear biasa sebesar $n!$.
+            </li>
+
+            <li class="question-item">
+                <strong>Penghitungan Ganda (Double Counting):</strong> Buktikan identitas kombinatorik di bawah ini menggunakan teknik perhitungan ganda:
+                $$\sum_{k=1}^{n}k\binom{n}{k}=n2^{n-1}$$
+                Jelaskan skenario tunggal yang dihitung dengan dua cara berbeda sehingga menghasilkan kedua sisi persamaan tersebut.
+            </li>
+
+            <li class="question-item">
+                <strong>Bilangan Stirling Jenis Kedua:</strong> Bilangan Stirling Jenis Kedua, $S(n,k)$, menghitung jumlah cara mempartisi himpunan $n$ elemen menjadi $k$ himpunan bagian yang tidak kosong. Berikan analisis kombinatorik untuk membuktikan relasi rekurensinya:
+                $$S(n,k)=k\cdot{S(n-1,k)}+S(n-1,k-1)$$
+            </li>
+
+            <li class="question-item">
+                <strong>Koefisien Multinomial:</strong> Berikan argumen kombinatorik terstruktur untuk membuktikan Teorema Multinomial mengenai penjabaran $(x_1+x_2+\dots+x_m)^n$. Jelaskan analisis rasional mengapa koefisiennya dirumuskan dengan:
+                $$\frac{n!}{n_1!n_2!\dots{n_m!}}$$
+            </li>
+
+            <li class="question-item">
+                <strong>Barisan dan Pigeonhole:</strong> Analisis dan buktikan Teorema Erdős-Szekeres: Tunjukkan bahwa setiap barisan sembarang yang terdiri dari $n^2+1$ bilangan real yang berbeda pasti memuat setidaknya satu sub-barisan monoton naik dengan panjang $n+1$, atau satu sub-barisan monoton turun dengan panjang $n+1$.
+            </li>
+
+            <li class="question-item">
+                <strong>Fungsi Pembangkit (Generating Functions) untuk Partisi:</strong> Gunakan argumen fungsi pembangkit untuk membuktikan sebuah teorema terkenal dari Euler: "Jumlah cara mempartisi suatu bilangan bulat positif $n$ ke dalam bagian-bagian yang bernilai ganjil adalah sama persis dengan jumlah cara mempartisi $n$ ke dalam bagian-bagian yang semuanya saling berbeda (distinct)."
+            </li>
+        </ol>
+    </div>
+
+</body>
+</html>
