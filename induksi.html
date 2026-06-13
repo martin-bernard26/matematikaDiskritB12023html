@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Induksi Matematika — Matematika Diskrit | IKIP Siliwangi</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:   #0B1929;
+    --navy2:  #112238;
+    --slate:  #1E3A5F;
+    --cyan:   #00E5FF;
+    --cyan2:  #00B8D9;
+    --amber:  #FFB300;
+    --white:  #F0F4F8;
+    --muted:  #8BACC8;
+    --card:   #152D4A;
+    --success:#00C853;
+    --danger: #FF5252;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--navy2);
+    border-right: 1px solid rgba(0,229,255,.12);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid rgba(0,229,255,.10);
+  }
+  .sidebar-brand .course-tag {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .55rem;
+    letter-spacing: .15em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .sidebar-brand h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .85rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.4;
+  }
+
+  .progress-wrap { padding: 14px 20px; border-bottom: 1px solid rgba(0,229,255,.08); }
+  .progress-label { font-size: .7rem; color: var(--muted); margin-bottom: 6px; }
+  .progress-bar-outer { background: var(--slate); border-radius: 99px; height: 5px; }
+  .progress-bar-inner {
+    background: linear-gradient(90deg, var(--cyan), var(--amber));
+    height: 5px;
+    border-radius: 99px;
+    width: 0%;
+    transition: width .5s ease;
+  }
+  .progress-pct { font-size: .7rem; color: var(--cyan); margin-top: 5px; }
+
+  nav { flex: 1; padding: 12px 0; }
+  .nav-section { padding: 8px 20px 4px; font-size: .6rem; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+  .nav-link {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px;
+    font-size: .78rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all .2s;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+  }
+  .nav-link:hover { color: var(--white); background: rgba(0,229,255,.05); }
+  .nav-link.active { color: var(--cyan); border-left-color: var(--cyan); background: rgba(0,229,255,.08); }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(0,229,255,.08); }
+  .sidebar-footer p { font-size: .65rem; color: var(--muted); }
+  .sidebar-footer strong { color: var(--cyan); }
+
+  /* ── MAIN ── */
+  main { margin-left: 240px; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 90vh;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 50%, #0D2137 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 80px 80px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    right: -100px; top: -100px;
+    background: radial-gradient(circle, rgba(0,229,255,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .7rem;
+    letter-spacing: .2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--cyan); }
+  .hero-sub {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(.9rem, 1.5vw, 1.2rem);
+    color: var(--amber);
+    font-weight: 400;
+    margin-bottom: 28px;
+    letter-spacing: .05em;
+  }
+  .hero-desc {
+    max-width: 560px;
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* Domino animation */
+  .domino-row {
+    display: flex; align-items: flex-end; gap: 6px;
+    margin-bottom: 48px;
+  }
+  .domino {
+    width: 20px;
+    background: linear-gradient(180deg, var(--cyan) 0%, var(--cyan2) 100%);
+    border-radius: 3px 3px 2px 2px;
+    transform-origin: bottom center;
+    transform: rotate(-60deg);
+    opacity: 0;
+    animation: dominoFall 0.4s ease forwards;
+  }
+  .domino:nth-child(1)  { height:60px; animation-delay:.2s; }
+  .domino:nth-child(2)  { height:65px; animation-delay:.55s; }
+  .domino:nth-child(3)  { height:70px; animation-delay:.90s; }
+  .domino:nth-child(4)  { height:75px; animation-delay:1.25s; }
+  .domino:nth-child(5)  { height:80px; animation-delay:1.60s; }
+  .domino:nth-child(6)  { height:85px; animation-delay:1.95s; }
+  .domino:nth-child(7)  { height:90px; animation-delay:2.30s; background: linear-gradient(180deg, var(--amber) 0%, #e59e00 100%); }
+  .domino-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .65rem;
+    color: var(--muted);
+    display: flex; align-items: flex-end; gap: 6px;
+    margin-left: 4px;
+    padding-bottom: 4px;
+  }
+  .domino-label span { color: var(--cyan); }
+  @keyframes dominoFall {
+    0%   { opacity:0; transform: rotate(0deg) translateY(-10px); }
+    60%  { opacity:1; transform: rotate(-75deg); }
+    100% { opacity:1; transform: rotate(-60deg); }
+  }
+
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; }
+  .meta-label { font-size: .65rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .meta-val { font-family: 'Orbitron', sans-serif; font-size: .9rem; color: var(--white); font-weight: 700; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 72px 80px; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .section:nth-child(odd) { background: rgba(255,255,255,.015); }
+
+  .section-eyebrow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .6rem;
+    letter-spacing: .18em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 700;
+    margin-bottom: 28px;
+    line-height: 1.25;
+  }
+  .section h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--amber);
+    margin: 28px 0 12px;
+  }
+  .section p { color: var(--muted); margin-bottom: 16px; max-width: 720px; }
+
+  /* ── CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px; margin-top: 32px; }
+  .card {
+    background: var(--card);
+    border: 1px solid rgba(0,229,255,.12);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: transform .2s, border-color .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(0,229,255,.35); }
+  .card-icon { font-size: 1.8rem; margin-bottom: 12px; }
+  .card h4 { font-family: 'Orbitron', sans-serif; font-size: .85rem; color: var(--white); margin-bottom: 10px; }
+  .card p { font-size: .85rem; color: var(--muted); max-width: none; }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: var(--card);
+    border: 1px solid rgba(0,229,255,.2);
+    border-left: 4px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 24px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .95rem;
+    color: var(--white);
+    line-height: 2;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-box::after {
+    content: '∀n ∈ ℤ⁺';
+    position: absolute;
+    right: 20px; top: 14px;
+    font-size: .6rem;
+    color: rgba(0,229,255,.3);
+    letter-spacing: .1em;
+  }
+  .formula-box .hl { color: var(--cyan); }
+  .formula-box .hl-amber { color: var(--amber); }
+  .formula-box .hl-green { color: var(--success); }
+
+  /* ── STEP TIMELINE ── */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 32px; }
+  .step {
+    display: flex; gap: 24px;
+    padding: 0 0 36px;
+    position: relative;
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    left: 19px; top: 44px;
+    width: 2px;
+    bottom: 0;
+    background: linear-gradient(180deg, var(--cyan) 0%, transparent 100%);
+  }
+  .step:last-child::before { display: none; }
+  .step-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--slate);
+    border: 2px solid var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--cyan);
+    flex-shrink: 0;
+  }
+  .step-body { flex: 1; padding-top: 6px; }
+  .step-title { font-weight: 600; color: var(--white); margin-bottom: 8px; }
+  .step-desc { font-size: .88rem; color: var(--muted); }
+
+  /* ── EXAMPLE BOX ── */
+  .example {
+    background: var(--navy2);
+    border: 1px solid rgba(0,229,255,.14);
+    border-radius: var(--radius);
+    margin: 32px 0;
+    overflow: hidden;
+  }
+  .example-header {
+    background: var(--slate);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: .75rem;
+    color: var(--cyan);
+    letter-spacing: .08em;
+  }
+  .example-header .badge {
+    background: var(--cyan);
+    color: var(--navy);
+    font-size: .6rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+  .example-body { padding: 28px 32px; }
+  .example-body .soal { color: var(--white); font-weight: 500; margin-bottom: 20px; font-size: .95rem; }
+  .example-body .step-proof {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .82rem;
+    color: var(--muted);
+    line-height: 2;
+    padding-left: 16px;
+    border-left: 2px solid rgba(0,229,255,.2);
+    margin-bottom: 12px;
+  }
+  .example-body .step-proof .hl { color: var(--cyan); }
+  .example-body .step-proof .hl-a { color: var(--amber); }
+  .example-body .step-proof .hl-g { color: var(--success); }
+  .example-body .step-label {
+    font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--amber); margin: 16px 0 6px;
+    font-family: 'Orbitron', sans-serif;
+  }
+  .qed {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--success);
+    font-size: .85rem;
+    margin-top: 12px;
+  }
+
+  /* ── TABLE ── */
+  .styled-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+  .styled-table th {
+    background: var(--slate);
+    color: var(--cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: .7rem;
+    letter-spacing: .08em;
+    padding: 12px 16px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .styled-table td { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.05); font-size: .85rem; color: var(--muted); }
+  .styled-table tr:hover td { background: rgba(0,229,255,.04); color: var(--white); }
+  .styled-table code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .8rem;
+    background: rgba(0,229,255,.1);
+    color: var(--cyan);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: rgba(255,179,0,.08);
+    border: 1px solid rgba(255,179,0,.25);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+  .highlight-box .hb-title { color: var(--amber); font-weight: 600; margin-bottom: 8px; font-size: .9rem; }
+  .highlight-box p { color: #c8a04a; font-size: .88rem; margin: 0; max-width: none; }
+
+  /* ── QUIZ ── */
+  #quiz-section { padding: 72px 80px; }
+  #quiz-section h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .quiz-intro { color: var(--muted); margin-bottom: 40px; }
+
+  .quiz-card {
+    background: var(--card);
+    border: 1px solid rgba(0,229,255,.14);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 28px;
+    transition: border-color .3s;
+  }
+  .quiz-card.answered { border-color: rgba(0,229,255,.4); }
+  .quiz-q {
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .quiz-q .q-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .7rem;
+    color: var(--cyan);
+    letter-spacing: .1em;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--slate);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: .88rem;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+  }
+  .option:hover:not(:disabled) { border-color: var(--cyan); color: var(--white); background: rgba(0,229,255,.08); }
+  .option.correct { background: rgba(0,200,83,.15); border-color: var(--success); color: var(--success); }
+  .option.wrong   { background: rgba(255,82,82,.12); border-color: var(--danger); color: var(--danger); }
+  .option:disabled { cursor: default; }
+  .feedback {
+    margin-top: 14px;
+    font-size: .83rem;
+    padding: 10px 16px;
+    border-radius: 8px;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: rgba(0,200,83,.12); color: var(--success); }
+  .feedback.wrong   { background: rgba(255,82,82,.10); color: var(--danger); }
+
+  .quiz-result {
+    background: var(--card);
+    border: 1px solid rgba(0,229,255,.2);
+    border-radius: var(--radius);
+    padding: 40px;
+    text-align: center;
+    display: none;
+    margin-top: 20px;
+  }
+  .quiz-result.show { display: block; }
+  .result-score {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  .result-label { color: var(--muted); margin-bottom: 24px; }
+  .result-msg { font-size: 1.1rem; color: var(--white); font-weight: 500; }
+  .btn-reset {
+    margin-top: 24px;
+    background: var(--cyan);
+    color: var(--navy);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    cursor: pointer;
+    transition: transform .2s, opacity .2s;
+  }
+  .btn-reset:hover { transform: translateY(-2px); opacity: .9; }
+
+  /* ── REFERENSI ── */
+  .ref-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
+  .ref-list li {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: .83rem;
+    color: var(--muted);
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .ref-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .65rem;
+    color: var(--cyan);
+    background: rgba(0,229,255,.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── DIVIDER ── */
+  .fancy-divider {
+    display: flex; align-items: center; gap: 16px;
+    margin: 40px 0;
+  }
+  .fancy-divider .line { flex: 1; height: 1px; background: rgba(0,229,255,.15); }
+  .fancy-divider .sym { font-family: 'JetBrains Mono', monospace; color: var(--cyan); font-size: .75rem; }
+
+  /* ── TOOLTIP ── */
+  .tip {
+    border-bottom: 1px dashed var(--cyan);
+    cursor: help;
+    position: relative;
+  }
+  .tip::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--slate);
+    border: 1px solid var(--cyan);
+    color: var(--white);
+    font-size: .75rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+    z-index: 99;
+  }
+  .tip:hover::after { opacity: 1; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    #sidebar { display: none; }
+    main { margin-left: 0; }
+    .hero, .section, #quiz-section { padding: 48px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-brand">
+    <div class="course-tag">Matematika Diskrit</div>
+    <h2>Induksi<br>Matematika</h2>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">Progress membaca</div>
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+  <nav>
+    <div class="nav-section">Konten</div>
+    <a class="nav-link active" href="#intro" onclick="setActive(this)"><span class="nav-dot"></span>Pengantar</a>
+    <a class="nav-link" href="#konsep" onclick="setActive(this)"><span class="nav-dot"></span>Konsep Dasar</a>
+    <a class="nav-link" href="#langkah" onclick="setActive(this)"><span class="nav-dot"></span>Langkah-Langkah</a>
+    <a class="nav-link" href="#contoh1" onclick="setActive(this)"><span class="nav-dot"></span>Contoh 1 — Jumlah Bilangan</a>
+    <a class="nav-link" href="#contoh2" onclick="setActive(this)"><span class="nav-dot"></span>Contoh 2 — Faktorisasi</a>
+    <a class="nav-link" href="#contoh3" onclick="setActive(this)"><span class="nav-dot"></span>Contoh 3 — Ketaksamaan</a>
+    <a class="nav-link" href="#kuat" onclick="setActive(this)"><span class="nav-dot"></span>Induksi Kuat</a>
+    <div class="nav-section">Latihan</div>
+    <a class="nav-link" href="#quiz-section" onclick="setActive(this)"><span class="nav-dot"></span>Kuis Interaktif</a>
+    <a class="nav-link" href="#referensi" onclick="setActive(this)"><span class="nav-dot"></span>Referensi</a>
+  </nav>
+  <div class="sidebar-footer">
+    <p>Disusun oleh<br><strong>Martin Bernard, M.Pd.</strong><br>IKIP Siliwangi — Cimahi</p>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="intro">
+    <div class="hero-eyebrow">Matematika Diskrit · Bab 5</div>
+    <h1>Induksi<br><span>Matematika</span></h1>
+    <div class="hero-sub">Mathematical Induction</div>
+
+    <div class="domino-row">
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino"></div>
+      <div class="domino-label">P(1) → P(2) → P(3) → &nbsp;<span>P(n)</span> → P(n+1)</div>
+    </div>
+
+    <p class="hero-desc">
+      Induksi matematika adalah teknik pembuktian yang elegaan dan kuat — membuktikan sebuah pernyataan berlaku untuk semua bilangan asli hanya dengan dua langkah sederhana. Seperti barisan domino: jika yang pertama jatuh, dan setiap domino menjatuhkan yang berikutnya, maka <em>semua</em> domino pasti akan jatuh.
+    </p>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Mata Kuliah</span>
+        <span class="meta-val">Matematika Diskrit</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Program Studi</span>
+        <span class="meta-val">Pendidikan Matematika</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Capaian</span>
+        <span class="meta-val">3 Contoh · 7 Soal Kuis</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KONSEP DASAR ── -->
+  <section class="section" id="konsep">
+    <div class="section-eyebrow">01 — Konsep Dasar</div>
+    <h2>Apa Itu Induksi Matematika?</h2>
+
+    <p>
+      Induksi matematika adalah metode pembuktian untuk menegakkan bahwa suatu proposisi <strong style="color:var(--white)">P(n)</strong> berlaku untuk setiap bilangan bulat positif n ≥ n₀. Metode ini didasarkan pada <span class="tip" data-tip="Well-ordering principle: setiap himpunan bilangan asli tak kosong mempunyai elemen terkecil">prinsip urutan baik</span> bilangan asli.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Tujuan</h4>
+        <p>Membuktikan pernyataan yang melibatkan variabel bilangan bulat positif n tanpa harus menguji satu per satu.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h4>Mekanisme</h4>
+        <p>Cukup dua langkah: buktikan untuk n awal (basis), lalu buktikan jika berlaku untuk k, maka berlaku untuk k+1 (induktif).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h4>Analogi</h4>
+        <p>Seperti tangga tak hingga: jika bisa naik anak tangga pertama, dan dari setiap anak tangga bisa ke anak tangga berikutnya — maka bisa naik ke mana saja.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📐</div>
+        <h4>Penggunaan</h4>
+        <p>Membuktikan rumus deret, ketaksamaan, sifat keterbagian, rumus kombinatorika, dan teorema rekursi.</p>
+      </div>
+    </div>
+
+    <div class="fancy-divider"><div class="line"></div><div class="sym">∀</div><div class="line"></div></div>
+
+    <h3>Prinsip Induksi Matematika</h3>
+    <p>Prinsip ini menyatakan bahwa:</p>
+
+    <div class="formula-box">
+      Misalkan P(n) adalah proposisi yang melibatkan bilangan bulat positif n.<br>
+      Jika terpenuhi:<br>
+      &nbsp;&nbsp;① <span class="hl">P(1)</span> benar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">← Basis / Langkah Awal</span><br>
+      &nbsp;&nbsp;② Untuk setiap <span class="hl-amber">k ≥ 1</span>, jika <span class="hl">P(k)</span> benar,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; maka <span class="hl-green">P(k+1)</span> juga benar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--muted);font-size:.8rem">← Langkah Induktif</span><br><br>
+      Maka <span class="hl">P(n)</span> benar untuk semua n ∈ ℤ⁺
+    </div>
+
+    <div class="highlight-box">
+      <div class="hb-title">⚠️ Perhatian Penting</div>
+      <p>Kedua langkah harus dibuktikan. Hanya membuktikan basis saja (tanpa langkah induktif) tidak cukup untuk menyimpulkan pernyataan berlaku untuk semua n. Begitu pula sebaliknya.</p>
+    </div>
+  </section>
+
+  <!-- ── LANGKAH-LANGKAH ── -->
+  <section class="section" id="langkah">
+    <div class="section-eyebrow">02 — Prosedur</div>
+    <h2>Langkah-Langkah Pembuktian</h2>
+    <p>Berikut adalah prosedur sistematis yang harus diikuti dalam setiap pembuktian dengan induksi matematika:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Tuliskan Pernyataan P(n)</div>
+          <div class="step-desc">Nyatakan secara eksplisit apa yang ingin dibuktikan, dalam bentuk proposisi P(n) yang melibatkan variabel n. Pastikan domain n jelas (n ≥ 1, n ≥ 0, dsb.).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Langkah Basis — Buktikan P(1)</div>
+          <div class="step-desc">Substitusikan n = 1 (atau nilai awal yang sesuai) ke pernyataan P(n) dan verifikasi kebenarannya secara langsung melalui perhitungan.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Hipotesis Induktif — Asumsikan P(k) Benar</div>
+          <div class="step-desc">Asumsikan P(k) benar untuk sembarang bilangan bulat positif k yang tetap. Ini disebut <strong style="color:var(--white)">Hipotesis Induktif</strong> — sebuah asumsi, bukan hasil yang sudah terbukti sendiri.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">Langkah Induktif — Buktikan P(k) ⟹ P(k+1)</div>
+          <div class="step-desc">Dengan menggunakan hipotesis induktif (P(k) benar), buktikan bahwa P(k+1) juga harus benar. Ini adalah inti dari pembuktian — gunakan aljabar, manipulasi ekspresi, atau argumen logis.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">Kesimpulan</div>
+          <div class="step-desc">Karena P(1) benar (basis) dan P(k) ⟹ P(k+1) (induktif), maka berdasarkan Prinsip Induksi Matematika, P(n) benar untuk semua n ∈ ℤ⁺. □</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTOH 1 ── -->
+  <section class="section" id="contoh1">
+    <div class="section-eyebrow">03 — Contoh 1</div>
+    <h2>Rumus Jumlah Bilangan Asli</h2>
+    <p>Salah satu contoh paling klasik induksi matematika adalah pembuktian rumus jumlah bilangan asli pertama.</p>
+
+    <div class="example">
+      <div class="example-header">
+        <span class="badge">Teorema</span>
+        Deret Aritmetika — Jumlah 1 hingga n
+      </div>
+      <div class="example-body">
+        <p class="soal">
+          Buktikan bahwa untuk setiap bilangan bulat positif n berlaku:<br>
+          <strong style="font-family:'JetBrains Mono',monospace; font-size:1rem;">1 + 2 + 3 + … + n = n(n+1)/2</strong>
+        </p>
+
+        <div class="example-body step-label">📌 Langkah 1 — Pernyataan</div>
+        <div class="step-proof">
+          P(n) : 1 + 2 + 3 + … + n = <span class="hl">n(n+1)/2</span>
+        </div>
+
+        <div class="example-body step-label">✅ Langkah 2 — Basis (n = 1)</div>
+        <div class="step-proof">
+          Ruas kiri  : 1<br>
+          Ruas kanan : <span class="hl">1(1+1)/2 = 2/2 = 1</span><br>
+          Ruas kiri = Ruas kanan ✓ → P(1) <span class="hl-g">benar</span>
+        </div>
+
+        <div class="example-body step-label">🔵 Langkah 3 — Hipotesis Induktif</div>
+        <div class="step-proof">
+          Asumsikan P(k) benar untuk suatu k ∈ ℤ⁺:<br>
+          <span class="hl-a">1 + 2 + 3 + … + k = k(k+1)/2</span>
+        </div>
+
+        <div class="example-body step-label">🔧 Langkah 4 — Langkah Induktif [Buktikan P(k+1)]</div>
+        <div class="step-proof">
+          Harus dibuktikan: 1 + 2 + … + k + (k+1) = <span class="hl">(k+1)(k+2)/2</span><br><br>
+          Ruas kiri:<br>
+          = (1 + 2 + … + k) + (k+1)<br>
+          = <span class="hl-a">k(k+1)/2</span> + (k+1)         ← gunakan hipotesis induktif<br>
+          = (k+1) · [k/2 + 1]<br>
+          = (k+1) · [(k + 2)/2]<br>
+          = <span class="hl-g">(k+1)(k+2)/2</span>  ✓
+        </div>
+
+        <div class="qed">∎ &nbsp;Terbukti — P(n) benar untuk semua n ∈ ℤ⁺</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="hb-title">💡 Verifikasi Cepat</div>
+      <p>n = 10 → Jumlah = 1+2+…+10 = 55 &nbsp;|&nbsp; Formula: 10×11/2 = 55 ✓<br>
+         n = 100 → Jumlah = 5050 &nbsp;|&nbsp; Formula: 100×101/2 = 5050 ✓ (rumus Gauss yang terkenal!)</p>
+    </div>
+  </section>
+
+  <!-- ── CONTOH 2 ── -->
+  <section class="section" id="contoh2">
+    <div class="section-eyebrow">04 — Contoh 2</div>
+    <h2>Sifat Keterbagian</h2>
+    <p>Induksi matematika juga sangat berguna untuk membuktikan sifat keterbagian dalam teori bilangan.</p>
+
+    <div class="example">
+      <div class="example-header">
+        <span class="badge">Teorema</span>
+        Keterbagian — 3 membagi (n³ − n)
+      </div>
+      <div class="example-body">
+        <p class="soal">
+          Buktikan bahwa untuk setiap bilangan bulat positif n, ekspresi <strong style="font-family:'JetBrains Mono',monospace;">n³ − n</strong> habis dibagi 3.
+        </p>
+
+        <div class="example-body step-label">📌 Langkah 1 — Pernyataan</div>
+        <div class="step-proof">
+          P(n) : 3 | (n³ − n) &nbsp; [3 membagi n³ − n]
+        </div>
+
+        <div class="example-body step-label">✅ Langkah 2 — Basis (n = 1)</div>
+        <div class="step-proof">
+          1³ − 1 = 1 − 1 = <span class="hl">0</span><br>
+          3 | 0 ✓ → P(1) <span class="hl-g">benar</span>
+        </div>
+
+        <div class="example-body step-label">🔵 Langkah 3 — Hipotesis Induktif</div>
+        <div class="step-proof">
+          Asumsikan P(k) benar: <span class="hl-a">3 | (k³ − k)</span><br>
+          Artinya: k³ − k = 3m untuk suatu bilangan bulat m
+        </div>
+
+        <div class="example-body step-label">🔧 Langkah 4 — Langkah Induktif</div>
+        <div class="step-proof">
+          Perlu buktikan: 3 | ((k+1)³ − (k+1))<br><br>
+          (k+1)³ − (k+1)<br>
+          = (k³ + 3k² + 3k + 1) − (k+1)<br>
+          = k³ + 3k² + 3k + 1 − k − 1<br>
+          = k³ − k + 3k² + 3k<br>
+          = <span class="hl-a">(k³ − k)</span> + 3k(k + 1)<br>
+          = <span class="hl-a">3m</span> + 3k(k+1)         ← gunakan hipotesis induktif<br>
+          = 3[m + k(k+1)]<br>
+          = <span class="hl-g">3 × bilangan bulat</span>  ✓
+        </div>
+
+        <div class="qed">∎ &nbsp;Terbukti — n³ − n habis dibagi 3 untuk semua n ∈ ℤ⁺</div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <div class="hb-title">💡 Fakta Menarik</div>
+      <p>n³ − n = n(n−1)(n+1) = (n−1)·n·(n+1) adalah hasil kali tiga bilangan bulat berurutan. Tiga bilangan berurutan selalu mengandung tepat satu kelipatan 3 — sehingga hasilnya selalu habis dibagi 3!</p>
+    </div>
+  </section>
+
+  <!-- ── CONTOH 3 ── -->
+  <section class="section" id="contoh3">
+    <div class="section-eyebrow">05 — Contoh 3</div>
+    <h2>Pembuktian Ketaksamaan</h2>
+    <p>Induksi matematika juga dapat digunakan untuk membuktikan ketaksamaan yang melibatkan ekspresi eksponensial.</p>
+
+    <div class="example">
+      <div class="example-header">
+        <span class="badge">Teorema</span>
+        Ketaksamaan Bernoulli — 2ⁿ ≥ n + 1
+      </div>
+      <div class="example-body">
+        <p class="soal">
+          Buktikan bahwa untuk setiap bilangan bulat positif n berlaku: <strong style="font-family:'JetBrains Mono',monospace;">2ⁿ ≥ n + 1</strong>
+        </p>
+
+        <div class="example-body step-label">📌 Langkah 1 — Pernyataan</div>
+        <div class="step-proof">
+          P(n) : <span class="hl">2ⁿ ≥ n + 1</span>
+        </div>
+
+        <div class="example-body step-label">✅ Langkah 2 — Basis (n = 1)</div>
+        <div class="step-proof">
+          Ruas kiri  : 2¹ = 2<br>
+          Ruas kanan : 1 + 1 = 2<br>
+          2 ≥ 2 ✓ → P(1) <span class="hl-g">benar</span>
+        </div>
+
+        <div class="example-body step-label">🔵 Langkah 3 — Hipotesis Induktif</div>
+        <div class="step-proof">
+          Asumsikan P(k) benar: <span class="hl-a">2ᵏ ≥ k + 1</span>
+        </div>
+
+        <div class="example-body step-label">🔧 Langkah 4 — Langkah Induktif</div>
+        <div class="step-proof">
+          Perlu buktikan: 2ᵏ⁺¹ ≥ (k+1) + 1 = k + 2<br><br>
+          2ᵏ⁺¹ = 2 · 2ᵏ<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; ≥ 2 · (k + 1)       ← gunakan hipotesis induktif: <span class="hl-a">2ᵏ ≥ k+1</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp; = 2k + 2<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; = (k + 2) + k<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; ≥ k + 2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ← karena k ≥ 0<br>
+          Jadi: 2ᵏ⁺¹ ≥ <span class="hl-g">k + 2</span>  ✓
+        </div>
+
+        <div class="qed">∎ &nbsp;Terbukti — 2ⁿ ≥ n + 1 untuk semua n ∈ ℤ⁺</div>
+      </div>
+    </div>
+
+    <div class="fancy-divider"><div class="line"></div><div class="sym">∑</div><div class="line"></div></div>
+
+    <h3>Ringkasan Perbandingan Contoh</h3>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Pernyataan</th>
+          <th>Tipe</th>
+          <th>Formula / Klaim</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Jumlah bilangan asli</td>
+          <td>Rumus deret</td>
+          <td><code>Σk = n(n+1)/2</code></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Keterbagian n³−n</td>
+          <td>Sifat keterbagian</td>
+          <td><code>3 | (n³ − n)</code></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Ketaksamaan 2ⁿ</td>
+          <td>Ketaksamaan</td>
+          <td><code>2ⁿ ≥ n + 1</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ── INDUKSI KUAT ── -->
+  <section class="section" id="kuat">
+    <div class="section-eyebrow">06 — Lanjutan</div>
+    <h2>Induksi Matematika Kuat</h2>
+    <p>
+      <span class="tip" data-tip="Disebut juga Complete Induction atau Second Principle of Induction">Induksi matematika kuat</span> adalah variasi dari induksi biasa. Pada langkah induktifnya, hipotesis yang digunakan lebih kuat: diasumsikan P(n) benar untuk <strong style="color:var(--white)">semua</strong> nilai dari basis hingga k, bukan hanya P(k) saja.
+    </p>
+
+    <div class="formula-box">
+      <span class="hl">Prinsip Induksi Kuat:</span><br><br>
+      Jika:<br>
+      &nbsp;&nbsp;① P(1) benar (basis)<br>
+      &nbsp;&nbsp;② Untuk setiap k ≥ 1, jika <span class="hl-amber">P(1), P(2), …, P(k)</span> semua benar,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; maka <span class="hl-green">P(k+1)</span> juga benar<br><br>
+      Maka P(n) benar untuk semua n ∈ ℤ⁺
+    </div>
+
+    <div class="card-grid" style="margin-top:28px">
+      <div class="card">
+        <div class="card-icon">🔄</div>
+        <h4>Induksi Biasa</h4>
+        <p>Hipotesis: <em>P(k) benar</em>.<br>Cukup untuk membuktikan P(k+1) dari satu nilai sebelumnya.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💪</div>
+        <h4>Induksi Kuat</h4>
+        <p>Hipotesis: <em>P(1), P(2), …, P(k) semua benar</em>.<br>Berguna saat P(k+1) bergantung pada lebih dari satu nilai sebelumnya.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h4>Kapan Digunakan?</h4>
+        <p>Rekursi (seperti Fibonacci), pembuktian teorema faktorisasi prima, analisis algoritma rekursif.</p>
+      </div>
+    </div>
+
+    <h3>Contoh Penerapan: Bilangan Fibonacci</h3>
+    <p>Didefinisikan F(1) = 1, F(2) = 1, F(n) = F(n−1) + F(n−2) untuk n ≥ 3. Pembuktian sifat Fibonacci sering memerlukan hipotesis untuk F(k) <em>dan</em> F(k−1), sehingga induksi kuat lebih tepat digunakan.</p>
+    <p>Misalnya, membuktikan bahwa F(n) &lt; 2ⁿ untuk semua n ≥ 1 memerlukan asumsi F(k−1) &lt; 2ᵏ⁻¹ dan F(k) &lt; 2ᵏ secara bersamaan — ini adalah ciri khas induksi kuat.</p>
+  </section>
+
+  <!-- ── QUIZ ── -->
+  <section id="quiz-section">
+    <div class="section-eyebrow" style="font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:12px;">07 — Evaluasi</div>
+    <h2>Kuis Interaktif</h2>
+    <p class="quiz-intro">Uji pemahaman Anda tentang induksi matematika. Pilih jawaban terbaik untuk setiap soal.</p>
+
+    <div id="quiz-container"></div>
+    <div class="quiz-result" id="quizResult">
+      <div class="result-score" id="resultScore">0</div>
+      <div class="result-label">dari 7 soal</div>
+      <div class="result-msg" id="resultMsg"></div>
+      <button class="btn-reset" onclick="resetQuiz()">↺ &nbsp;Ulangi Kuis</button>
+    </div>
+  </section>
+
+  <!-- ── REFERENSI ── -->
+  <section class="section" id="referensi">
+    <div class="section-eyebrow">08 — Pustaka</div>
+    <h2>Referensi</h2>
+    <p>Materi ini disusun berdasarkan sumber-sumber berikut:</p>
+
+    <ul class="ref-list">
+      <li>
+        <span class="ref-num">[1]</span>
+        <span>Rosen, K. H. (2019). <em>Discrete Mathematics and Its Applications</em>, 8th Edition. McGraw-Hill Education. — Bab 5: Induction and Recursion.</span>
+      </li>
+      <li>
+        <span class="ref-num">[2]</span>
+        <span>Johnsonbaugh, R. (2008). <em>Discrete Mathematics</em>, 7th Edition. Pearson Prentice Hall. — Chapter 2: Proofs.</span>
+      </li>
+      <li>
+        <span class="ref-num">[3]</span>
+        <span>Grimaldi, R. P. (2004). <em>Discrete and Combinatorial Mathematics</em>, 5th Edition. Addison Wesley. — Chapter 4: Mathematical Induction.</span>
+      </li>
+      <li>
+        <span class="ref-num">[4]</span>
+        <span>Epp, S. S. (2010). <em>Discrete Mathematics with Applications</em>, 4th Edition. Cengage Learning. — Section 5.1–5.3: Mathematical Induction.</span>
+      </li>
+      <li>
+        <span class="ref-num">[5]</span>
+        <span>Susanna, S. E. (2020). <em>Discrete Mathematics: Introduction to Mathematical Reasoning</em>. Cengage. — Chapter 4: Elementary Number Theory and Methods of Proof.</span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<script>
+// ── QUIZ DATA ──
+const quizData = [
+  {
+    q: "Pada pembuktian dengan induksi matematika, apa yang dimaksud dengan 'langkah basis'?",
+    opts: [
+      "Membuktikan bahwa P(k) ⟹ P(k+1)",
+      "Membuktikan bahwa P(n) berlaku untuk satu nilai awal tertentu, biasanya n = 1",
+      "Mengasumsikan P(k) benar untuk k sembarang",
+      "Menguji pernyataan untuk semua nilai n secara berurutan"
+    ],
+    ans: 1,
+    fb: "Langkah basis membuktikan P(n) untuk nilai awal (biasanya n = 1) secara langsung melalui perhitungan."
+  },
+  {
+    q: "Dalam pembuktian induksi matematika bahwa 1 + 2 + … + n = n(n+1)/2, apa yang dibuktikan pada langkah induktif?",
+    opts: [
+      "1 + 2 + … + k = k(k+1)/2",
+      "1 + 2 + … + (k+1) = (k+1)(k+2)/2",
+      "P(1) benar karena 1 = 1(1+1)/2",
+      "Formula berlaku untuk k = 100"
+    ],
+    ans: 1,
+    fb: "Langkah induktif membuktikan bahwa jika P(k) benar, maka P(k+1) harus benar, yaitu 1+2+…+(k+1) = (k+1)(k+2)/2."
+  },
+  {
+    q: "Apakah pembuktian berikut ini valid? \"Saya sudah membuktikan P(1), P(2), P(3), P(4), dan P(5) benar. Maka P(n) benar untuk semua n.\"",
+    opts: [
+      "Ya, karena sudah cukup banyak nilai yang diuji",
+      "Ya, selama P(1) terbukti benar",
+      "Tidak, karena langkah induktif belum dilakukan",
+      "Tidak, karena basis harus dimulai dari n = 0"
+    ],
+    ans: 2,
+    fb: "Pembuktian tersebut tidak valid. Menguji sejumlah kasus saja tidak membuktikan berlakunya untuk semua n. Langkah induktif (P(k) ⟹ P(k+1)) tetap diperlukan."
+  },
+  {
+    q: "Pada pembuktian bahwa 3 | (n³ − n) untuk semua n ∈ ℤ⁺, berapakah nilai n³ − n saat n = 2?",
+    opts: ["2", "4", "6", "8"],
+    ans: 2,
+    fb: "n = 2: n³ − n = 8 − 2 = 6. Dan 6 = 3 × 2, jadi memang habis dibagi 3. ✓"
+  },
+  {
+    q: "Mengapa pada langkah induktif, kita diperbolehkan menggunakan hipotesis induktif P(k)?",
+    opts: [
+      "Karena P(k) sudah terbukti sebelumnya dalam kasus basis",
+      "Karena hipotesis induktif adalah fakta yang tidak perlu dibuktikan",
+      "Karena kita sedang membuktikan implikasi P(k) ⟹ P(k+1), dan dalam sebuah implikasi, anteseden (P(k)) diasumsikan benar",
+      "Karena k selalu sama dengan 1"
+    ],
+    ans: 2,
+    fb: "Kita membuktikan kondisional (implikasi): 'JIKA P(k) benar, MAKA P(k+1) benar'. Dalam logika, untuk membuktikan implikasi, kita mengasumsikan anteseden (P(k)) benar, lalu membuktikan konsekuen (P(k+1))."
+  },
+  {
+    q: "Kapan penggunaan induksi matematika kuat (strong induction) lebih tepat dibandingkan induksi biasa?",
+    opts: [
+      "Saat P(n) melibatkan ketidaksamaan (≥ atau ≤)",
+      "Saat pembuktian P(k+1) memerlukan asumsi lebih dari satu nilai sebelumnya (bukan hanya P(k))",
+      "Saat basis dimulai dari n = 0, bukan n = 1",
+      "Saat formula melibatkan faktorial atau kombinatorial"
+    ],
+    ans: 1,
+    fb: "Induksi kuat digunakan ketika untuk membuktikan P(k+1) kita membutuhkan kebenaran P(k−1), P(k−2), atau nilai sebelumnya lainnya — bukan hanya P(k)."
+  },
+  {
+    q: "Selesaikan: Pada langkah induktif pembuktian 1 + 2 + … + k + (k+1) = (k+1)(k+2)/2, setelah menggunakan hipotesis induktif diperoleh ekspresi k(k+1)/2 + (k+1). Langkah berikutnya yang tepat adalah…",
+    opts: [
+      "k(k+1)/2 + (k+1) = k(k+1)/2 + 2(k+1)/2 = (k+1)(k+2)/2",
+      "k(k+1)/2 + (k+1) = (k+1)(k+1)/2",
+      "k(k+1)/2 + (k+1) = k²/2 + 3k/2 + 1",
+      "Tidak bisa disederhanakan lebih lanjut"
+    ],
+    ans: 0,
+    fb: "k(k+1)/2 + (k+1) = k(k+1)/2 + 2(k+1)/2 = [k(k+1) + 2(k+1)]/2 = (k+1)(k+2)/2. Inilah yang ingin dibuktikan! ✓"
+  }
+];
+
+let answered = new Array(quizData.length).fill(false);
+let correct  = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  answered = new Array(quizData.length).fill(false);
+  correct = 0;
+
+  quizData.forEach((item, qi) => {
+    const card = document.createElement('div');
+    card.className = 'quiz-card';
+    card.id = 'qcard-' + qi;
+
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-q';
+    qDiv.innerHTML = `<span class="q-num">Soal ${qi+1} dari ${quizData.length}</span>${item.q}`;
+
+    const optsDiv = document.createElement('div');
+    optsDiv.className = 'options';
+
+    item.opts.forEach((opt, oi) => {
+      const btn = document.createElement('button');
+      btn.className = 'option';
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(qi, oi, btn, optsDiv);
+      optsDiv.appendChild(btn);
+    });
+
+    const fb = document.createElement('div');
+    fb.className = 'feedback';
+    fb.id = 'fb-' + qi;
+
+    card.appendChild(qDiv);
+    card.appendChild(optsDiv);
+    card.appendChild(fb);
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, oi, btn, optsDiv) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+
+  const item = quizData[qi];
+  const isCorrect = oi === item.ans;
+  if (isCorrect) correct++;
+
+  // Mark options
+  Array.from(optsDiv.children).forEach((b, i) => {
+    b.disabled = true;
+    if (i === item.ans) b.classList.add('correct');
+    else if (i === oi && !isCorrect) b.classList.add('wrong');
+  });
+
+  // Show feedback
+  const fb = document.getElementById('fb-' + qi);
+  fb.textContent = (isCorrect ? '✓ Benar! ' : '✗ Salah. ') + item.fb;
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+
+  // Mark card
+  document.getElementById('qcard-' + qi).classList.add('answered');
+
+  // Update progress
+  updateProgress();
+
+  // Check all done
+  if (answered.every(a => a)) showResult();
+}
+
+function showResult() {
+  const result = document.getElementById('quizResult');
+  const score = document.getElementById('resultScore');
+  const msg = document.getElementById('resultMsg');
+  result.classList.add('show');
+  score.textContent = correct + '/' + quizData.length;
+
+  const pct = Math.round((correct / quizData.length) * 100);
+  if (pct >= 86) msg.textContent = '🏆 Sangat Baik! Pemahaman Anda tentang induksi matematika sudah sangat solid.';
+  else if (pct >= 70) msg.textContent = '👍 Baik! Tinggal sedikit lagi untuk memperkuat pemahaman Anda.';
+  else if (pct >= 50) msg.textContent = '📚 Cukup. Coba baca kembali materi dan ulangi kuis ini.';
+  else msg.textContent = '💡 Perlu belajar lebih lanjut. Pelajari kembali setiap langkah pembuktian dengan teliti.';
+
+  result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function resetQuiz() {
+  document.getElementById('quizResult').classList.remove('show');
+  buildQuiz();
+}
+
+// ── PROGRESS BAR ──
+function updateProgress() {
+  const sections = document.querySelectorAll('section');
+  const bar = document.getElementById('progressBar');
+  const pct = document.getElementById('progressPct');
+  const scrolled = window.scrollY;
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const p = Math.min(100, Math.round((scrolled / docH) * 100));
+  bar.style.width = p + '%';
+  pct.textContent = p + '%';
+}
+
+// ── ACTIVE NAV ──
+function setActive(el) {
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── SCROLL SPY ──
+window.addEventListener('scroll', () => {
+  updateProgress();
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-link');
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY + 120 >= s.offsetTop) current = s.id;
+  });
+  links.forEach(l => {
+    l.classList.remove('active');
+    if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+  });
+});
+
+// ── INIT ──
+buildQuiz();
+</script>
+</body>
+</html>
