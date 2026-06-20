@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teori Graf — Matematika Diskrit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js" defer></script>
+<style>
+:root{
+  --bg:#0a1120;
+  --bg-soft:#0e1730;
+  --card:#121d39;
+  --card-2:#192a52;
+  --border:#22305a;
+  --border-soft:#1a2547;
+  --text:#e9edf7;
+  --text-dim:#94a1c4;
+  --text-dimmer:#5c699a;
+  --cyan:#5eead4;
+  --blue:#60a5fa;
+  --amber:#fbbf24;
+  --coral:#fb7185;
+  --violet:#c084fc;
+  --green:#4ade80;
+  --display:'Space Grotesk',sans-serif;
+  --body:'Plus Jakarta Sans',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:radial-gradient(ellipse 1200px 600px at 50% -10%, #16224a 0%, var(--bg) 55%);
+  color:var(--text);
+  font-family:var(--body);
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-0.01em;margin:0;}
+a{color:var(--cyan);}
+code,.mono{font-family:var(--mono);}
+
+/* ---------- HERO ---------- */
+.hero{padding:72px 0 40px;position:relative;overflow:hidden;}
+.hero-meta{
+  display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;
+  font-family:var(--mono);font-size:12.5px;color:var(--text-dimmer);
+  text-transform:uppercase;letter-spacing:0.06em;margin-bottom:22px;
+}
+.hero-meta span:not(:last-child)::after{content:"·";margin-left:14px;color:var(--border);}
+.hero h1{font-size:clamp(40px,7vw,68px);line-height:1.02;color:#fff;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p.lede{max-width:620px;color:var(--text-dim);font-size:17px;margin-top:18px;}
+.hero-graph-bg{position:absolute;top:-40px;right:-80px;width:520px;height:520px;opacity:0.5;pointer-events:none;}
+
+/* ---------- NAV GRAPH (signature) ---------- */
+.navsec{padding:10px 0 50px;}
+.navsec-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.navsec-head h3{font-size:14px;color:var(--text-dim);font-weight:500;text-transform:uppercase;letter-spacing:0.08em;}
+.navsec-note{font-size:13px;color:var(--text-dimmer);font-style:italic;}
+.navgraph-box{
+  border:1px solid var(--border-soft);border-radius:18px;background:var(--bg-soft);
+  padding:8px;overflow:hidden;
+}
+.nav-node{cursor:pointer;}
+.nav-node circle{transition:r 0.15s ease, fill 0.2s ease;}
+.nav-node:hover circle{r:30;}
+.nav-node text{font-family:var(--display);fill:var(--text);font-size:11px;font-weight:600;pointer-events:none;}
+.nav-node .num{font-family:var(--mono);font-size:10px;fill:var(--bg);font-weight:600;pointer-events:none;}
+.navline{stroke:var(--border);stroke-width:1.5;}
+.navline.vert{stroke:#2a3a6e;stroke-dasharray:4 4;}
+
+/* ---------- SECTION SHELL ---------- */
+section.block{padding:54px 0;border-top:1px solid var(--border-soft);}
+.eyebrow{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.eyebrow .badge{
+  width:30px;height:30px;border-radius:50%;background:var(--card-2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;color:var(--cyan);flex-shrink:0;
+}
+.eyebrow span.label{font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dimmer);font-family:var(--mono);}
+.block h2{font-size:clamp(26px,3.6vw,34px);color:#fff;margin-bottom:16px;}
+.block > p.intro{color:var(--text-dim);max-width:700px;font-size:15.5px;}
+
+/* ---------- GENERIC CARDS ---------- */
+.card{
+  background:var(--card);border:1px solid var(--border-soft);border-radius:16px;padding:22px 24px;
+}
+.grid{display:grid;gap:16px;}
+.grid.cols-2{grid-template-columns:repeat(2,1fr);}
+.grid.cols-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:760px){.grid.cols-2,.grid.cols-3{grid-template-columns:1fr;}}
+.def-box{
+  border-left:3px solid var(--cyan);background:var(--bg-soft);border-radius:0 12px 12px 0;
+  padding:16px 20px;margin:18px 0;
+}
+.def-box .tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--cyan);}
+.theorem-box{
+  border-left:3px solid var(--violet);background:var(--bg-soft);border-radius:0 12px 12px 0;
+  padding:16px 20px;margin:18px 0;
+}
+.theorem-box .tag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--violet);}
+.term-card{
+  background:var(--card);border:1px solid var(--border-soft);border-radius:14px;padding:18px;
+}
+.term-card h4{font-size:15.5px;color:#fff;margin-bottom:6px;}
+.term-card p{font-size:13.8px;color:var(--text-dim);margin:6px 0 10px;}
+.term-card svg{width:100%;height:auto;}
+
+/* ---------- DEMO PANEL ---------- */
+.demo-panel{
+  border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:18px;padding:20px;margin-top:22px;
+}
+.demo-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.demo-head h4{font-size:14px;color:var(--cyan);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;}
+.demo-instructions{font-size:13.5px;color:var(--text-dim);margin-bottom:14px;}
+.demo-svg-box{background:#070d1c;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.demo-svg-box svg{width:100%;height:auto;display:block;cursor:pointer;}
+.btn{
+  font-family:var(--mono);font-size:12.5px;background:var(--card-2);color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:8px 14px;cursor:pointer;transition:all .15s ease;
+}
+.btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;}
+.stat-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-family:var(--mono);font-size:13px;}
+.stat-row .stat{background:var(--card);border:1px solid var(--border-soft);border-radius:10px;padding:8px 14px;color:var(--text-dim);}
+.stat-row .stat b{color:#fff;font-size:15px;}
+.feedback-line{font-size:13.5px;margin-top:10px;padding:10px 14px;border-radius:8px;background:var(--card-2);color:var(--text-dim);min-height:20px;}
+.feedback-line.ok{color:var(--green);background:#10241a;}
+.feedback-line.bad{color:var(--coral);background:#2a1620;}
+.checklist{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-family:var(--mono);font-size:12.5px;}
+.checklist .chk{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text-dimmer);}
+.checklist .chk.yes{color:var(--green);border-color:#1f4a32;}
+.checklist .chk.no{color:var(--text-dimmer);}
+
+/* ---------- MATRIX ---------- */
+table.matrix{border-collapse:collapse;font-family:var(--mono);font-size:13px;margin-top:14px;}
+table.matrix th,table.matrix td{
+  width:34px;height:34px;text-align:center;border:1px solid var(--border-soft);color:var(--text-dim);
+}
+table.matrix th{color:var(--cyan);background:var(--card-2);}
+table.matrix td.one{color:var(--cyan);font-weight:600;}
+
+/* ---------- GALLERY (graf khusus) ---------- */
+.gallery-card{background:var(--card);border:1px solid var(--border-soft);border-radius:14px;padding:18px;}
+.gallery-card .imgwrap{background:#070d1c;border-radius:10px;padding:10px;margin-bottom:10px;}
+.gallery-card h4{font-size:15px;color:#fff;}
+.gallery-card .formula{font-family:var(--mono);font-size:12.5px;color:var(--cyan);margin-top:6px;}
+.gallery-card p{font-size:13px;color:var(--text-dim);}
+
+/* ---------- QUIZ ---------- */
+.quiz-q{border:1px solid var(--border-soft);background:var(--bg-soft);border-radius:14px;padding:20px;margin-bottom:18px;}
+.quiz-q .qnum{font-family:var(--mono);font-size:11.5px;color:var(--text-dimmer);text-transform:uppercase;letter-spacing:0.06em;}
+.quiz-q h4{font-size:15.5px;color:#fff;margin:6px 0 14px;font-weight:500;}
+.opt-row{display:flex;flex-direction:column;gap:8px;}
+.opt{
+  text-align:left;background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;font-size:13.8px;color:var(--text);cursor:pointer;font-family:var(--body);
+}
+.opt:hover{border-color:var(--blue);}
+.quiz-q.answered .opt{cursor:default;}
+.quiz-q.answered .opt:hover{border-color:var(--border);}
+.opt.correct-pick{border-color:var(--green);background:#0f2419;color:var(--green);}
+.opt.wrong-pick{border-color:var(--coral);background:#241019;color:var(--coral);}
+.explain{font-size:13.3px;color:var(--text-dim);margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);display:none;}
+.quiz-q.answered .explain{display:block;}
+.essay-q textarea{display:none;}
+.hint-box{font-size:13.3px;color:var(--text-dim);margin-top:12px;padding:12px 14px;background:var(--card);border-radius:8px;border:1px solid var(--border);display:none;}
+.hint-box.show{display:block;}
+
+/* ---------- SUMMARY / FOOTER ---------- */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+@media (max-width:760px){.summary-grid{grid-template-columns:1fr;}}
+.summary-grid .card{font-size:13.5px;color:var(--text-dim);}
+.summary-grid .card b{color:#fff;display:block;margin-bottom:6px;font-family:var(--display);font-size:14.5px;}
+footer{padding:50px 0 60px;border-top:1px solid var(--border-soft);}
+footer .fgrid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px;font-size:13px;color:var(--text-dimmer);}
+footer b{color:var(--text-dim);}
+.node-color-key{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--text-dimmer);font-family:var(--mono);}
+.node-color-key .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <header class="hero">
+    <div class="hero-meta">
+      <span>Mata Kuliah: Matematika Diskrit</span>
+      <span>Topik: Teori Graf</span>
+      <span>Program Studi Pendidikan Matematika</span>
+      <span>IKIP Siliwangi</span>
+    </div>
+    <h1>Memahami <em>Graf</em><br>sebagai Bahasa Keterhubungan</h1>
+    <p class="lede">Graf adalah struktur matematis paling sederhana untuk menggambarkan hubungan antar objek — mulai dari peta jaringan jalan, pertemanan di media sosial, hingga rute pengiriman barang. Modul ini membahas definisi, jenis, representasi, serta sifat-sifat penting graf secara interaktif.</p>
+  </header>
+
+  <!-- ============ NAV GRAPH ============ -->
+  <section class="navsec">
+    <div class="navsec-head">
+      <h3>Peta Materi</h3>
+      <span class="navsec-note">Klik salah satu titik untuk menuju bagian terkait — tata letaknya sendiri membentuk graf tangga (ladder graph).</span>
+    </div>
+    <div class="navgraph-box">
+      <svg viewBox="0 0 760 410" xmlns="http://www.w3.org/2000/svg">
+        <g class="navlines">
+          <line class="navline" x1="80" y1="90" x2="230" y2="90"/>
+          <line class="navline" x1="230" y1="90" x2="380" y2="90"/>
+          <line class="navline" x1="380" y1="90" x2="530" y2="90"/>
+          <line class="navline" x1="530" y1="90" x2="680" y2="90"/>
+          <line class="navline" x1="80" y1="320" x2="230" y2="320"/>
+          <line class="navline" x1="230" y1="320" x2="380" y2="320"/>
+          <line class="navline" x1="380" y1="320" x2="530" y2="320"/>
+          <line class="navline" x1="530" y1="320" x2="680" y2="320"/>
+          <line class="navline vert" x1="80" y1="90" x2="80" y2="320"/>
+          <line class="navline vert" x1="230" y1="90" x2="230" y2="320"/>
+          <line class="navline vert" x1="380" y1="90" x2="380" y2="320"/>
+          <line class="navline vert" x1="530" y1="90" x2="530" y2="320"/>
+          <line class="navline vert" x1="680" y1="90" x2="680" y2="320"/>
+        </g>
+        <g class="nav-node" data-target="#definisi"><circle cx="80" cy="90" r="26" fill="#172b52" stroke="#5eead4"/><text x="80" y="44" text-anchor="middle">Definisi</text><text class="num" x="80" y="94" text-anchor="middle">1</text></g>
+        <g class="nav-node" data-target="#terminologi"><circle cx="230" cy="90" r="26" fill="#172b52" stroke="#5eead4"/><text x="230" y="44" text-anchor="middle">Terminologi</text><text class="num" x="230" y="94" text-anchor="middle">2</text></g>
+        <g class="nav-node" data-target="#jenis"><circle cx="380" cy="90" r="26" fill="#172b52" stroke="#5eead4"/><text x="380" y="44" text-anchor="middle">Jenis Graf</text><text class="num" x="380" y="94" text-anchor="middle">3</text></g>
+        <g class="nav-node" data-target="#representasi"><circle cx="530" cy="90" r="26" fill="#172b52" stroke="#5eead4"/><text x="530" y="44" text-anchor="middle">Representasi</text><text class="num" x="530" y="94" text-anchor="middle">4</text></g>
+        <g class="nav-node" data-target="#walk"><circle cx="680" cy="90" r="26" fill="#172b52" stroke="#5eead4"/><text x="680" y="44" text-anchor="middle">Walk·Path</text><text class="num" x="680" y="94" text-anchor="middle">5</text></g>
+        <g class="nav-node" data-target="#khusus"><circle cx="80" cy="320" r="26" fill="#172b52" stroke="#fbbf24"/><text x="80" y="368" text-anchor="middle">Graf Khusus</text><text class="num" x="80" y="324" text-anchor="middle">6</text></g>
+        <g class="nav-node" data-target="#euler"><circle cx="230" cy="320" r="26" fill="#172b52" stroke="#fbbf24"/><text x="230" y="368" text-anchor="middle">Euler·Hamilton</text><text class="num" x="230" y="324" text-anchor="middle">7</text></g>
+        <g class="nav-node" data-target="#pewarnaan"><circle cx="380" cy="320" r="26" fill="#172b52" stroke="#fbbf24"/><text x="380" y="368" text-anchor="middle">Pewarnaan</text><text class="num" x="380" y="324" text-anchor="middle">8</text></g>
+        <g class="nav-node" data-target="#aplikasi"><circle cx="530" cy="320" r="26" fill="#172b52" stroke="#fbbf24"/><text x="530" y="368" text-anchor="middle">Aplikasi</text><text class="num" x="530" y="324" text-anchor="middle">9</text></g>
+        <g class="nav-node" data-target="#latihan"><circle cx="680" cy="320" r="26" fill="#172b52" stroke="#fbbf24"/><text x="680" y="368" text-anchor="middle">Latihan</text><text class="num" x="680" y="324" text-anchor="middle">10</text></g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ============ 1. DEFINISI ============ -->
+  <section class="block" id="definisi">
+    <div class="eyebrow"><div class="badge">1</div><span class="label">Definisi Dasar</span></div>
+    <h2>Apa Itu Graf?</h2>
+    <p class="intro">Secara formal, sebuah graf dituliskan sebagai pasangan dua himpunan.</p>
+
+    <div class="def-box">
+      <span class="tag">Definisi</span>
+      <p>Graf \(G\) adalah pasangan \(G=(V,E)\), dengan \(V\) adalah himpunan tidak kosong yang elemennya disebut <b>titik</b> atau <b>vertex/node</b>, dan \(E\) adalah himpunan pasangan titik yang disebut <b>sisi</b> atau <b>edge</b>, yang menyatakan hubungan antara dua titik.</p>
+    </div>
+
+    <p>Setiap titik memiliki <b>derajat</b> (degree), yaitu banyaknya sisi yang terhubung pada titik tersebut, dinotasikan \(\deg(v)\). Jumlah seluruh derajat titik dalam graf selalu berkaitan langsung dengan jumlah sisinya:</p>
+
+    <div class="theorem-box">
+      <span class="tag">Teorema — Lemma Persalaman Tangan (Handshaking Lemma)</span>
+      <p>Untuk graf \(G=(V,E)\) berlaku \(\displaystyle\sum_{v \in V}\deg(v) = 2|E|\). Akibatnya, banyaknya titik berderajat ganjil pada sembarang graf selalu genap.</p>
+    </div>
+
+    <div class="demo-panel">
+      <div class="demo-head"><h4>Simulasi — Bangun Graf Sendiri</h4><button class="btn" id="builderReset">Atur Ulang</button></div>
+      <p class="demo-instructions">Klik area kosong untuk menambah titik baru. Klik satu titik lalu titik lain untuk menghubungkannya dengan sisi. Perhatikan bagaimana derajat dan total derajat berubah.</p>
+      <div class="demo-svg-box">
+        <svg id="builderSvg" viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="stat-row" id="builderStats"></div>
+    </div>
+  </section>
+
+  <!-- ============ 2. TERMINOLOGI ============ -->
+  <section class="block" id="terminologi">
+    <div class="eyebrow"><div class="badge">2</div><span class="label">Istilah Penting</span></div>
+    <h2>Terminologi Graf</h2>
+    <p class="intro">Beberapa istilah berikut akan terus digunakan sepanjang materi, jadi penting untuk dipahami sejak awal.</p>
+
+    <div class="grid cols-3" style="margin-top:20px;">
+      <div class="term-card">
+        <h4>Bertetangga (Adjacent)</h4>
+        <p>Dua titik dikatakan bertetangga jika dihubungkan langsung oleh sebuah sisi.</p>
+        <svg viewBox="0 0 160 90"><circle cx="40" cy="45" r="10" fill="#5eead4"/><circle cx="120" cy="45" r="10" fill="#5eead4"/><line x1="50" y1="45" x2="110" y2="45" stroke="#5c699a" stroke-width="2"/></svg>
+      </div>
+      <div class="term-card">
+        <h4>Terkait (Incident)</h4>
+        <p>Sisi \(e\) dikatakan terkait (incident) dengan titik \(v\) jika \(v\) adalah salah satu ujung sisi \(e\).</p>
+        <svg viewBox="0 0 160 90"><circle cx="40" cy="45" r="10" fill="#fbbf24"/><circle cx="120" cy="45" r="10" fill="#60a5fa"/><line x1="50" y1="45" x2="110" y2="45" stroke="#5c699a" stroke-width="2"/><text x="80" y="36" fill="#94a1c4" font-size="11" text-anchor="middle" font-family="JetBrains Mono">e</text></svg>
+      </div>
+      <div class="term-card">
+        <h4>Derajat 0 — Terasing (Isolated)</h4>
+        <p>Titik yang tidak memiliki sisi sama sekali, sehingga \(\deg(v)=0\).</p>
+        <svg viewBox="0 0 160 90"><circle cx="80" cy="45" r="10" fill="#5c699a"/></svg>
+      </div>
+      <div class="term-card">
+        <h4>Derajat 1 — Ujung (Pendant)</h4>
+        <p>Titik yang hanya memiliki tepat satu sisi, sehingga \(\deg(v)=1\).</p>
+        <svg viewBox="0 0 160 90"><circle cx="40" cy="45" r="10" fill="#5c699a"/><circle cx="120" cy="45" r="10" fill="#fb7185"/><line x1="50" y1="45" x2="110" y2="45" stroke="#5c699a" stroke-width="2"/></svg>
+      </div>
+      <div class="term-card">
+        <h4>Gelang (Loop)</h4>
+        <p>Sisi yang kedua ujungnya berada pada titik yang sama. Sebuah loop menambah derajat titik sebesar 2.</p>
+        <svg viewBox="0 0 160 90"><circle cx="80" cy="55" r="10" fill="#c084fc"/><path d="M70,48 C55,20 105,20 90,48" stroke="#5c699a" stroke-width="2" fill="none"/></svg>
+      </div>
+      <div class="term-card">
+        <h4>Sisi Ganda (Multiple/Parallel Edges)</h4>
+        <p>Dua titik yang dihubungkan oleh lebih dari satu sisi berbeda.</p>
+        <svg viewBox="0 0 160 90"><circle cx="40" cy="45" r="10" fill="#4ade80"/><circle cx="120" cy="45" r="10" fill="#4ade80"/><path d="M50,40 Q80,15 110,40" stroke="#5c699a" stroke-width="2" fill="none"/><path d="M50,50 Q80,75 110,50" stroke="#5c699a" stroke-width="2" fill="none"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. JENIS GRAF ============ -->
+  <section class="block" id="jenis">
+    <div class="eyebrow"><div class="badge">3</div><span class="label">Klasifikasi</span></div>
+    <h2>Jenis-Jenis Graf</h2>
+    <p class="intro">Graf dapat dikelompokkan dari beberapa sudut pandang sekaligus: ada-tidaknya loop dan sisi ganda, arah sisinya, serta apakah sisinya berbobot.</p>
+
+    <div class="grid cols-2" style="margin-top:20px;">
+      <div class="card">
+        <h4 style="color:#fff;margin-bottom:8px;">Berdasarkan Loop &amp; Sisi Ganda</h4>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--cyan);">Graf sederhana (simple graph)</b> — tidak memiliki loop maupun sisi ganda.</p>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--amber);">Graf tak-sederhana</b> — memuat loop dan/atau sisi ganda. Disebut <i>multigraf</i> bila hanya memuat sisi ganda, dan <i>graf semu (pseudograph)</i> bila juga memuat loop.</p>
+      </div>
+      <div class="card">
+        <h4 style="color:#fff;margin-bottom:8px;">Berdasarkan Arah Sisi</h4>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--cyan);">Graf tak-berarah (undirected)</b> — sisi tidak memiliki orientasi; \((u,v)\) sama dengan \((v,u)\).</p>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--amber);">Graf berarah (directed/digraph)</b> — setiap sisi memiliki arah, dituliskan sebagai pasangan terurut \((u,v)\), dan dibedakan derajat-keluar (out-degree) dengan derajat-masuk (in-degree).</p>
+      </div>
+      <div class="card">
+        <h4 style="color:#fff;margin-bottom:8px;">Berdasarkan Bobot</h4>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--cyan);">Graf tak-berbobot</b> — semua sisi dianggap setara.</p>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--amber);">Graf berbobot (weighted)</b> — setiap sisi memiliki nilai/bobot, misalnya jarak antar kota atau biaya suatu rute.</p>
+      </div>
+      <div class="card">
+        <h4 style="color:#fff;margin-bottom:8px;">Berdasarkan Keterhubungan</h4>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--cyan);">Graf terhubung (connected)</b> — terdapat lintasan antara setiap pasang titik.</p>
+        <p style="color:var(--text-dim);font-size:14px;"><b style="color:var(--amber);">Graf tak-terhubung</b> — terdiri dari dua atau lebih komponen yang saling lepas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. REPRESENTASI ============ -->
+  <section class="block" id="representasi">
+    <div class="eyebrow"><div class="badge">4</div><span class="label">Representasi</span></div>
+    <h2>Merepresentasikan Graf</h2>
+    <p class="intro">Untuk diolah secara komputasional, graf umumnya dinyatakan dalam bentuk matriks ketetanggaan, matriks keterhubungan, atau senarai (list) ketetanggaan.</p>
+
+    <div class="def-box">
+      <span class="tag">Matriks Ketetanggaan (Adjacency Matrix)</span>
+      <p>Matriks \(A\) berukuran \(n\times n\) dengan \(A_{ij}=1\) jika titik \(i\) dan \(j\) bertetangga, dan \(A_{ij}=0\) jika tidak. Untuk graf tak-berarah, matriks ini selalu simetris.</p>
+    </div>
+
+    <div class="demo-panel">
+      <div class="demo-head"><h4>Simulasi — Graf Pentagon Interaktif</h4><button class="btn" id="matrixReset">Atur Ulang ke C5</button></div>
+      <p class="demo-instructions">Klik garis (calon sisi) pada graf untuk mengaktifkan/menonaktifkannya. Matriks ketetanggaan di sebelahnya akan menyesuaikan secara langsung.</p>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+        <div class="demo-svg-box" style="flex:1;min-width:280px;">
+          <svg id="matrixSvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div style="flex:0 0 auto;">
+          <table class="matrix" id="matrixTable"></table>
+          <div id="matrixList" style="font-family:var(--mono);font-size:12px;color:var(--text-dim);margin-top:12px;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. WALK / TRAIL / PATH ============ -->
+  <section class="block" id="walk">
+    <div class="eyebrow"><div class="badge">5</div><span class="label">Pergerakan dalam Graf</span></div>
+    <h2>Walk, Trail, Path, dan Sirkuit</h2>
+    <p class="intro">Keempat istilah ini menyatakan tingkat "kebebasan" berulang yang berbeda saat bergerak dari satu titik ke titik lain melalui sisi-sisi graf.</p>
+
+    <div class="grid cols-2" style="margin-top:18px;">
+      <div class="card"><h4 style="color:#fff;">Walk</h4><p style="color:var(--text-dim);font-size:13.8px;">Barisan titik dan sisi yang berurutan dan saling terhubung; titik maupun sisi <b>boleh berulang</b>.</p></div>
+      <div class="card"><h4 style="color:#fff;">Trail</h4><p style="color:var(--text-dim);font-size:13.8px;">Walk yang <b>tidak mengulang sisi</b> apa pun (titik masih boleh berulang).</p></div>
+      <div class="card"><h4 style="color:#fff;">Path (Lintasan)</h4><p style="color:var(--text-dim);font-size:13.8px;">Trail yang juga <b>tidak mengulang titik</b> — setiap titik dan sisi dilalui paling banyak satu kali.</p></div>
+      <div class="card"><h4 style="color:#fff;">Sirkuit / Siklus</h4><p style="color:var(--text-dim);font-size:13.8px;"><b>Sirkuit</b> adalah trail tertutup (titik awal = titik akhir). <b>Siklus (cycle)</b> adalah sirkuit yang juga tidak mengulang titik lain selain titik awal/akhir.</p></div>
+    </div>
+
+    <div class="demo-panel">
+      <div class="demo-head"><h4>Simulasi — Klasifikasikan Pergerakan Anda</h4><button class="btn" id="walkReset">Atur Ulang</button></div>
+      <p class="demo-instructions">Klik titik-titik secara berurutan untuk membentuk sebuah perjalanan. Sistem akan menentukan apakah perjalanan tersebut tergolong walk, trail, path, atau sirkuit.</p>
+      <div class="demo-svg-box">
+        <svg id="walkSvg" viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="feedback-line" id="walkFeedback">Klik sebuah titik untuk memulai.</div>
+      <div class="checklist" id="walkChecklist"></div>
+    </div>
+  </section>
+
+  <!-- ============ 6. GRAF KHUSUS ============ -->
+  <section class="block" id="khusus">
+    <div class="eyebrow"><div class="badge">6</div><span class="label">Galeri</span></div>
+    <h2>Graf-Graf Khusus</h2>
+    <p class="intro">Beberapa bentuk graf muncul begitu sering sehingga diberi nama dan notasi tersendiri.</p>
+
+    <div class="grid cols-3" style="margin-top:20px;" id="khususGallery"></div>
+  </section>
+
+  <!-- ============ 7. EULER & HAMILTON ============ -->
+  <section class="block" id="euler">
+    <div class="eyebrow"><div class="badge">7</div><span class="label">Lintasan &amp; Sirkuit Khusus</span></div>
+    <h2>Graf Euler dan Graf Hamilton</h2>
+    <p class="intro">Dua persoalan klasik dalam teori graf adalah: dapatkah kita melalui <i>setiap sisi</i> tepat satu kali (Euler), atau melalui <i>setiap titik</i> tepat satu kali (Hamilton)?</p>
+
+    <div class="def-box">
+      <span class="tag">Definisi</span>
+      <p><b>Lintasan/Sirkuit Euler</b> adalah trail/sirkuit yang melalui <i>setiap sisi</i> graf tepat satu kali. <b>Lintasan/Sirkuit Hamilton</b> adalah path/cycle yang melalui <i>setiap titik</i> graf tepat satu kali.</p>
+    </div>
+
+    <div class="theorem-box">
+      <span class="tag">Teorema Euler</span>
+      <p>Graf terhubung \(G\) memiliki <b>sirkuit Euler</b> jika dan hanya jika setiap titiknya berderajat genap. Graf terhubung \(G\) memiliki <b>lintasan Euler</b> (tidak tertutup) jika dan hanya jika tepat dua titiknya berderajat ganjil.</p>
+    </div>
+
+    <p style="font-size:14px;color:var(--text-dim);">Persoalan ini pertama kali dipecahkan Leonhard Euler pada tahun 1736 melalui kasus Jembatan Königsberg: empat daratan dihubungkan oleh tujuh jembatan, dan setiap daratan memiliki derajat ganjil — sehingga, berdasarkan teorema di atas, tidak mungkin ada rute yang melewati ketujuh jembatan masing-masing tepat satu kali.</p>
+
+    <table class="matrix" style="margin-top:10px;" id="konigsbergTable"></table>
+
+    <div class="demo-panel">
+      <div class="demo-head"><h4>Simulasi — Temukan Sirkuit Euler</h4><button class="btn" id="eulerReset">Atur Ulang</button></div>
+      <p class="demo-instructions">Graf di bawah memiliki dua segitiga yang berbagi satu titik (semua derajat genap, sehingga sirkuit Euler pasti ada). Klik titik demi titik untuk melalui setiap sisi tepat satu kali, lalu kembali ke titik awal. Hati-hati: urutan yang salah bisa membuat Anda buntu sebelum semua sisi terpakai.</p>
+      <div class="demo-svg-box">
+        <svg id="eulerSvg" viewBox="0 0 640 280" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="feedback-line" id="eulerFeedback">Klik salah satu titik untuk mulai menjelajah.</div>
+    </div>
+
+    <div class="def-box" style="margin-top:26px;">
+      <span class="tag">Catatan</span>
+      <p>Berbeda dengan masalah Euler, belum ditemukan teorema sederhana yang menentukan secara pasti kapan suatu graf memiliki sirkuit Hamilton untuk graf sembarang — ini masih menjadi salah satu persoalan terbuka penting dalam teori graf dan ilmu komputer (terkait kelas kompleksitas NP).</p>
+    </div>
+  </section>
+
+  <!-- ============ 8. PEWARNAAN ============ -->
+  <section class="block" id="pewarnaan">
+    <div class="eyebrow"><div class="badge">8</div><span class="label">Pewarnaan Graf</span></div>
+    <h2>Pewarnaan Titik (Vertex Coloring)</h2>
+    <p class="intro">Pewarnaan titik adalah pemberian warna pada setiap titik graf sedemikian rupa sehingga dua titik yang bertetangga tidak memiliki warna yang sama.</p>
+
+    <div class="def-box">
+      <span class="tag">Definisi</span>
+      <p>Bilangan kromatik \(\chi(G)\) adalah jumlah warna minimum yang diperlukan untuk mewarnai semua titik graf \(G\) sehingga tidak ada dua titik bertetangga berwarna sama.</p>
+    </div>
+
+    <div class="demo-panel">
+      <div class="demo-head"><h4>Simulasi — Warnai Graf Ini</h4><button class="btn" id="colorReset">Atur Ulang</button></div>
+      <p class="demo-instructions">Klik sebuah titik untuk mengganti warnanya secara bergilir. Sisi akan menyala merah jika menghubungkan dua titik berwarna sama. Cobalah temukan pewarnaan valid dengan warna seminimal mungkin.</p>
+      <div class="demo-svg-box">
+        <svg id="colorSvg" viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="stat-row" id="colorStats"></div>
+      <div class="feedback-line" id="colorFeedback">Belum ada titik yang diwarnai.</div>
+      <button class="btn" id="colorHintBtn" style="margin-top:10px;">Tunjukkan Petunjuk Struktural</button>
+      <div class="hint-box" id="colorHint">Perhatikan tiga titik yang membentuk segitiga pada graf ini. Pada segitiga, ketiga titik saling bertetangga satu sama lain — pikirkan apa konsekuensinya terhadap jumlah warna minimum yang dibutuhkan.</div>
+    </div>
+
+    <p style="font-size:14px;color:var(--text-dim);margin-top:20px;">Pewarnaan graf banyak diterapkan dalam <b>penjadwalan</b> (dua kegiatan yang bertabrakan waktu direpresentasikan sebagai titik bertetangga dan harus mendapat slot/"warna" berbeda) serta dalam <b>pewarnaan peta</b>, yang melahirkan Teorema Empat Warna: setiap peta datar dapat diwarnai dengan paling banyak empat warna sehingga wilayah yang berbatasan tidak sewarna.</p>
+  </section>
+
+  <!-- ============ 9. APLIKASI ============ -->
+  <section class="block" id="aplikasi">
+    <div class="eyebrow"><div class="badge">9</div><span class="label">Penerapan</span></div>
+    <h2>Aplikasi Teori Graf</h2>
+    <p class="intro">Karena sifatnya yang abstrak namun fleksibel, graf dipakai di hampir setiap bidang yang melibatkan jaringan atau hubungan antar entitas.</p>
+
+    <div class="grid cols-3" style="margin-top:20px;">
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Jaringan Sosial</h4><p style="color:var(--text-dim);font-size:13.5px;">Setiap pengguna adalah titik, dan relasi pertemanan/pengikut adalah sisi — digunakan untuk merekomendasikan koneksi baru.</p></div>
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Navigasi &amp; Transportasi</h4><p style="color:var(--text-dim);font-size:13.5px;">Persimpangan jalan sebagai titik dan ruas jalan berbobot jarak/waktu sebagai sisi, dipakai algoritma pencarian rute tersingkat.</p></div>
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Jaringan Komputer</h4><p style="color:var(--text-dim);font-size:13.5px;">Perangkat sebagai titik dan koneksi kabel/nirkabel sebagai sisi, untuk merancang topologi yang andal dan efisien.</p></div>
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Penjadwalan</h4><p style="color:var(--text-dim);font-size:13.5px;">Konflik antar kegiatan dimodelkan sebagai sisi, lalu diselesaikan dengan pewarnaan graf agar tidak ada jadwal yang bertabrakan.</p></div>
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Kimia &amp; Biologi</h4><p style="color:var(--text-dim);font-size:13.5px;">Struktur molekul direpresentasikan sebagai graf dengan atom sebagai titik dan ikatan kimia sebagai sisi.</p></div>
+      <div class="card"><h4 style="color:#fff;font-size:15px;">Algoritma Pencarian</h4><p style="color:var(--text-dim);font-size:13.5px;">BFS dan DFS adalah algoritma penjelajahan graf yang menjadi dasar mesin pencari, GPS, dan banyak sistem rekomendasi.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 10. LATIHAN ============ -->
+  <section class="block" id="latihan">
+    <div class="eyebrow"><div class="badge">10</div><span class="label">Asesmen</span></div>
+    <h2>Latihan Soal</h2>
+    <p class="intro">Kerjakan soal pilihan ganda berikut untuk memeriksa pemahaman Anda, lalu coba dua soal esai di bagian akhir tanpa melihat kunci jawaban — gunakan petunjuk hanya jika benar-benar diperlukan.</p>
+
+    <div id="quizContainer" style="margin-top:22px;"></div>
+
+    <h3 style="font-size:18px;color:#fff;margin:30px 0 10px;">Soal Esai Reflektif</h3>
+    <div class="quiz-q essay-q">
+      <div class="qnum">Esai 1</div>
+      <h4>Buktikan bahwa pada graf sederhana dengan \(n\) titik, jumlah sisi maksimum yang mungkin adalah \(\dfrac{n(n-1)}{2}\). Jelaskan alasannya secara matematis.</h4>
+      <button class="btn hintbtn">Tampilkan Petunjuk</button>
+      <div class="hint-box">Karena graf sederhana tidak mengizinkan loop maupun sisi ganda, setiap pasang titik berbeda paling banyak dihubungkan oleh satu sisi. Pertanyaannya kemudian menjadi: ada berapa banyak cara memilih 2 titik berbeda dari \(n\) titik yang tersedia?</div>
+    </div>
+    <div class="quiz-q essay-q">
+      <div class="qnum">Esai 2</div>
+      <h4>Sebuah graf terhubung diketahui memiliki tepat satu titik berderajat genap dan sisanya (6 titik) seluruhnya berderajat ganjil. Mungkinkah graf semacam ini ada? Jelaskan menggunakan Lemma Persalaman Tangan.</h4>
+      <button class="btn hintbtn">Tampilkan Petunjuk</button>
+      <div class="hint-box">Lemma Persalaman Tangan mengatakan bahwa jumlah titik berderajat ganjil pada sembarang graf selalu berjumlah genap. Hitung berapa titik berderajat ganjil pada soal ini, lalu periksa apakah jumlah tersebut konsisten dengan fakta tersebut.</div>
+    </div>
+  </section>
+
+  <!-- ============ RANGKUMAN ============ -->
+  <section class="block">
+    <div class="eyebrow"><div class="badge">↺</div><span class="label">Rangkuman</span></div>
+    <h2>Inti Materi</h2>
+    <div class="summary-grid" style="margin-top:18px;">
+      <div class="card"><b>Struktur Dasar</b>Graf \(G=(V,E)\) menyatakan hubungan antar objek melalui titik dan sisi; derajat dan Lemma Persalaman Tangan menjadi alat hitung paling mendasar.</div>
+      <div class="card"><b>Hierarki Pergerakan</b>Walk ⊇ Trail ⊇ Path, dengan Sirkuit dan Siklus sebagai versi tertutupnya — masing-masing membatasi pengulangan sisi dan/atau titik secara berjenjang.</div>
+      <div class="card"><b>Sifat Global</b>Teorema Euler memberi syarat pasti untuk sirkuit/lintasan Euler, sementara bilangan kromatik \(\chi(G)\) mengukur kompleksitas pewarnaan suatu graf.</div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fgrid">
+      <div><b>Martin Bernard, M.Pd.</b><br>Program Studi Pendidikan Matematika<br>IKIP Siliwangi, Cimahi, Jawa Barat</div>
+      <div style="max-width:380px;">Materi ini disusun untuk mata kuliah Matematika Diskrit sebagai bahan ajar interaktif tentang Teori Graf. Seluruh simulasi berjalan langsung di peramban tanpa memerlukan koneksi server.</div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILITAS UMUM
+   ============================================================ */
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs={}, parent=null){
+  const e = document.createElementNS(NS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function svgCoords(svg, evt){
+  const pt = svg.createSVGPoint();
+  pt.x = evt.clientX; pt.y = evt.clientY;
+  const ctm = svg.getScreenCTM().inverse();
+  const p = pt.matrixTransform(ctm);
+  return {x:p.x, y:p.y};
+}
+
+/* ============================================================
+   NAV GRAPH — klik untuk scroll
+   ============================================================ */
+document.querySelectorAll('.nav-node').forEach(n=>{
+  n.addEventListener('click', ()=>{
+    const target = document.querySelector(n.dataset.target);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+/* ============================================================
+   1. BUILDER DEMO — Bangun Graf Sendiri
+   ============================================================ */
+(function(){
+  const svg = document.getElementById('builderSvg');
+  const statsBox = document.getElementById('builderStats');
+  const resetBtn = document.getElementById('builderReset');
+  let vertices = []; // {id, x, y}
+  let edges = [];    // [idA, idB]
+  let selected = null;
+  let nextId = 0;
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  function degreeOf(id){
+    return edges.filter(e=>e[0]===id || e[1]===id).length;
+  }
+
+  function render(){
+    svg.innerHTML = '';
+    edges.forEach(([a,b])=>{
+      const va = vertices.find(v=>v.id===a), vb = vertices.find(v=>v.id===b);
+      if(va && vb) el('line',{x1:va.x,y1:va.y,x2:vb.x,y2:vb.y,stroke:'#3a4a82','stroke-width':2}, svg);
+    });
+    vertices.forEach(v=>{
+      const g = el('g', {}, svg);
+      const c = el('circle', {cx:v.x, cy:v.y, r:16, fill: selected===v.id ? '#5eead4' : '#172b52', stroke:'#5eead4', 'stroke-width':2, style:'cursor:pointer'}, g);
+      el('text', {x:v.x, y:v.y+4, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':12, fill: selected===v.id ? '#0a1120':'#e9edf7'}, g).textContent = LETTERS[v.id % 26];
+      el('text', {x:v.x, y:v.y-24, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':11, fill:'#5eead4'}, g).textContent = 'deg='+degreeOf(v.id);
+      c.addEventListener('click', (evt)=>{
+        evt.stopPropagation();
+        if(selected===null){ selected = v.id; }
+        else if(selected===v.id){ selected = null; }
+        else {
+          const exists = edges.some(e=> (e[0]===selected&&e[1]===v.id) || (e[0]===v.id&&e[1]===selected));
+          if(!exists) edges.push([selected, v.id]);
+          selected = null;
+        }
+        render();
+      });
+    });
+    const totalDeg = edges.length*2;
+    statsBox.innerHTML =
+      '<div class="stat">|V| = <b>'+vertices.length+'</b></div>'+
+      '<div class="stat">|E| = <b>'+edges.length+'</b></div>'+
+      '<div class="stat">&Sigma;deg(v) = <b>'+totalDeg+'</b> (= 2|E| &check;)</div>';
+  }
+
+  svg.addEventListener('click', (evt)=>{
+    const {x,y} = svgCoords(svg, evt);
+    vertices.push({id:nextId, x, y});
+    nextId++;
+    selected = null;
+    render();
+  });
+
+  resetBtn.addEventListener('click', ()=>{
+    vertices=[]; edges=[]; selected=null; nextId=0; render();
+  });
+
+  render();
+})();
+
+/* ============================================================
+   2. MATRIX DEMO — Pentagon C5 interaktif
+   ============================================================ */
+(function(){
+  const svg = document.getElementById('matrixSvg');
+  const table = document.getElementById('matrixTable');
+  const listBox = document.getElementById('matrixList');
+  const resetBtn = document.getElementById('matrixReset');
+  const labels = ['A','B','C','D','E'];
+  const pos = [
+    {x:250, y:30}, {x:430, y:140}, {x:355, y:280}, {x:145, y:280}, {x:70, y:140}
+  ];
+  const allPairs = [];
+  for(let i=0;i<5;i++) for(let j=i+1;j<5;j++) allPairs.push([i,j]);
+  const cyclePairs = new Set(['0-1','1-2','2-3','3-4','0-4']);
+  let state = {};
+  function key(i,j){ return i<j ? i+'-'+j : j+'-'+i; }
+  function resetState(){
+    state = {};
+    allPairs.forEach(([i,j])=>{ state[key(i,j)] = cyclePairs.has(key(i,j)); });
+  }
+  resetState();
+
+  function render(){
+    svg.innerHTML = '';
+    allPairs.forEach(([i,j])=>{
+      const active = state[key(i,j)];
+      const line = el('line', {
+        x1:pos[i].x, y1:pos[i].y, x2:pos[j].x, y2:pos[j].y,
+        stroke: active ? '#5eead4' : '#22305a',
+        'stroke-width': active ? 2.5 : 1.5,
+        style:'cursor:pointer'
+      }, svg);
+      line.addEventListener('click', ()=>{ state[key(i,j)] = !state[key(i,j)]; render(); });
+    });
+    pos.forEach((p,idx)=>{
+      const g = el('g', {}, svg);
+      el('circle', {cx:p.x, cy:p.y, r:16, fill:'#172b52', stroke:'#fbbf24', 'stroke-width':2}, g);
+      el('text', {x:p.x, y:p.y+4, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':13, fill:'#fbbf24'}, g).textContent = labels[idx];
+    });
+
+    let html = '<tr><th></th>'+labels.map(l=>'<th>'+l+'</th>').join('')+'</tr>';
+    for(let i=0;i<5;i++){
+      html += '<tr><th>'+labels[i]+'</th>';
+      for(let j=0;j<5;j++){
+        if(i===j){ html += '<td>0</td>'; continue; }
+        const v = state[key(i,j)] ? 1 : 0;
+        html += '<td class="'+(v?'one':'')+'">'+v+'</td>';
+      }
+      html += '</tr>';
+    }
+    table.innerHTML = html;
+
+    let listTxt = '';
+    for(let i=0;i<5;i++){
+      const neigh = [];
+      for(let j=0;j<5;j++){ if(i!==j && state[key(i,j)]) neigh.push(labels[j]); }
+      listTxt += labels[i]+': { '+neigh.join(', ')+' }<br>';
+    }
+    listBox.innerHTML = listTxt;
+  }
+
+  resetBtn.addEventListener('click', ()=>{ resetState(); render(); });
+  render();
+})();
+
+/* ============================================================
+   3. WALK / TRAIL / PATH CLASSIFIER
+   ============================================================ */
+(function(){
+  const svg = document.getElementById('walkSvg');
+  const feedback = document.getElementById('walkFeedback');
+  const checklistBox = document.getElementById('walkChecklist');
+  const resetBtn = document.getElementById('walkReset');
+  const labels = ['P','Q','R','S','T'];
+  const pos = [
+    {x:280, y:35}, {x:480, y:150}, {x:390, y:290}, {x:170, y:290}, {x:80, y:150}
+  ];
+  const adjList = {0:[1,2],1:[0,2,4],2:[0,1,3],3:[2,4],4:[1,3]};
+  // edges: 0-1,1-2,2-3,3-4,4-1,0-2  (P-Q,Q-R,R-S,S-T,T-Q,P-R)
+  let sequence = [];
+
+  function edgeExists(a,b){ return adjList[a] && adjList[a].includes(b); }
+  function edgeKey(a,b){ return a<b ? a+'-'+b : b+'-'+a; }
+
+  function classify(){
+    if(sequence.length<2) return null;
+    const isClosed = sequence[0]===sequence[sequence.length-1];
+    const core = isClosed ? sequence.slice(0,-1) : sequence.slice();
+    const edgeKeys = [];
+    for(let i=0;i<sequence.length-1;i++) edgeKeys.push(edgeKey(sequence[i],sequence[i+1]));
+    const edgesRepeated = edgeKeys.length !== new Set(edgeKeys).size;
+    const verticesRepeated = core.length !== new Set(core).size;
+    const isTrail = !edgesRepeated;
+    const isPath = isTrail && !verticesRepeated && !isClosed;
+    const isCircuit = isTrail && isClosed && sequence.length>=4;
+    const isCycle = isCircuit && !verticesRepeated;
+    return {isTrail, isPath, isCircuit, isCycle};
+  }
+
+  function render(){
+    svg.innerHTML = '';
+    const drawn = new Set();
+    for(const a in adjList){
+      adjList[a].forEach(b=>{
+        const k = edgeKey(+a,b);
+        if(drawn.has(k)) return;
+        drawn.add(k);
+        el('line', {x1:pos[a].x,y1:pos[a].y,x2:pos[b].x,y2:pos[b].y, stroke:'#3a4a82','stroke-width':2}, svg);
+      });
+    }
+    for(let i=0;i<sequence.length-1;i++){
+      const a=sequence[i], b=sequence[i+1];
+      el('line', {x1:pos[a].x,y1:pos[a].y,x2:pos[b].x,y2:pos[b].y, stroke:'#5eead4','stroke-width':3}, svg);
+    }
+    pos.forEach((p,idx)=>{
+      const g = el('g', {}, svg);
+      const stepIdx = sequence.indexOf(idx);
+      el('circle', {cx:p.x, cy:p.y, r:17, fill: stepIdx>=0 ? '#5eead4' : '#172b52', stroke:'#60a5fa', 'stroke-width':2, style:'cursor:pointer'}, g)
+        .addEventListener('click', ()=> handleClick(idx));
+      el('text', {x:p.x, y:p.y+4, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':13, fill: stepIdx>=0 ? '#0a1120':'#e9edf7', style:'pointer-events:none'}, g).textContent = labels[idx];
+    });
+  }
+
+  function handleClick(idx){
+    if(sequence.length===0){ sequence.push(idx); }
+    else {
+      const last = sequence[sequence.length-1];
+      if(last===idx){ feedback.textContent = 'Titik sama dengan posisi sekarang — pilih titik lain.'; feedback.className='feedback-line'; return; }
+      if(!edgeExists(last, idx)){
+        feedback.textContent = 'Tidak ada sisi langsung antara '+labels[last]+' dan '+labels[idx]+' — langkah diabaikan.';
+        feedback.className = 'feedback-line bad';
+        return;
+      }
+      sequence.push(idx);
+    }
+    render();
+    updateInfo();
+  }
+
+  function updateInfo(){
+    const seqText = sequence.map(i=>labels[i]).join(' → ');
+    const res = classify();
+    if(!res){
+      feedback.textContent = 'Urutan sekarang: '+seqText+'. Klik titik lain untuk melanjutkan.';
+      feedback.className = 'feedback-line';
+      checklistBox.innerHTML = '';
+      return;
+    }
+    feedback.textContent = 'Urutan: '+seqText;
+    feedback.className = 'feedback-line ok';
+    checklistBox.innerHTML =
+      '<div class="chk yes">Walk &check;</div>'+
+      '<div class="chk '+(res.isTrail?'yes':'no')+'">Trail '+(res.isTrail?'&check;':'&times;')+'</div>'+
+      '<div class="chk '+(res.isPath?'yes':'no')+'">Path '+(res.isPath?'&check;':'&times;')+'</div>'+
+      '<div class="chk '+(res.isCircuit?'yes':'no')+'">Sirkuit '+(res.isCircuit?'&check;':'&times;')+'</div>'+
+      '<div class="chk '+(res.isCycle?'yes':'no')+'">Siklus Sederhana '+(res.isCycle?'&check;':'&times;')+'</div>';
+  }
+
+  resetBtn.addEventListener('click', ()=>{
+    sequence = [];
+    feedback.textContent = 'Klik sebuah titik untuk memulai.';
+    feedback.className = 'feedback-line';
+    checklistBox.innerHTML = '';
+    render();
+  });
+
+  render();
+})();
+
+/* ============================================================
+   6. GALERI GRAF KHUSUS
+   ============================================================ */
+(function(){
+  const gallery = document.getElementById('khususGallery');
+  function circlePts(n, cx, cy, r){
+    const pts = [];
+    for(let i=0;i<n;i++){
+      const ang = -Math.PI/2 + i*2*Math.PI/n;
+      pts.push({x:cx+r*Math.cos(ang), y:cy+r*Math.sin(ang)});
+    }
+    return pts;
+  }
+  function makeSvg(viewBox){
+    return '<svg viewBox="'+viewBox+'" xmlns="http://www.w3.org/2000/svg">';
+  }
+
+  // K5 - complete graph
+  let pts = circlePts(5, 80, 80, 55);
+  let lines='', circs='';
+  for(let i=0;i<5;i++) for(let j=i+1;j<5;j++) lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[j].x}" y2="${pts[j].y}" stroke="#fbbf24" stroke-width="1.4"/>`;
+  pts.forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#fbbf24"/>`);
+  const k5 = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  // C6 - cycle graph
+  pts = circlePts(6, 80, 80, 55);
+  lines=''; circs='';
+  for(let i=0;i<6;i++) lines += `<line x1="${pts[i].x}" y1="${pts[i].y}" x2="${pts[(i+1)%6].x}" y2="${pts[(i+1)%6].y}" stroke="#5eead4" stroke-width="1.6"/>`;
+  pts.forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#5eead4"/>`);
+  const c6 = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  // P4 - path graph
+  const ppts = [20,60,100,140].map(x=>({x, y:80}));
+  lines=''; circs='';
+  for(let i=0;i<3;i++) lines += `<line x1="${ppts[i].x}" y1="${ppts[i].y}" x2="${ppts[i+1].x}" y2="${ppts[i+1].y}" stroke="#60a5fa" stroke-width="1.6"/>`;
+  ppts.forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#60a5fa"/>`);
+  const p4 = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  // K(2,3) bipartite complete
+  const left=[{x:30,y:55},{x:30,y:105}];
+  const right=[{x:130,y:30},{x:130,y:80},{x:130,y:130}];
+  lines=''; circs='';
+  left.forEach(l=> right.forEach(r=> lines += `<line x1="${l.x}" y1="${l.y}" x2="${r.x}" y2="${r.y}" stroke="#c084fc" stroke-width="1.2"/>`));
+  left.forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#c084fc"/>`);
+  right.forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#c084fc"/>`);
+  const k23 = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  // Tree example
+  const tpts = {r:{x:80,y:25}, a:{x:40,y:75}, b:{x:120,y:75}, c:{x:20,y:130}, d:{x:60,y:130}, e:{x:140,y:130}};
+  lines = `<line x1="80" y1="25" x2="40" y2="75" stroke="#4ade80" stroke-width="1.6"/>
+           <line x1="80" y1="25" x2="120" y2="75" stroke="#4ade80" stroke-width="1.6"/>
+           <line x1="40" y1="75" x2="20" y2="130" stroke="#4ade80" stroke-width="1.6"/>
+           <line x1="40" y1="75" x2="60" y2="130" stroke="#4ade80" stroke-width="1.6"/>
+           <line x1="120" y1="75" x2="140" y2="130" stroke="#4ade80" stroke-width="1.6"/>`;
+  circs=''; Object.values(tpts).forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#4ade80"/>`);
+  const tree = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  // Bipartite (general, non complete)
+  const bl=[{x:30,y:40},{x:30,y:90},{x:30,y:140}];
+  const br=[{x:130,y:55},{x:130,y:125}];
+  lines = `<line x1="30" y1="40" x2="130" y2="55" stroke="#fb7185" stroke-width="1.6"/>
+           <line x1="30" y1="90" x2="130" y2="55" stroke="#fb7185" stroke-width="1.6"/>
+           <line x1="30" y1="90" x2="130" y2="125" stroke="#fb7185" stroke-width="1.6"/>
+           <line x1="30" y1="140" x2="130" y2="125" stroke="#fb7185" stroke-width="1.6"/>`;
+  circs=''; bl.concat(br).forEach(p=> circs += `<circle cx="${p.x}" cy="${p.y}" r="6" fill="#fb7185"/>`);
+  const bip = makeSvg('0 0 160 160')+lines+circs+'</svg>';
+
+  const items = [
+    {name:'Graf Lengkap K\u2099', svg:k5, formula:'|E| = n(n\u22121)/2', desc:'Setiap pasang titik berbeda dihubungkan tepat satu sisi. Contoh di samping: K5 — juga merupakan salah satu graf non-planar paling sederhana.'},
+    {name:'Graf Lingkaran C\u2099', svg:c6, formula:'|E| = n', desc:'Titik-titiknya membentuk satu siklus tertutup; setiap titik berderajat 2.'},
+    {name:'Graf Lintasan P\u2099', svg:p4, formula:'|E| = n\u22121', desc:'Titik-titiknya tersusun dalam satu rangkaian lurus tanpa percabangan maupun siklus.'},
+    {name:'Graf Bipartit Lengkap K_{m,n}', svg:k23, formula:'|E| = m\u00d7n', desc:'Titik terbagi dua kelompok; setiap titik di kelompok pertama terhubung ke seluruh titik kelompok kedua, tanpa sisi di dalam kelompok yang sama.'},
+    {name:'Pohon (Tree)', svg:tree, formula:'|E| = n\u22121', desc:'Graf terhubung tanpa siklus. Menghapus satu sisi mana pun akan memutus graf menjadi dua komponen.'},
+    {name:'Graf Bipartit', svg:bip, formula:'tidak memuat siklus ganjil', desc:'Titik dapat dipisah menjadi dua kelompok sedemikian rupa sehingga tidak ada sisi yang menghubungkan dua titik dalam kelompok yang sama.'}
+  ];
+  gallery.innerHTML = items.map(it=>`
+    <div class="gallery-card">
+      <div class="imgwrap">${it.svg}</div>
+      <h4>${it.name}</h4>
+      <div class="formula">${it.formula}</div>
+      <p>${it.desc}</p>
+    </div>`).join('');
+})();
+
+/* ============================================================
+   7a. TABEL KÖNIGSBERG (statis)
+   ============================================================ */
+(function(){
+  const table = document.getElementById('konigsbergTable');
+  const data = [['A (pulau besar)',5],['B (pulau kecil)',3],['C (tepi utara)',3],['D (tepi selatan)',3]];
+  let html = '<tr><th>Daratan</th><th>Derajat</th></tr>';
+  data.forEach(([n,d])=> html += `<tr><td style="width:auto;padding:4px 14px;">${n}</td><td>${d}</td></tr>`);
+  table.innerHTML = html;
+})();
+
+/* ============================================================
+   7b. EULER TRACER — graf dua segitiga berbagi satu titik
+   ============================================================ */
+(function(){
+  const svg = document.getElementById('eulerSvg');
+  const feedback = document.getElementById('eulerFeedback');
+  const resetBtn = document.getElementById('eulerReset');
+  const labels = ['A','B','M','C','D'];
+  const pos = [
+    {x:110, y:230}, {x:230, y:110}, {x:340, y:230}, {x:450, y:110}, {x:560, y:230}
+  ];
+  const edgeList = [[0,1],[1,2],[2,0],[2,3],[3,4],[4,2]]; // A-B,B-M,M-A,M-C,C-D,D-M
+  function ek(a,b){ return a<b ? a+'-'+b : b+'-'+a; }
+  const adj = {};
+  edgeList.forEach(([a,b])=>{ (adj[a]=adj[a]||[]).push(b); (adj[b]=adj[b]||[]).push(a); });
+
+  let used = new Set();
+  let path = [];
+
+  function render(){
+    svg.innerHTML = '';
+    edgeList.forEach(([a,b], idx)=>{
+      const used_ = used.has(ek(a,b));
+      const orderIdx = path.findIndex((v,i)=> i>0 && ek(path[i-1],v)===ek(a,b));
+      el('line', {x1:pos[a].x,y1:pos[a].y,x2:pos[b].x,y2:pos[b].y, stroke: used_ ? '#5eead4':'#3a4a82', 'stroke-width': used_?3:2, style:'cursor:pointer'}, svg)
+        .addEventListener('click', ()=> tryStep(a,b));
+      if(used_){
+        let order = -1;
+        for(let i=1;i<path.length;i++){ if(ek(path[i-1],path[i])===ek(a,b)){ order = i; break; } }
+        if(order>0) el('text', {x:(pos[a].x+pos[b].x)/2, y:(pos[a].y+pos[b].y)/2 - 8, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':12, fill:'#5eead4'}, svg).textContent = order;
+      }
+    });
+    pos.forEach((p,idx)=>{
+      const g = el('g', {}, svg);
+      const isCurrent = path.length && path[path.length-1]===idx;
+      const visited = path.includes(idx);
+      el('circle', {cx:p.x, cy:p.y, r:18, fill: isCurrent ? '#5eead4' : (visited ? '#1e3a5f' : '#172b52'), stroke:'#fbbf24', 'stroke-width':2, style:'cursor:pointer'}, g)
+        .addEventListener('click', ()=> handleVertexClick(idx));
+      el('text', {x:p.x, y:p.y+4, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':13, fill: isCurrent ? '#0a1120':'#e9edf7', style:'pointer-events:none'}, g).textContent = labels[idx];
+    });
+  }
+
+  function handleVertexClick(idx){
+    if(path.length===0){
+      path = [idx];
+      feedback.textContent = 'Mulai dari titik '+labels[idx]+'. Sekarang pilih titik tetangga untuk menjelajahi sisi pertama.';
+      feedback.className = 'feedback-line';
+      render();
+      return;
+    }
+    tryStep(path[path.length-1], idx);
+  }
+
+  function tryStep(from, to){
+    if(path.length===0) return;
+    const current = path[path.length-1];
+    if(current!==from && current!==to) return; // klik garis tak terkait posisi sekarang
+    const target = current===from ? to : from;
+    if(!adj[current] || !adj[current].includes(target)){
+      feedback.textContent = labels[current]+' dan '+labels[target]+' tidak bertetangga.';
+      feedback.className = 'feedback-line bad';
+      return;
+    }
+    if(used.has(ek(current,target))){
+      feedback.textContent = 'Sisi '+labels[current]+'–'+labels[target]+' sudah pernah dipakai — pilih sisi lain.';
+      feedback.className = 'feedback-line bad';
+      return;
+    }
+    used.add(ek(current,target));
+    path.push(target);
+    render();
+    evaluate();
+  }
+
+  function evaluate(){
+    const current = path[path.length-1];
+    if(used.size === edgeList.length){
+      if(current === path[0]){
+        feedback.textContent = 'Berhasil! Urutan '+path.map(i=>labels[i]).join(' \u2192 ')+' melalui seluruh sisi tepat satu kali dan kembali ke titik awal — ini adalah Sirkuit Euler.';
+        feedback.className = 'feedback-line ok';
+      } else {
+        feedback.textContent = 'Seluruh sisi terpakai namun belum kembali ke titik awal. Klik Atur Ulang dan coba urutan lain.';
+        feedback.className = 'feedback-line bad';
+      }
+      return;
+    }
+    const remaining = (adj[current]||[]).filter(n=> !used.has(ek(current,n)));
+    if(remaining.length===0){
+      feedback.textContent = 'Buntu di titik '+labels[current]+' — masih ada '+(edgeList.length-used.size)+' sisi tersisa. Klik Atur Ulang dan coba urutan lain (ingat: hindari menutup salah satu segitiga terlalu cepat).';
+      feedback.className = 'feedback-line bad';
+    } else {
+      feedback.textContent = 'Di titik '+labels[current]+'. Sisi terpakai: '+used.size+'/'+edgeList.length+'.';
+      feedback.className = 'feedback-line';
+    }
+  }
+
+  resetBtn.addEventListener('click', ()=>{
+    used = new Set(); path = [];
+    feedback.textContent = 'Klik salah satu titik untuk mulai menjelajah.';
+    feedback.className = 'feedback-line';
+    render();
+  });
+
+  render();
+})();
+
+/* ============================================================
+   8. PEWARNAAN GRAF — house graph
+   ============================================================ */
+(function(){
+  const svg = document.getElementById('colorSvg');
+  const statsBox = document.getElementById('colorStats');
+  const feedback = document.getElementById('colorFeedback');
+  const resetBtn = document.getElementById('colorReset');
+  const hintBtn = document.getElementById('colorHintBtn');
+  const hintBox = document.getElementById('colorHint');
+  const labels = ['A','B','C','D','E'];
+  const pos = [
+    {x:120, y:240}, {x:360, y:240}, {x:360, y:120}, {x:120, y:120}, {x:240, y:40}
+  ];
+  const edgeList = [[0,1],[1,2],[2,3],[3,0],[3,4],[4,2]]; // A-B,B-C,C-D,D-A,D-E,E-C
+  const palette = [null, '#fbbf24', '#fb7185', '#c084fc', '#4ade80'];
+  let colorIdx = [0,0,0,0,0];
+
+  function render(){
+    svg.innerHTML = '';
+    edgeList.forEach(([a,b])=>{
+      const conflict = colorIdx[a]!==0 && colorIdx[b]!==0 && colorIdx[a]===colorIdx[b];
+      el('line', {x1:pos[a].x,y1:pos[a].y,x2:pos[b].x,y2:pos[b].y, stroke: conflict ? '#fb7185' : '#3a4a82', 'stroke-width': conflict?3:2}, svg);
+    });
+    pos.forEach((p,idx)=>{
+      const g = el('g', {}, svg);
+      const fill = palette[colorIdx[idx]] || '#172b52';
+      el('circle', {cx:p.x, cy:p.y, r:20, fill, stroke:'#e9edf7', 'stroke-width':1.5, style:'cursor:pointer'}, g)
+        .addEventListener('click', ()=>{ colorIdx[idx] = (colorIdx[idx]+1) % palette.length; render(); });
+      el('text', {x:p.x, y:p.y+4, 'text-anchor':'middle', 'font-family':'JetBrains Mono', 'font-size':13, fill: colorIdx[idx]===0 ? '#e9edf7':'#0a1120', style:'pointer-events:none'}, g).textContent = labels[idx];
+    });
+
+    const usedColors = new Set(colorIdx.filter(c=>c!==0));
+    const allColored = colorIdx.every(c=>c!==0);
+    const anyConflict = edgeList.some(([a,b])=> colorIdx[a]!==0 && colorIdx[b]!==0 && colorIdx[a]===colorIdx[b]);
+    statsBox.innerHTML = '<div class="stat">Warna terpakai: <b>'+usedColors.size+'</b></div><div class="stat">Titik diwarnai: <b>'+colorIdx.filter(c=>c!==0).length+'/5</b></div>';
+
+    if(!allColored){
+      feedback.textContent = 'Lanjutkan mewarnai sisa titik.';
+      feedback.className = 'feedback-line';
+    } else if(anyConflict){
+      feedback.textContent = 'Ada konflik: dua titik bertetangga memiliki warna yang sama (lihat sisi merah).';
+      feedback.className = 'feedback-line bad';
+    } else {
+      feedback.textContent = 'Pewarnaan valid dengan '+usedColors.size+' warna! Coba kurangi jumlah warna untuk mendekati bilangan kromatik minimum.';
+      feedback.className = 'feedback-line ok';
+    }
+  }
+
+  resetBtn.addEventListener('click', ()=>{ colorIdx=[0,0,0,0,0]; render(); });
+  hintBtn.addEventListener('click', ()=> hintBox.classList.toggle('show'));
+
+  render();
+})();
+
+/* ============================================================
+   10. QUIZ
+   ============================================================ */
+(function(){
+  const container = document.getElementById('quizContainer');
+  const questions = [
+    {
+      q:'Diberikan graf dengan 6 titik dan jumlah seluruh derajat titiknya adalah 18. Berapa jumlah sisi graf tersebut?',
+      options:['6','9','18','36'], correct:1,
+      explain:'Berdasarkan Lemma Persalaman Tangan, &Sigma;deg(v) = 2|E|, sehingga |E| = 18/2 = 9.'
+    },
+    {
+      q:'Graf di mana setiap pasang titik berbeda dihubungkan oleh tepat satu sisi disebut...',
+      options:['Graf lingkaran','Graf lengkap','Graf bipartit','Graf kosong'], correct:1,
+      explain:'Itulah definisi graf lengkap K\u2099, dengan jumlah sisi n(n\u22121)/2.'
+    },
+    {
+      q:'Sebuah pohon (tree) memiliki 12 titik. Berapa jumlah sisinya?',
+      options:['11','12','13','24'], correct:0,
+      explain:'Pada pohon berlaku |E| = |V| \u2212 1, sehingga 12 \u2212 1 = 11.'
+    },
+    {
+      q:'Syarat sebuah graf terhubung memiliki sirkuit Euler adalah...',
+      options:['Tepat dua titik berderajat ganjil','Semua titik berderajat genap','Semua titik berderajat ganjil','Graf harus berbentuk pohon'], correct:1,
+      explain:'Sesuai Teorema Euler, sirkuit Euler ada jika dan hanya jika seluruh titik berderajat genap.'
+    },
+    {
+      q:'Pernyataan yang benar mengenai hubungan Path dan Walk adalah...',
+      options:['Path tidak boleh mengulang sisi maupun titik','Path boleh mengulang titik','Path harus berupa graf berarah','Path identik dengan Walk'], correct:0,
+      explain:'Path adalah bentuk paling ketat: trail (tanpa sisi berulang) yang juga tidak mengulang titik.'
+    },
+    {
+      q:'Jumlah minimum warna yang diperlukan untuk mewarnai graf yang memuat segitiga (K3) adalah...',
+      options:['1','2','3','4'], correct:2,
+      explain:'Pada segitiga, ketiga titik saling bertetangga, sehingga ketiganya membutuhkan warna yang berbeda satu sama lain — minimal 3 warna.'
+    }
+  ];
+
+  container.innerHTML = questions.map((item,qi)=>`
+    <div class="quiz-q" data-qi="${qi}">
+      <div class="qnum">Soal ${qi+1}</div>
+      <h4>${item.q}</h4>
+      <div class="opt-row">
+        ${item.options.map((opt,oi)=>`<button class="opt" data-oi="${oi}">${opt}</button>`).join('')}
+      </div>
+      <div class="explain">${item.explain}</div>
+    </div>`).join('');
+
+  container.querySelectorAll('.quiz-q').forEach((qEl, qi)=>{
+    const item = questions[qi];
+    qEl.querySelectorAll('.opt').forEach((btn,oi)=>{
+      btn.addEventListener('click', ()=>{
+        if(qEl.classList.contains('answered')) return;
+        qEl.classList.add('answered');
+        if(oi===item.correct){ btn.classList.add('correct-pick'); }
+        else {
+          btn.classList.add('wrong-pick');
+          qEl.querySelectorAll('.opt')[item.correct].classList.add('correct-pick');
+        }
+      });
+    });
+  });
+
+  document.querySelectorAll('.hintbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const box = btn.nextElementSibling;
+      box.classList.toggle('show');
+      btn.textContent = box.classList.contains('show') ? 'Sembunyikan Petunjuk' : 'Tampilkan Petunjuk';
+    });
+  });
+})();
+</script>
+</body>
+</html>
