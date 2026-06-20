@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soal Esay — Graf (Matematika Diskrit)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Token system ────────────────────────────────────────────── */
+    :root {
+      --bg:       #0d1117;
+      --surface:  #161b22;
+      --border:   #21262d;
+      --accent:   #58a6ff;
+      --accent2:  #3fb950;
+      --muted:    #8b949e;
+      --text:     #e6edf3;
+      --text-dim: #c9d1d9;
+      --num-bg:   #1f2937;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+      --font-body:    'Inter', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(88,166,255,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      max-width: 680px;
+      margin: 0 auto 20px;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .meta-pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+    }
+    .meta-pill span { color: var(--text-dim); }
+
+    /* ── Instructions box ────────────────────────────────────────── */
+    .instructions {
+      max-width: 820px;
+      margin: 36px auto 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 8px;
+      padding: 18px 24px;
+      font-size: 13.5px;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+    .instructions strong { color: var(--accent2); font-weight: 600; }
+
+    /* ── Main layout ─────────────────────────────────────────────── */
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Section divider ─────────────────────────────────────────── */
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 28px 0 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+    .section-label strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── Question card ───────────────────────────────────────────── */
+    .question {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 20px;
+      margin-bottom: 20px;
+      padding: 22px 24px 22px 0;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    .question:hover { background: rgba(88,166,255,.03); border-radius: 6px; }
+
+    .q-number {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--num-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .q-body { display: flex; flex-direction: column; gap: 8px; }
+
+    .q-topic {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .q-text {
+      font-size: 15px;
+      color: var(--text-dim);
+      line-height: 1.75;
+    }
+
+    .q-text strong { color: var(--text); font-weight: 600; }
+
+    /* answer space lines */
+    .answer-space {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .answer-line {
+      height: 1px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 32px 16px;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .05em;
+    }
+
+    /* ── Print styles ─────────────────────────────────────────────── */
+    @media print {
+      body { background: #fff; color: #111; }
+      header::before { display: none; }
+      h1, h1 em, .q-number, .eyebrow, .section-label strong { color: #1a56db !important; }
+      .q-text, .meta-pill, .q-topic, footer, .section-label { color: #444 !important; }
+      .q-number { background: #e8f0fe; border-color: #c0d3fb; }
+      .instructions { border-color: #ddd; border-left-color: #1a7f37; }
+      .question:hover { background: none; }
+      footer { color: #666; }
+    }
+
+    @media (max-width: 560px) {
+      .question { grid-template-columns: 38px 1fr; gap: 0 12px; }
+      .q-number { width: 34px; height: 34px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════════════ -->
+<header>
+  <p class="eyebrow">Matematika Diskrit &nbsp;·&nbsp; Graf</p>
+  <h1>Soal Esay<br /><em>Teori Graf</em></h1>
+  <div class="meta-row">
+    <span class="meta-pill">Mata Kuliah: <span>Matematika Diskrit</span></span>
+    <span class="meta-pill">Jumlah Soal: <span>20 Butir</span></span>
+    <span class="meta-pill">Bentuk: <span>Esay / Uraian</span></span>
+  </div>
+
+  <div class="instructions" style="margin:36px auto 0;">
+    <strong>Petunjuk Pengerjaan:</strong> Jawablah setiap pertanyaan berikut secara lengkap dan sistematis.
+    Sertakan definisi, langkah-langkah, dan contoh pendukung apabila diperlukan.
+    Gambarkan graf bila soal memintanya. Dilarang bekerja sama atau menggunakan referensi yang tidak diizinkan.
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MAIN
+════════════════════════════════════════════════════════════════ -->
+<main>
+
+  <!-- BAGIAN A: Konsep Dasar -->
+  <p class="section-label"><strong>A</strong> &nbsp;— Konsep Dasar Graf</p>
+
+  <div class="question">
+    <div class="q-number">01</div>
+    <div class="q-body">
+      <span class="q-topic">Definisi</span>
+      <p class="q-text">Jelaskan pengertian <strong>graf</strong> dalam matematika diskrit. Sebutkan komponen-komponen penyusunnya beserta notasi formalnya, dan berikan satu contoh graf sederhana beserta representasinya!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">02</div>
+    <div class="q-body">
+      <span class="q-topic">Jenis Graf</span>
+      <p class="q-text">Uraikan perbedaan antara <strong>graf berarah (digraf)</strong> dan <strong>graf tak berarah</strong>! Tuliskan definisi masing-masing, lalu berikan contoh penerapan keduanya dalam kehidupan nyata!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">03</div>
+    <div class="q-body">
+      <span class="q-topic">Terminologi</span>
+      <p class="q-text">Jelaskan apa yang dimaksud dengan <strong>derajat (degree)</strong> sebuah simpul dalam graf tak berarah. Mengapa jumlah derajat semua simpul selalu genap? Buktikan pernyataan tersebut secara singkat!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">04</div>
+    <div class="q-body">
+      <span class="q-topic">Graf Khusus</span>
+      <p class="q-text">Apa yang dimaksud dengan <strong>graf lengkap (complete graph) K<sub>n</sub></strong>? Tentukan banyaknya sisi pada K<sub>5</sub> dan gambarkan representasinya. Tuliskan rumus umum jumlah sisi pada K<sub>n</sub>!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">05</div>
+    <div class="q-body">
+      <span class="q-topic">Graf Bipartit</span>
+      <p class="q-text">Definisikan <strong>graf bipartit</strong> dan <strong>graf bipartit lengkap K<sub>m,n</sub></strong>. Tunjukkan bahwa suatu graf adalah bipartit jika dan hanya jika graf tersebut tidak memuat siklus dengan panjang ganjil!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BAGIAN B: Representasi Graf -->
+  <p class="section-label" style="margin-top:12px;"><strong>B</strong> &nbsp;— Representasi Graf</p>
+
+  <div class="question">
+    <div class="q-number">06</div>
+    <div class="q-body">
+      <span class="q-topic">Matriks Adjacency</span>
+      <p class="q-text">Tuliskan <strong>matriks ketetanggaan (adjacency matrix)</strong> dari graf tak berarah G dengan simpul {A, B, C, D} dan sisi {AB, AC, BD, CD}. Jelaskan sifat-sifat matriks tersebut terkait simetri dan representasi sisi!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">07</div>
+    <div class="q-body">
+      <span class="q-topic">Daftar Ketetanggaan</span>
+      <p class="q-text">Jelaskan representasi graf menggunakan <strong>daftar ketetanggaan (adjacency list)</strong>! Bandingkan efisiensi memori dan waktu akses antara adjacency list dan adjacency matrix untuk graf jarang (sparse graph) dan graf padat (dense graph)!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">08</div>
+    <div class="q-body">
+      <span class="q-topic">Matriks Insidensi</span>
+      <p class="q-text">Apa yang dimaksud dengan <strong>matriks insidensi (incidence matrix)</strong> suatu graf? Konstruksikan matriks insidensi dari graf dengan simpul {1, 2, 3} dan sisi {e1=(1,2), e2=(2,3), e3=(1,3)}. Interpretasikan setiap entri matriks tersebut!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BAGIAN C: Lintasan dan Sirkuit -->
+  <p class="section-label" style="margin-top:12px;"><strong>C</strong> &nbsp;— Lintasan, Siklus, dan Konektivitas</p>
+
+  <div class="question">
+    <div class="q-number">09</div>
+    <div class="q-body">
+      <span class="q-topic">Lintasan Euler</span>
+      <p class="q-text">Jelaskan syarat yang harus dipenuhi suatu graf agar memiliki <strong>lintasan Euler</strong> dan <strong>sirkuit Euler</strong>! Hubungkan syarat-syarat tersebut dengan konsep derajat simpul. Berikan contoh graf yang memiliki sirkuit Euler dan yang tidak!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">10</div>
+    <div class="q-body">
+      <span class="q-topic">Lintasan Hamilton</span>
+      <p class="q-text">Bedakan konsep <strong>lintasan Hamilton</strong> dengan lintasan Euler! Jelaskan teorema Dirac dan teorema Ore sebagai kondisi cukup untuk eksistensi sirkuit Hamilton. Mengapa permasalahan Hamilton lebih sulit diselesaikan dibanding Euler?</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">11</div>
+    <div class="q-body">
+      <span class="q-topic">Graf Terhubung</span>
+      <p class="q-text">Definisikan <strong>graf terhubung (connected graph)</strong> dan <strong>komponen terhubung</strong>. Jelaskan cara menentukan apakah suatu graf terhubung menggunakan algoritma BFS atau DFS! Apa perbedaan antara graf terhubung kuat dan graf terhubung lemah pada digraf?</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">12</div>
+    <div class="q-body">
+      <span class="q-topic">Jembatan & Titik Artikulasi</span>
+      <p class="q-text">Apa yang dimaksud dengan <strong>jembatan (bridge)</strong> dan <strong>titik artikulasi (cut vertex)</strong> dalam sebuah graf? Mengapa identifikasi kedua elemen ini penting dalam analisis jaringan? Berikan contoh konkret dengan menggambarkan sebuah graf yang memiliki keduanya!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BAGIAN D: Pohon -->
+  <p class="section-label" style="margin-top:12px;"><strong>D</strong> &nbsp;— Pohon (Tree)</p>
+
+  <div class="question">
+    <div class="q-number">13</div>
+    <div class="q-body">
+      <span class="q-topic">Definisi Pohon</span>
+      <p class="q-text">Jelaskan definisi <strong>pohon (tree)</strong> sebagai graf khusus. Buktikan bahwa sebuah pohon dengan n simpul selalu memiliki tepat n−1 sisi! Apa yang dimaksud dengan pohon rentang (spanning tree) dari suatu graf?</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">14</div>
+    <div class="q-body">
+      <span class="q-topic">Pohon Rentang Minimum</span>
+      <p class="q-text">Jelaskan permasalahan <strong>pohon rentang minimum (minimum spanning tree)</strong>! Uraikan langkah-langkah algoritma Kruskal dan algoritma Prim dalam mencari pohon rentang minimum. Bandingkan kompleksitas waktu keduanya!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BAGIAN E: Pewarnaan & Planaritas -->
+  <p class="section-label" style="margin-top:12px;"><strong>E</strong> &nbsp;— Pewarnaan Graf & Planaritas</p>
+
+  <div class="question">
+    <div class="q-number">15</div>
+    <div class="q-body">
+      <span class="q-topic">Pewarnaan Graf</span>
+      <p class="q-text">Jelaskan konsep <strong>pewarnaan simpul (vertex coloring)</strong> pada graf dan definisi <strong>bilangan kromatik χ(G)</strong>! Tentukan bilangan kromatik dari graf siklus C<sub>5</sub> dan graf lengkap K<sub>4</sub>. Sebutkan aplikasi nyata pewarnaan graf!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">16</div>
+    <div class="q-body">
+      <span class="q-topic">Teorema Empat Warna</span>
+      <p class="q-text">Jelaskan isi dari <strong>Teorema Empat Warna</strong> dan kaitannya dengan pewarnaan graf planar. Mengapa pembuktian teorema ini dianggap kontroversial dalam sejarah matematika? Hubungkan dengan permasalahan pewarnaan peta!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">17</div>
+    <div class="q-body">
+      <span class="q-topic">Graf Planar</span>
+      <p class="q-text">Definisikan <strong>graf planar</strong> dan tuliskan <strong>Rumus Euler</strong> untuk graf planar terhubung (V − E + F = 2). Gunakan rumus ini untuk membuktikan bahwa K<sub>5</sub> bukan merupakan graf planar!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <!-- BAGIAN F: Algoritma & Aplikasi -->
+  <p class="section-label" style="margin-top:12px;"><strong>F</strong> &nbsp;— Algoritma dan Aplikasi Graf</p>
+
+  <div class="question">
+    <div class="q-number">18</div>
+    <div class="q-body">
+      <span class="q-topic">Algoritma Dijkstra</span>
+      <p class="q-text">Uraikan langkah-langkah <strong>algoritma Dijkstra</strong> untuk mencari jalur terpendek dari simpul sumber ke semua simpul lain pada graf berbobot. Terapkan algoritma tersebut pada graf berbobot sederhana dengan 4 simpul yang Anda definisikan sendiri, dan tentukan jalur terpendek dari simpul pertama!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">19</div>
+    <div class="q-body">
+      <span class="q-topic">BFS & DFS</span>
+      <p class="q-text">Jelaskan perbedaan mendasar antara algoritma penelusuran <strong>BFS (Breadth-First Search)</strong> dan <strong>DFS (Depth-First Search)</strong>! Tuliskan pseudocode salah satu algoritma tersebut dan jelaskan struktur data yang digunakan. Sebutkan keunggulan masing-masing algoritma dalam konteks berbeda!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="q-number">20</div>
+    <div class="q-body">
+      <span class="q-topic">Aplikasi Dunia Nyata</span>
+      <p class="q-text">Jelaskan bagaimana konsep <strong>teori graf</strong> digunakan dalam tiga bidang berikut: (a) sistem jaringan komputer, (b) media sosial dan analisis hubungan antar pengguna, dan (c) optimasi rute transportasi. Untuk setiap bidang, sebutkan jenis graf yang sesuai dan permasalahan apa yang dapat diselesaikan!</p>
+      <div class="answer-space"><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════ -->
+<footer>
+  Matematika Diskrit &nbsp;·&nbsp; Teori Graf &nbsp;·&nbsp; 20 Soal Esay &nbsp;·&nbsp; Tanpa Kunci Jawaban
+</footer>
+
+</body>
+</html>
